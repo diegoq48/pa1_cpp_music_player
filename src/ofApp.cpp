@@ -81,6 +81,8 @@ void ofApp::drawMode3(vector<float> amplitudes){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     // This method is called automatically when any key is pressed
+    srand(time(0));
+    int random = rand() % 3;
     switch(key){
         case 'p':
             if(playing){
@@ -101,11 +103,17 @@ void ofApp::keyPressed(int key){
             break;
         case 'a':
             sound.stop();
+            break;
         case 'd':
-            srand(time(0));
-            int random = rand() % 3;
             sound.load(songArray[random]);
             sound.play();
+            break; 
+        case '=':
+            sound.setVolume(sound.getVolume() + 0.1);
+            break;
+        case '-':
+            sound.setVolume(sound.getVolume() - 0.1);
+            break;
     }
 }
 
