@@ -2,10 +2,10 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    sound.load("beat.wav"); //Loads a sound file (in bin/data/)
+    sound.load("newSongShadowOnTheSun.flac"); //Loads a sound file (in bin/data/)
     sound.setLoop(true); // Makes the song loop indefinitely
-    sound.setVolume(1); // Sets the song volume
-    ofSetBackgroundColor(36, 32,56); // Sets the Background Color
+    sound.setVolume(2); // Sets the song volume
+    ofSetBackgroundColor(00, 80,00); // Sets the Background Color
 }
 
 //--------------------------------------------------------------
@@ -51,8 +51,13 @@ void ofApp::drawMode1(vector<float> amplitudes){
         ofFill(); // Drawn Shapes will be filled in with color
         ofSetColor(256); // This resets the color of the "brush" to white
         ofDrawBitmapString("Rectangle Height Visualizer", 0, 15);
-        ofSetColor(189, 45, 135); 
-        ofDrawRectangle(2, ofGetHeight() - 100, 50,  amplitudes[0]);
+        ofSetColor(00, 00, ofRandom(256)); 
+        ofDrawRectRounded(20, ofGetHeight(), 50,  amplitudes[0], 10);
+
+      /*    for (int i = 0; i < 10; i++) { 
+            //make whitespace between the bars
+            ofDrawRectangle(2, ofGetHeight() - 100, ofGetWidth() - 100,  amplitudes[0]);
+        }  */
 }
 void ofApp::drawMode2(vector<float> amplitudes){
         ofSetLineWidth(5); // Sets the line width
@@ -62,7 +67,7 @@ void ofApp::drawMode2(vector<float> amplitudes){
         int bands = amplitudes.size();
         for(int i=0; i< bands; i++){
             ofSetColor((bands - i)*32 %256,18,144); // Color varies between frequencies
-            ofDrawCircle(ofGetWidth()/2, ofGetHeight()/2, amplitudes[0]/(i +1));
+            
         }
 }
 
@@ -93,6 +98,9 @@ void ofApp::keyPressed(int key){
         case '3':
             mode = '3';
             break;
+        case 'a':
+            sound.stop();
+        case 'd':
     }
 }
 
