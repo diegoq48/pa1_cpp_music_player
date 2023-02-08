@@ -29,6 +29,7 @@ class ofApp : public ofBaseApp{
 		
 		bool playing = false;
 		char mode = '1';
+		std::string songArray[4] = {"newSongShadowOnTheSun.flac", "rock-song.wav", "pigeon-coo.wav", "geesebeat.wav"};
 
 		int cur_x, cur_y = 0;
 		float sound_length;

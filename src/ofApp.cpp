@@ -1,4 +1,5 @@
 #include "ofApp.h"
+#include <ctime>
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -6,6 +7,7 @@ void ofApp::setup(){
     sound.setLoop(true); // Makes the song loop indefinitely
     sound.setVolume(2); // Sets the song volume
     ofSetBackgroundColor(00, 80,00); // Sets the Background Color
+    ofSetWindowTitle("Music Visualizer"); // Sets the Window Title
 }
 
 //--------------------------------------------------------------
@@ -23,13 +25,12 @@ void ofApp::draw(){
     It's in charge of drawing all figures and text on screen */
 
     // Progress Bar
-    ofSetColor(256);
+    ofSetColor(256); 
     ofFill();
 
     float pos = playing ? progress : lastPos;
     int percent = pos*100;
     ofDrawBitmapString("Song Progress: " + ofToString(percent) + "%", 0, 30);
-
     // Mode Selection
     if(!playing){
         ofDrawBitmapString("Press 'p' to play some music!", ofGetWidth()/2 - 50, ofGetHeight()/2);
@@ -101,6 +102,10 @@ void ofApp::keyPressed(int key){
         case 'a':
             sound.stop();
         case 'd':
+            srand(time(0));
+            int random = rand() % 3;
+            sound.load(songArray[random]);
+            sound.play();
     }
 }
 
