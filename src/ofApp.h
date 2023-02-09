@@ -26,11 +26,12 @@ class ofApp : public ofBaseApp{
 	private:
 		ofSoundPlayer sound;
 		AudioVisualizer visualizer;
-		
+		int color = ofRandom(254);
 		bool playing = false;
 		char mode = '1';
-		std::string songArray[4] = {"newSongShadowOnTheSun.flac", "rock-song.wav", "pigeon-coo.wav", "geesebeat.wav"};
-
+		std::string songArray[6] = {"newSongShadowOnTheSun.flac", "OliverTreeMissyou.flac", "somethingMemorable.mp3", "iReallyWannaStayAtYourHouse.mp3",
+		"makeThisRight.mp3", "breathOfASerpant.mp3"};
+		
 		int cur_x, cur_y = 0;
 		float sound_length;
 

@@ -6,7 +6,7 @@ void ofApp::setup(){
     sound.load("newSongShadowOnTheSun.flac"); //Loads a sound file (in bin/data/)
     sound.setLoop(true); // Makes the song loop indefinitely
     sound.setVolume(2); // Sets the song volume
-    ofSetBackgroundColor(00, 80,00); // Sets the Background Color
+    ofSetBackgroundColor(00, 00,00); // Sets the Background Color
     ofSetWindowTitle("Music Visualizer"); // Sets the Window Title
 }
 
@@ -25,7 +25,7 @@ void ofApp::draw(){
     It's in charge of drawing all figures and text on screen */
 
     // Progress Bar
-    ofSetColor(256); 
+    ofSetColor(255); 
     ofFill();
 
     float pos = playing ? progress : lastPos;
@@ -50,15 +50,15 @@ void ofApp::draw(){
 }
 void ofApp::drawMode1(vector<float> amplitudes){
         ofFill(); // Drawn Shapes will be filled in with color
-        ofSetColor(256); // This resets the color of the "brush" to white
+        ofSetColor(255); // This resets the color of the "brush" to white
         ofDrawBitmapString("Rectangle Height Visualizer", 0, 15);
-        ofSetColor(00, 00, ofRandom(256)); 
-        ofDrawRectRounded(20, ofGetHeight(), 50,  amplitudes[0], 10);
+        ofSetColor(00, 00, color); 
+        for (int i = 32; i >= 0 ; i--) { 
+            ofDrawRectangle(ofGetWidth() / 64 * i, ofGetHeight(), ofGetWidth()/64,  amplitudes[32 - (i + 1)]*10);}
+        for (int i = 32; i < 64; i++) { 
+            ofDrawRectangle(ofGetWidth() / 64 * i, ofGetHeight(), ofGetWidth()/64,  amplitudes[i-32]*10);
 
-      /*    for (int i = 0; i < 10; i++) { 
-            //make whitespace between the bars
-            ofDrawRectangle(2, ofGetHeight() - 100, ofGetWidth() - 100,  amplitudes[0]);
-        }  */
+        }  
 }
 void ofApp::drawMode2(vector<float> amplitudes){
         ofSetLineWidth(5); // Sets the line width
@@ -82,7 +82,7 @@ void ofApp::drawMode3(vector<float> amplitudes){
 void ofApp::keyPressed(int key){
     // This method is called automatically when any key is pressed
     srand(time(0));
-    int random = rand() % 3;
+    int random = rand() % 6;
     switch(key){
         case 'p':
             if(playing){
@@ -109,7 +109,7 @@ void ofApp::keyPressed(int key){
             sound.play();
             break; 
         case '=':
-            sound.setVolume(sound.getVolume() + 0.1);
+            sound.setVolume(sound.getVolume() + 0.1);   
             break;
         case '-':
             sound.setVolume(sound.getVolume() - 0.1);
