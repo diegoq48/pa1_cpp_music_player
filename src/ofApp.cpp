@@ -25,13 +25,19 @@ void ofApp::draw(){
     It's in charge of drawing all figures and text on screen */
 
     // Progress Bar
-    ofSetColor(256); 
-    ofFill();
-
     float pos = playing ? progress : lastPos;
     int percent = pos*100;
-    ofDrawBitmapString("Song Progress: " + ofToString(percent) + "%", 0, 30);
+
+    ofFill();
+
+    ofSetColor(256); // Set background bar color
+    ofDrawRectangle(0, ofGetHeight() - 10, ofGetWidth(), 10); // Draw background bar
+
+    ofSetColor(100); // Set progress bar color
+    ofDrawRectangle(0, ofGetHeight() - 10, ofGetWidth() * pos, 10); // Draw progress bar
+
     // Mode Selection
+    ofSetColor(256); // Set text color
     if(!playing){
         ofDrawBitmapString("Press 'p' to play some music!", ofGetWidth()/2 - 50, ofGetHeight()/2);
     }
@@ -86,8 +92,10 @@ void ofApp::keyPressed(int key){
     switch(key){
         case 'p':
             if(playing){
+                lastPos = progress;
                 sound.stop();
             }else{
+                sound.setPosition(lastPos);
                 sound.play();
             }
             playing = !playing;
