@@ -23,18 +23,20 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+		void changeSong();
+
 	private:
+		int songNumber = 0;
 		ofSoundPlayer sound;
 		AudioVisualizer visualizer;
 		int color = ofRandom(254);
 		bool playing = false;
 		char mode = '1';
-		std::string songArray[6] = {"newSongShadowOnTheSun.flac", "OliverTreeMissyou.flac", "somethingMemorable.mp3", "iReallyWannaStayAtYourHouse.mp3",
-		"makeThisRight.mp3", "breathOfASerpant.mp3"};
-		
+		std::string songArray[5] = {"iReallyWannaStayAtYourHouse.mp3","OliverTreeMissyou.flac","newSongShadowOnTheSun.flac","makeThisRight.mp3", "somethingMemorable.mp3"};
+		int songArraySize = (sizeof(songArray)/sizeof(songArray[0]))-1;
 		int cur_x, cur_y = 0;
 		float sound_length;
-
+		int decay = 0; // 0 = no decay, 1 = decay
 		float progress = 0;
 		float lastPos = 0;
 };
