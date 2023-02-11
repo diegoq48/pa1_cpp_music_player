@@ -29,8 +29,15 @@ void ofApp::draw(){
     ofFill();
 
     float pos = playing ? progress : lastPos;
-    int percent = pos*100;
-    ofDrawBitmapString("Song Progress: " + ofToString(percent) + "%", 0, 30);
+
+    ofFill();
+
+    ofSetColor(100); // Set background bar color
+    ofDrawRectangle(0, ofGetHeight() - 20, ofGetWidth(), 20); // Draw background bar
+
+    ofSetColor(255); // Set progress bar and text color
+    ofDrawRectangle(0, ofGetHeight() - 20, ofGetWidth() * pos, 20); // Draw progress bar
+
     // Mode Selection
     if(!playing){
         ofDrawBitmapString("Press 'p' to play some music!", ofGetWidth()/2 - 50, ofGetHeight()/2);
@@ -43,13 +50,11 @@ void ofApp::draw(){
     }else if(mode == '3'){
         drawMode3(amplitudes);
     }
-
-    // ofDrawBitmapString("Current Mouse Position: " + ofToString(cur_x) + ", " + ofToString(cur_y), 0, 30);
-
     
 }
 void ofApp::drawMode1(vector<float> amplitudes){
         ofFill(); // Drawn Shapes will be filled in with color
+        ofSetColor(255); // This resets the color of the "brush" to white
         ofSetColor(255); // This resets the color of the "brush" to white
         ofDrawBitmapString("Rectangle Height Visualizer", 0, 15);
         // used random color declared in the .h file to change the color of the visualizer to a random shade of blue
@@ -68,11 +73,11 @@ void ofApp::drawMode1(vector<float> amplitudes){
 void ofApp::drawMode2(vector<float> amplitudes){
         ofSetLineWidth(5); // Sets the line width
         ofNoFill(); // Only the outline of shapes will be drawn
-        ofSetColor(254); // This resets the color of the "brush" to white
+        ofSetColor(255); // This resets the color of the "brush" to white
         ofDrawBitmapString("Circle Radius Visualizer", 0, 15);
         int bands = amplitudes.size();
         for(int i=0; i< bands; i++){
-            ofSetColor((bands - i)*32 %256,18,144); // Color varies between frequencies
+            ofSetColor((bands - i)*32 %255,18,144); // Color varies between frequencies
         }
         for (int i = 0; i < bands; i++) {
             ofDrawCircle(ofGetWidth()/2, ofGetHeight()/2, amplitudes[i]*100);
@@ -87,7 +92,7 @@ void ofApp::changeSong(){
 }
 
 void ofApp::drawMode3(vector<float> amplitudes){
-    ofSetColor(254); // This resets the color of the "brush" to white
+    ofSetColor(255); // This resets the color of the "brush" to white
     ofDrawBitmapString("Rectangle Width Visualizer", 0, 15);
     // YOUR CODE HERE
     for (int i = 0; i < 64; i++){
@@ -101,9 +106,11 @@ void ofApp::keyPressed(int key){
     switch(key){
         case 'p':
             if(playing){
+                lastPos = progress;
                 sound.stop();
             }else{
-                sound.play();               
+                sound.setPosition(lastPos);
+                sound.play();
             }
             playing = !playing;
             break;
@@ -157,18 +164,23 @@ void ofApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y){
-    cur_x = x;
-    cur_y = y;
+    
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
-
+void ofApp::mouseDragged(int x, int y, int button) {
+    if (y >= ofGetHeight() - 20 && button == 0) {
+        float posf = (float)x / (float)ofGetWidth(); // Get the correct position in the song
+        sound.setPosition(posf); // Set the position of the song
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+    if (y >= ofGetHeight() - 20 && button == 0) {
+        float posf = (float)x / (float)ofGetWidth(); // Get the correct position in the song
+        sound.setPosition(posf); // Set the position of the song
+    }
 }
 
 //--------------------------------------------------------------
