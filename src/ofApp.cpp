@@ -57,48 +57,6 @@ void ofApp::draw(){
     ofApp::drawProgressBar(pos);
     
 }
-
-    void ofApp::drawProgressBar(float pos){
-        ofFill();
-        ofSetColor(100); // Set background bar color
-        ofDrawRectangle(0, ofGetHeight() - 20, ofGetWidth(), 20); // Draw background bar
-        ofSetColor(255); // Set progress bar and text color
-        ofDrawRectangle(0, ofGetHeight() - 20, ofGetWidth() * pos, 20); // Draw progress bar
-
-    }
-
-
-    void ofApp::changeSong(){
-        sound.unload();
-        songNumber++;
-        if (songNumber > songArraySize && loopStatus){
-            songNumber = 0;
-            sound.load(songArray[songNumber]);
-            sound.play();
-        } 
-        else if(songNumber > songArraySize && !loopStatus){
-            songNumber = 0;
-            sound.unload();
-            sound.stop();
-            playing = false;
-            sound.load(songArray[songNumber]);
-        }
-        else{ 
-            sound.load(songArray[songNumber]);
-            sound.play();
-        }
-    }
-
-    void ofApp::drawHud(){
-        ofDrawBitmapString("Mode: " + modeArray[mode], 0, 15);
-        ofDrawBitmapString("Song Title: " + songArray[songNumber], 0, 30);
-        ofDrawBitmapString("Progress: " +  to_string(progress * 100) + "%", 0, 45);
-        ofDrawBitmapString("loopStatus: " +  to_string(loopStatus), 0, 60);
-        ofDrawBitmapString("Repeat: " +  to_string(repeatStatus), 0, 75);
-        ofDrawBitmapString("Volume: " +  to_string(sound.getVolume()), 0, 90);
-        ofDrawBitmapString("Press h for help", ofGetWidth() - 100, ofGetHeight() - 5);
-    }
-
     
 void ofApp::drawMode0(vector<float> amplitudes){
         ofFill(); // Drawn Shapes will be filled in with color
@@ -169,6 +127,49 @@ void ofApp::drawMode2(vector<float> amplitudes){
         ofDrawBitmapString("Press 'b' to play random song", 0, 180);
     }
 } */
+
+
+    void ofApp::drawProgressBar(float pos){
+        ofFill();
+        ofSetColor(100); // Set background bar color
+        ofDrawRectangle(0, ofGetHeight() - 20, ofGetWidth(), 20); // Draw background bar
+        ofSetColor(255); // Set progress bar and text color
+        ofDrawRectangle(0, ofGetHeight() - 20, ofGetWidth() * pos, 20); // Draw progress bar
+
+    }
+
+
+    void ofApp::changeSong(){
+        sound.unload();
+        songNumber++;
+        if (songNumber > songArraySize && loopStatus){
+            songNumber = 0;
+            sound.load(songArray[songNumber]);
+            sound.play();
+        } 
+        else if(songNumber > songArraySize && !loopStatus){
+            songNumber = 0;
+            sound.unload();
+            sound.stop();
+            playing = false;
+            sound.load(songArray[songNumber]);
+        }
+        else{ 
+            sound.load(songArray[songNumber]);
+            sound.play();
+        }
+    }
+
+    void ofApp::drawHud(){
+        ofDrawBitmapString("Mode: " + modeArray[mode], 0, 15);
+        ofDrawBitmapString("Song Title: " + songArray[songNumber], 0, 30);
+        ofDrawBitmapString("Progress: " +  to_string(progress * 100) + "%", 0, 45);
+        ofDrawBitmapString("loopStatus: " +  to_string(loopStatus), 0, 60);
+        ofDrawBitmapString("Repeat: " +  to_string(repeatStatus), 0, 75);
+        ofDrawBitmapString("Volume: " +  to_string(sound.getVolume()), 0, 90);
+        ofDrawBitmapString("Press h for help", ofGetWidth() - 100, ofGetHeight() - 5);
+    }
+
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     // This method is called automatically when any key is pressed
@@ -197,7 +198,9 @@ void ofApp::keyPressed(int key){
             break;
         case 'd':
         //case to play next song
+            playing = true;
             ofApp::changeSong();
+    
             break; 
         case '=':
             if ( (sound.getVolume() == 2.0)){
@@ -213,15 +216,17 @@ void ofApp::keyPressed(int key){
                 break;
             }
             else{
-                sound.setVolume(sound.getVolume() == 0.1);
+                sound.setVolume(sound.getVolume() - 0.1);
             }
             break;
         case 'b':
             // play a random song 
+            
             sound.unload();
             songNumber = rand() % songArraySize;
             sound.load(songArray[songNumber]);
             sound.play();
+            playing = true;
             break;
         case 'r':
             repeatStatus = !repeatStatus;
