@@ -1,10 +1,8 @@
 #include "ofApp.h"
 #include <ctime>
-#include <typeinfo>
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    //sound.load(songArray[rand() % songArraySize]); //Loads a sound file (in bin/data/)
     sound.load(songArray[0]);
     sound.setLoop(false); // Makes the song loop indefinitely
     sound.setVolume(2); // Sets the song volume
@@ -22,19 +20,17 @@ void ofApp::update(){
 }
 
 //--------------------------------------------------------------
+//update method draws constants 
 void ofApp::draw(){
-    /* The update method is called muliple times per second
-    It's in charge of drawing all figures and text on screen */
 
-    // Progress Bar
     ofSetColor(255); 
     ofFill();
-
+    ofApp::drawHud();
     float pos = playing ? progress : lastPos;
 
     ofFill();
 
-    ofSetColor(100); // Set background bar color
+    ofSetColor(0); // Set background bar color
     ofDrawRectangle(0, ofGetHeight() - 20, ofGetWidth(), 20); // Draw background bar
 
     ofSetColor(255); // Set progress bar and text color
@@ -58,8 +54,18 @@ void ofApp::draw(){
         default:
             break;
     }
+    ofApp::drawProgressBar(pos);
     
 }
+
+    void ofApp::drawProgressBar(float pos){
+        ofFill();
+        ofSetColor(100); // Set background bar color
+        ofDrawRectangle(0, ofGetHeight() - 20, ofGetWidth(), 20); // Draw background bar
+        ofSetColor(255); // Set progress bar and text color
+        ofDrawRectangle(0, ofGetHeight() - 20, ofGetWidth() * pos, 20); // Draw progress bar
+
+    }
 
 
     void ofApp::changeSong(){
@@ -98,7 +104,7 @@ void ofApp::drawMode0(vector<float> amplitudes){
         ofFill(); // Drawn Shapes will be filled in with color
         ofSetColor(255); // This resets the color of the "brush" to white
         ofSetColor(255); // This resets the color of the "brush" to white
-        ofApp::drawHud();
+        //ofApp::drawHud();
         // used random color declared in the .h file to change the color of the visualizer to a random shade of blue
         ofSetColor(00, 00, color); 
         //Implemented a mirror bar graph visualizer using two for loops 
@@ -106,10 +112,10 @@ void ofApp::drawMode0(vector<float> amplitudes){
         // based on the array of 64 visualizers and itterating as such 
         for (int i = 32; i >= 0; i--) {
             if (fabs(amplitudes[32 - (i + 1)]*10) > ofGetHeight() -20){
-                shownAmplitude = (ofGetHeight() - 20)*-1;
+                shownAmplitude = ((ofGetHeight() - 20)*-1);
             }
             else{
-                shownAmplitude = amplitudes[32 - (i + 1)]*10;
+                shownAmplitude = (amplitudes[32 - (i + 1)]*10);
             }
             ofDrawRectRounded(ofGetWidth() / 64 * i, ofGetHeight()+5, ofGetWidth()/64,  shownAmplitude, 5);
         }
@@ -128,7 +134,7 @@ void ofApp::drawMode1(vector<float> amplitudes){
         ofSetLineWidth(5); // Sets the line width
         ofNoFill(); // Only the outline of shapes will be drawn
         ofSetColor(255); // This resets the color of the "brush" to white
-        ofApp::drawHud();
+        //ofApp::drawHud();
         int bands = amplitudes.size();
         for(int i=0; i< bands; i++){
             ofSetColor((bands - i)*32 %255,18,144); // Color varies between frequencies
@@ -141,13 +147,28 @@ void ofApp::drawMode1(vector<float> amplitudes){
 
 void ofApp::drawMode2(vector<float> amplitudes){
     ofSetColor(255); // This resets the color of the "brush" to white
-    ofApp::drawHud();
-    // YOUR CODE HERE
     for (int i = 0; i < 64; i++){
         ofDrawRectangle(ofGetWidth()/64*i, (ofGetHeight()/2) , amplitudes[i]*10, 10);
     }
 }
-
+ 
+/* void ofApp::drawHelp(){
+    while (helpStatus){
+        ofSetColor(0);
+        ofDrawBitmapString("Press 'p' to play/pause", 0, 15);
+        ofDrawBitmapString("Press '0' to switch to mode 0", 0, 30);
+        ofDrawBitmapString("Press '1' to switch to mode 1", 0, 45);
+        ofDrawBitmapString("Press '2' to switch to mode 2", 0, 60);
+        ofDrawBitmapString("Press 'a' to stop", 0, 75);
+        ofDrawBitmapString("Press 'd' to play next song", 0, 90);
+        ofDrawBitmapString("Press '=' to increase volume", 0, 105);
+        ofDrawBitmapString("Press '-' to decrease volume", 0, 120);
+        ofDrawBitmapString("Release 'h' to hide help", 0, 135);
+        ofDrawBitmapString("Press 'l' to toggle loop", 0, 150);
+        ofDrawBitmapString("Press 'r' to toggle repeat", 0, 165);
+        ofDrawBitmapString("Press 'b' to play random song", 0, 180);
+    }
+} */
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     // This method is called automatically when any key is pressed
@@ -179,7 +200,7 @@ void ofApp::keyPressed(int key){
             ofApp::changeSong();
             break; 
         case '=':
-            if ((sound.getVolume() < 0.0) || (sound.getVolume() > 2.0)){
+            if ( (sound.getVolume() == 2.0)){
                 break;
             }
             else{
@@ -188,11 +209,11 @@ void ofApp::keyPressed(int key){
             break;
         case '-':
             //case to decrease volume
-            if ((sound.getVolume() < 0.0) || (sound.getVolume() > 2.0)){
+            if ((sound.getVolume() < 0.0)){
                 break;
             }
             else{
-                sound.setVolume(sound.getVolume() - 0.1);
+                sound.setVolume(sound.getVolume() == 0.1);
             }
             break;
         case 'b':
@@ -215,6 +236,7 @@ void ofApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
+
 
 }
 

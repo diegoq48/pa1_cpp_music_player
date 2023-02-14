@@ -25,6 +25,8 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 		void changeSong();
 		void drawHud();
+		void drawProgressBar(float pos);
+		void drawHelp();
 
 	private:
 		std::string modeArray[3] = {"Rectangle Height Visualizer", "Circle Radius Visualizer", "Rectangle Width Visualizer"};
@@ -32,6 +34,7 @@ class ofApp : public ofBaseApp{
 		ofSoundPlayer sound;
 		AudioVisualizer visualizer;
 		bool loopStatus = false; 
+		bool helpStatus = true;
 		int color = 255;
 		bool playing = false;
 		int mode = 0;
