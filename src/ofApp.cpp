@@ -1,9 +1,11 @@
 #include "ofApp.h"
 #include <ctime>
+#include <typeinfo>
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    sound.load(songArray[rand() % songArraySize]); //Loads a sound file (in bin/data/)
+    //sound.load(songArray[rand() % songArraySize]); //Loads a sound file (in bin/data/)
+    sound.load(songArray[0]);
     sound.setLoop(false); // Makes the song loop indefinitely
     sound.setVolume(2); // Sets the song volume
     ofSetBackgroundColor(00, 00,00); // Sets the Background Color
@@ -43,38 +45,90 @@ void ofApp::draw(){
         ofDrawBitmapString("Press 'p' to play some music!", ofGetWidth()/2 - 50, ofGetHeight()/2);
     }
     vector<float> amplitudes = visualizer.getAmplitudes();
-    if(mode == '1'){
-        drawMode1(amplitudes);
-    }else if(mode == '2'){
-        drawMode2(amplitudes);
-    }else if(mode == '3'){
-        drawMode3(amplitudes);
+    switch(mode){
+        case 0:
+            drawMode0(amplitudes);
+            break;
+        case 1:
+            drawMode1(amplitudes);
+            break;
+        case 2:
+            drawMode2(amplitudes);
+            break;
+        default:
+            break;
     }
     
 }
-void ofApp::drawMode1(vector<float> amplitudes){
+
+
+    void ofApp::changeSong(){
+        sound.unload();
+        songNumber++;
+        if (songNumber > songArraySize && loopStatus){
+            songNumber = 0;
+            sound.load(songArray[songNumber]);
+            sound.play();
+        } 
+        else if(songNumber > songArraySize && !loopStatus){
+            songNumber = 0;
+            sound.unload();
+            sound.stop();
+            playing = false;
+            sound.load(songArray[songNumber]);
+        }
+        else{ 
+            sound.load(songArray[songNumber]);
+            sound.play();
+        }
+    }
+
+    void ofApp::drawHud(){
+        ofDrawBitmapString("Mode: " + modeArray[mode], 0, 15);
+        ofDrawBitmapString("Song Title: " + songArray[songNumber], 0, 30);
+        ofDrawBitmapString("Progress: " +  to_string(progress * 100) + "%", 0, 45);
+        ofDrawBitmapString("loopStatus: " +  to_string(loopStatus), 0, 60);
+        ofDrawBitmapString("Repeat: " +  to_string(repeatStatus), 0, 75);
+        ofDrawBitmapString("Volume: " +  to_string(sound.getVolume()), 0, 90);
+        ofDrawBitmapString("Press h for help", ofGetWidth() - 100, ofGetHeight() - 5);
+    }
+
+    
+void ofApp::drawMode0(vector<float> amplitudes){
         ofFill(); // Drawn Shapes will be filled in with color
         ofSetColor(255); // This resets the color of the "brush" to white
         ofSetColor(255); // This resets the color of the "brush" to white
-        ofDrawBitmapString("Rectangle Height Visualizer", 0, 15);
+        ofApp::drawHud();
         // used random color declared in the .h file to change the color of the visualizer to a random shade of blue
         ofSetColor(00, 00, color); 
         //Implemented a mirror bar graph visualizer using two for loops 
         // one for the left side of the screen and one for the right side
         // based on the array of 64 visualizers and itterating as such 
         for (int i = 32; i >= 0; i--) {
-            ofDrawRectRounded(ofGetWidth() / 64 * i, ofGetHeight()+5, ofGetWidth()/64,  amplitudes[32 - (i + 1)]*10, 5);
+            if (fabs(amplitudes[32 - (i + 1)]*10) > ofGetHeight() -20){
+                shownAmplitude = (ofGetHeight() - 20)*-1;
+            }
+            else{
+                shownAmplitude = amplitudes[32 - (i + 1)]*10;
+            }
+            ofDrawRectRounded(ofGetWidth() / 64 * i, ofGetHeight()+5, ofGetWidth()/64,  shownAmplitude, 5);
         }
         for (int i = 32; i < 64; i++) { 
-            ofDrawRectRounded(ofGetWidth() / 64 * i, ofGetHeight()+5, ofGetWidth()/64,  amplitudes[i-32]*10, 5);
+            if (fabs(amplitudes[i-32]*10) > ofGetHeight() -20){
+                shownAmplitude = (ofGetHeight() - 20)*-1;
+            }
+            else{
+                shownAmplitude = amplitudes[i-32]*10;
+            }
+            ofDrawRectRounded(ofGetWidth() / 64 * i, ofGetHeight()+5, ofGetWidth()/64,  shownAmplitude, 5);
 
         }  
 }
-void ofApp::drawMode2(vector<float> amplitudes){
+void ofApp::drawMode1(vector<float> amplitudes){
         ofSetLineWidth(5); // Sets the line width
         ofNoFill(); // Only the outline of shapes will be drawn
         ofSetColor(255); // This resets the color of the "brush" to white
-        ofDrawBitmapString("Circle Radius Visualizer", 0, 15);
+        ofApp::drawHud();
         int bands = amplitudes.size();
         for(int i=0; i< bands; i++){
             ofSetColor((bands - i)*32 %255,18,144); // Color varies between frequencies
@@ -83,17 +137,11 @@ void ofApp::drawMode2(vector<float> amplitudes){
             ofDrawCircle(ofGetWidth()/2, ofGetHeight()/2, amplitudes[i]*100);
         }
 }
-void ofApp::changeSong(){
-    sound.unload();
-    songNumber++;
-    if (songNumber > songArraySize){songNumber = 0;}
-    sound.load(songArray[songNumber]);
-    sound.play();
-}
 
-void ofApp::drawMode3(vector<float> amplitudes){
+
+void ofApp::drawMode2(vector<float> amplitudes){
     ofSetColor(255); // This resets the color of the "brush" to white
-    ofDrawBitmapString("Rectangle Width Visualizer", 0, 15);
+    ofApp::drawHud();
     // YOUR CODE HERE
     for (int i = 0; i < 64; i++){
         ofDrawRectangle(ofGetWidth()/64*i, (ofGetHeight()/2) , amplitudes[i]*10, 10);
@@ -114,14 +162,14 @@ void ofApp::keyPressed(int key){
             }
             playing = !playing;
             break;
+        case '0':
+            mode = 0;
+            break;
         case '1':
-            mode = '1';
+            mode = 1;
             break;
         case '2':
-            mode = '2';
-            break;
-        case '3':
-            mode = '3';
+            mode = 2;
             break;
         case 'a':
             sound.stop();
@@ -131,27 +179,35 @@ void ofApp::keyPressed(int key){
             ofApp::changeSong();
             break; 
         case '=':
-            //case to increase volume
-            sound.setVolume(sound.getVolume() + 0.1);   
+            if ((sound.getVolume() < 0.0) || (sound.getVolume() > 2.0)){
+                break;
+            }
+            else{
+                sound.setVolume(sound.getVolume() + 0.1);
+            }
             break;
         case '-':
             //case to decrease volume
-            sound.setVolume(sound.getVolume() - 0.1);
-            break;
-        case 'r':
-            // play a random song 
-            sound.unload();
-            sound.load(songArray[rand() % songArraySize]);
-            sound.play();
-            break;
-        case 'l':
-            //loop song 
-            if (sound.isLoaded()){
-                sound.setLoop(false);
-            }else{
-                sound.setLoop(true);
+            if ((sound.getVolume() < 0.0) || (sound.getVolume() > 2.0)){
+                break;
+            }
+            else{
+                sound.setVolume(sound.getVolume() - 0.1);
             }
             break;
+        case 'b':
+            // play a random song 
+            sound.unload();
+            songNumber = rand() % songArraySize;
+            sound.load(songArray[songNumber]);
+            sound.play();
+            break;
+        case 'r':
+            repeatStatus = !repeatStatus;
+            sound.setLoop(repeatStatus);
+            break;
+        case 'l':
+            loopStatus = !loopStatus;
         default:
             break;
     }

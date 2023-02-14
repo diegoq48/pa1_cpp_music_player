@@ -9,9 +9,9 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
 
+		void drawMode0(vector<float> amplitudes);
 		void drawMode1(vector<float> amplitudes);
 		void drawMode2(vector<float> amplitudes);
-		void drawMode3(vector<float> amplitudes);
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y);
@@ -24,19 +24,24 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		void changeSong();
+		void drawHud();
 
 	private:
+		std::string modeArray[3] = {"Rectangle Height Visualizer", "Circle Radius Visualizer", "Rectangle Width Visualizer"};
 		int songNumber = 0;
 		ofSoundPlayer sound;
 		AudioVisualizer visualizer;
-		int color = ofRandom(254);
+		bool loopStatus = false; 
+		int color = 255;
 		bool playing = false;
-		char mode = '1';
+		int mode = 0;
 		std::string songArray[5] = {"iReallyWannaStayAtYourHouse.mp3","OliverTreeMissyou.flac","newSongShadowOnTheSun.flac","makeThisRight.mp3", "somethingMemorable.mp3"};
 		int songArraySize = (sizeof(songArray)/sizeof(songArray[0]))-1;
 		int cur_x, cur_y = 0;
 		float sound_length;
+		float shownAmplitude; 
 		int decay = 0; // 0 = no decay, 1 = decay
 		float progress = 0;
 		float lastPos = 0;
+		bool repeatStatus = false;
 };
