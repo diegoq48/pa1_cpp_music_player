@@ -8,6 +8,7 @@ void ofApp::setup(){
     sound.setVolume(2); // Sets the song volume
     ofSetBackgroundColor(00, 00,00); // Sets the Background Color
     ofSetWindowTitle("Music Visualizer"); // Sets the Window Title
+    ofApp::getSongs();
 }
 
 //--------------------------------------------------------------
@@ -17,6 +18,10 @@ void ofApp::update(){
     ofSoundUpdate(); // Updates all sound players
     visualizer.updateAmplitudes(); // Updates Amplitudes for visualizer
     progress = sound.getPosition();
+    if (progress > 0.99 && !repeatStatus){
+        ofApp::changeSong();
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -40,7 +45,7 @@ void ofApp::draw(){
     if(!playing){
         ofDrawBitmapString("Press 'p' to play some music!", ofGetWidth()/2 - 50, ofGetHeight()/2);
     }
-    vector<float> amplitudes = visualizer.getAmplitudes();
+    ofApp::setAmplitude();
     switch(mode){
         case 0:
             drawMode0(amplitudes);
@@ -55,7 +60,9 @@ void ofApp::draw(){
             break;
     }
     ofApp::drawProgressBar(pos);
-    
+    if (helpStatus){
+        ofApp::drawHelp();
+    }
 }
     
 void ofApp::drawMode0(vector<float> amplitudes){
@@ -73,7 +80,7 @@ void ofApp::drawMode0(vector<float> amplitudes){
                 shownAmplitude = ((ofGetHeight() - 20)*-1);
             }
             else{
-                shownAmplitude = (amplitudes[32 - (i + 1)]*10);
+                shownAmplitude = (amplitudes[32 - (i + 1)]*10 * heightRatio);
             }
             ofDrawRectRounded(ofGetWidth() / 64 * i, ofGetHeight()+5, ofGetWidth()/64,  shownAmplitude, 5);
         }
@@ -82,10 +89,9 @@ void ofApp::drawMode0(vector<float> amplitudes){
                 shownAmplitude = (ofGetHeight() - 20)*-1;
             }
             else{
-                shownAmplitude = amplitudes[i-32]*10;
+                shownAmplitude = (amplitudes[i-32]*10* heightRatio);
             }
             ofDrawRectRounded(ofGetWidth() / 64 * i, ofGetHeight()+5, ofGetWidth()/64,  shownAmplitude, 5);
-
         }  
 }
 void ofApp::drawMode1(vector<float> amplitudes){
@@ -102,6 +108,19 @@ void ofApp::drawMode1(vector<float> amplitudes){
         }
 }
 
+void ofApp::setAmplitude(){
+//  if(outputingUserAudio){
+//        amplitudes = visualizer.getUserAmplitudes();
+//    }
+     if(!barPause){
+        lastAmplitudes = amplitudes;
+        amplitudes = visualizer.getAmplitudes();
+    }
+    else{
+        amplitudes = lastAmplitudes;
+    } 
+}
+
 
 void ofApp::drawMode2(vector<float> amplitudes){
     ofSetColor(255); // This resets the color of the "brush" to white
@@ -109,24 +128,40 @@ void ofApp::drawMode2(vector<float> amplitudes){
         ofDrawRectangle(ofGetWidth()/64*i, (ofGetHeight()/2) , amplitudes[i]*10, 10);
     }
 }
- 
-/* void ofApp::drawHelp(){
-    while (helpStatus){
-        ofSetColor(0);
-        ofDrawBitmapString("Press 'p' to play/pause", 0, 15);
-        ofDrawBitmapString("Press '0' to switch to mode 0", 0, 30);
-        ofDrawBitmapString("Press '1' to switch to mode 1", 0, 45);
-        ofDrawBitmapString("Press '2' to switch to mode 2", 0, 60);
-        ofDrawBitmapString("Press 'a' to stop", 0, 75);
-        ofDrawBitmapString("Press 'd' to play next song", 0, 90);
-        ofDrawBitmapString("Press '=' to increase volume", 0, 105);
-        ofDrawBitmapString("Press '-' to decrease volume", 0, 120);
-        ofDrawBitmapString("Release 'h' to hide help", 0, 135);
-        ofDrawBitmapString("Press 'l' to toggle loop", 0, 150);
-        ofDrawBitmapString("Press 'r' to toggle repeat", 0, 165);
-        ofDrawBitmapString("Press 'b' to play random song", 0, 180);
+
+ void ofApp::getSongs()
+{
+    std::string dir = "/home/diegoq/Projects/advanced/of_v0.11.2_linux64gcc6_release/apps/myApps/pa1-diegoquinones_edyancruz/bin/data";
+
+    /* if(argv[1])
+        dir = argv[1]; */
+
+    for(auto& item: filesystem::recursive_directory_iterator(dir))
+    {
+        if(!filesystem::is_regular_file(item.path())
+        || item.path().extension() != ".mp3" || item.path().extension() != ".wav" || item.path().extension() != ".flac")
+            continue;
+
+        // open text file here
+            std::cout << item.path() << std::endl; 
     }
-} */
+} 
+ 
+ void ofApp::drawHelp(){
+        int helpMidScreenY = ofGetHeight()/2-48; int helpMidScreenX = ofGetWidth()/2;
+        ofDrawBitmapString("Press 'p' to play/pause", helpMidScreenX-strlen("Press 'p' to play/pause")/2*8, (helpMidScreenY));
+        ofDrawBitmapString("Press '0' to switch to mode 0", helpMidScreenX-strlen("Press '0' to switch to mode 0")/2 *8, helpMidScreenY +15 );
+        ofDrawBitmapString("Press '1' to switch to mode 1", helpMidScreenX-strlen("Press '1' to switch to mode 1")/2 *8, helpMidScreenY +30);
+        ofDrawBitmapString("Press '2' to switch to mode 2", helpMidScreenX-strlen("Press '2' to switch to mode 2")/2 *8, helpMidScreenY +45);
+        ofDrawBitmapString("Press 'a' to stop", helpMidScreenX-strlen("Press 'a' to stop")/2 *8 , helpMidScreenY+60);
+        ofDrawBitmapString("Press 'd' to play next song", helpMidScreenX-strlen("Press 'd' to play next song")/2 *8, helpMidScreenY +75);
+        ofDrawBitmapString("Press '=' to increase volume", helpMidScreenX-strlen("Press '=' to increase volume")/2 *8, helpMidScreenY +90);
+        ofDrawBitmapString("Press '-' to decrease volume", helpMidScreenX-strlen("Press '-' to decrease volume")/2 *8, helpMidScreenY +105);
+        ofDrawBitmapString("Release 'h' to toggle help", helpMidScreenX-strlen("Release 'h' to toggle help")/2 *8, helpMidScreenY +120);
+        ofDrawBitmapString("Press 'l' to toggle loop", helpMidScreenX-strlen("Press 'l' to toggle loop")/2 *8, helpMidScreenY+ 135);
+        ofDrawBitmapString("Press 'r' to toggle repeat", helpMidScreenX-strlen("Press 'r' to toggle repeat")/2 *8, helpMidScreenY + 150);
+        ofDrawBitmapString("Press 'b' to play random song", helpMidScreenX-strlen("Press 'b' to play random song")/2 *8, helpMidScreenY + 165);
+} 
 
 
     void ofApp::drawProgressBar(float pos){
@@ -144,7 +179,6 @@ void ofApp::drawMode2(vector<float> amplitudes){
         songNumber++;
         if (songNumber > songArraySize && loopStatus){
             songNumber = 0;
-            sound.load(songArray[songNumber]);
             sound.play();
         } 
         else if(songNumber > songArraySize && !loopStatus){
@@ -167,7 +201,10 @@ void ofApp::drawMode2(vector<float> amplitudes){
         ofDrawBitmapString("loopStatus: " +  to_string(loopStatus), 0, 60);
         ofDrawBitmapString("Repeat: " +  to_string(repeatStatus), 0, 75);
         ofDrawBitmapString("Volume: " +  to_string(sound.getVolume()), 0, 90);
-        ofDrawBitmapString("Press h for help", ofGetWidth() - 100, ofGetHeight() - 5);
+        ofDrawBitmapString("Press h for help", ofGetWidth() - strlen("Press h for help")*8, 15);
+        ofDrawBitmapString("Mode 0: Bar Graph", ofGetWidth() - strlen("Mode 0: Bar Graph")*8, 30);
+        ofDrawBitmapString("Mode 1: Circle Graph", ofGetWidth() - strlen("Mode 1: Circle Graph")*8, 45);
+        ofDrawBitmapString("Mode 2: Line Graph", ofGetWidth() - strlen("Mode 2: Line Graph")*8, 60);
     }
 
 //--------------------------------------------------------------
@@ -194,7 +231,7 @@ void ofApp::keyPressed(int key){
             mode = 2;
             break;
         case 'a':
-            sound.stop();
+            barPause = !barPause;
             break;
         case 'd':
         //case to play next song
@@ -234,6 +271,14 @@ void ofApp::keyPressed(int key){
             break;
         case 'l':
             loopStatus = !loopStatus;
+       /*  case 'u':
+            sound.unload();
+            sound.load(ofSoundStreamSetup(2, 0, 44100, 256, 4), stream=true)
+            sound.play();
+            break;   */ 
+        case 'h':
+            helpStatus = !helpStatus;
+            break;
         default:
             break;
     }
@@ -241,6 +286,7 @@ void ofApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
+
 
 
 }
@@ -283,7 +329,8 @@ void ofApp::mouseExited(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-
+    heightRatio = ofGetHeight() / priorScreenHeight;
+    priorScreenHeight = ofGetHeight();
 }
 
 //--------------------------------------------------------------

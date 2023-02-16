@@ -27,14 +27,17 @@ class ofApp : public ofBaseApp{
 		void drawHud();
 		void drawProgressBar(float pos);
 		void drawHelp();
+		void setAmplitude();
+		void getSongs();
 
 	private:
 		std::string modeArray[3] = {"Rectangle Height Visualizer", "Circle Radius Visualizer", "Rectangle Width Visualizer"};
+		bool outputingUserAudio = false;
 		int songNumber = 0;
 		ofSoundPlayer sound;
 		AudioVisualizer visualizer;
 		bool loopStatus = false; 
-		bool helpStatus = true;
+		bool helpStatus = false;
 		int color = 255;
 		bool playing = false;
 		int mode = 0;
@@ -47,4 +50,11 @@ class ofApp : public ofBaseApp{
 		float progress = 0;
 		float lastPos = 0;
 		bool repeatStatus = false;
+		bool barPause = false;
+		vector<float> amplitudes;
+		vector<float> lastAmplitudes; 
+		int priorScreenHeight = ofGetHeight();
+		float heightRatio = 1;
+		
+		
 };
