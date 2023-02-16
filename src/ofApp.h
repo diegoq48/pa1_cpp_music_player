@@ -12,6 +12,7 @@ class ofApp : public ofBaseApp{
 		void drawMode0(vector<float> amplitudes);
 		void drawMode1(vector<float> amplitudes);
 		void drawMode2(vector<float> amplitudes);
+		void drawMode3(vector<float> amplitudes);
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y);
@@ -27,9 +28,11 @@ class ofApp : public ofBaseApp{
 		void drawHud();
 		void drawProgressBar(float pos);
 		void drawHelp();
+		void setup3D(bool doSetup);
+		void setupLighting(ofLight& light, bool doSetup);
 
 	private:
-		std::string modeArray[3] = {"Rectangle Height Visualizer", "Circle Radius Visualizer", "Rectangle Width Visualizer"};
+		std::string modeArray[4] = {"Rectangle Height Visualizer", "Circle Radius Visualizer", "Rectangle Width Visualizer", "3D Voxel Visualizer"};
 		int songNumber = 0;
 		ofSoundPlayer sound;
 		AudioVisualizer visualizer;
@@ -47,4 +50,7 @@ class ofApp : public ofBaseApp{
 		float progress = 0;
 		float lastPos = 0;
 		bool repeatStatus = false;
+		ofLight light1;
+		ofLight light2;
+		ofEasyCam cam;
 };

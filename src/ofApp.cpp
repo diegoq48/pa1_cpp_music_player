@@ -51,6 +51,9 @@ void ofApp::draw(){
         case 2:
             drawMode2(amplitudes);
             break;
+        case 3:
+            drawMode3(amplitudes);
+            break;
         default:
             break;
     }
@@ -107,6 +110,72 @@ void ofApp::drawMode2(vector<float> amplitudes){
     ofSetColor(255); // This resets the color of the "brush" to white
     for (int i = 0; i < 64; i++){
         ofDrawRectangle(ofGetWidth()/64*i, (ofGetHeight()/2) , amplitudes[i]*10, 10);
+    }
+}
+
+void ofApp::drawMode3(vector<float> amplitudes){
+    setup3D(true);
+    ofSetColor(0, 0, color);
+    for (int i = 0; i < 64; i++){
+        if (amplitudes[i] < 0){
+            // Draws a voxel-like circle for each amplitude
+            ofDrawBox(ofPoint(20*i,0,0),20, amplitudes[i] * 8 , amplitudes[i] * 4);
+            ofDrawBox(ofPoint(20*i,0,0),20, amplitudes[i] * 6 , amplitudes[i] * 6);
+            ofDrawBox(ofPoint(20*i,0,0),20, amplitudes[i] * 4 , amplitudes[i] * 8);
+        }
+    }
+    setup3D(false);
+}
+
+void ofApp::setup3D(bool doSetup){
+    if (doSetup) {
+        // Setup the lighting
+        setupLighting(light1, true);
+        setupLighting(light2, true);
+
+        // Setup the camera
+        cam.setPosition(0, 900, 1000);
+        cam.lookAt(glm::vec3(0, 700, 500));
+        cam.begin();
+
+        // Setup the lights for even lighting across the scene
+        light1.setPosition(0, 500, 1500);
+        light2.setPosition(0, 500, -1500);
+        light1.draw();
+        light2.draw();
+
+        // Setup the scene
+        ofPushStyle();
+        ofPushMatrix();
+        ofRotateDeg(90, 0, 0, 1); // Rotate the whole scene 90 degrees around the z axis to align the boxes vertically
+        ofRotateDeg(ofGetElapsedTimef()*50, 0.5, 0, 0); // Rotate the whole scene around the x axis to make it spin
+
+        ofEnableLighting();
+        light1.enable();
+        light2.enable();
+    } else {
+        setupLighting(light1, false);
+        setupLighting(light2, false);
+        ofPopMatrix();
+        ofPopStyle();
+        cam.end();
+    }
+
+};
+
+void ofApp::setupLighting(ofLight& light, bool doSetup){
+    if (doSetup) {
+        // Adjust the light for the most even lighting
+        light.setDirectional();
+        light.setSpotlight();
+        light.setSpotlightCutOff(2000);
+        light.setSpotConcentration(1);
+        light.setPointLight();
+        ofEnableDepthTest();
+    } else {
+        ofDisableLighting();
+        ofDisableDepthTest();
+        light.disable();
     }
 }
  
@@ -192,6 +261,9 @@ void ofApp::keyPressed(int key){
             break;
         case '2':
             mode = 2;
+            break;
+        case '3':
+            mode = 3;
             break;
         case 'a':
             sound.stop();
