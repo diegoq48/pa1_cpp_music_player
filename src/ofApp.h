@@ -24,12 +24,13 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-		void changeSong();
+		void changeSong(int displacement);
 		void drawHud();
 		void drawProgressBar(float pos);
 		void drawHelp();
 		void setup3D(bool doSetup);
 		void setupLighting(ofLight& light, bool doSetup);
+		void setAmplitude();
 
 	private:
 		std::string modeArray[4] = {"Rectangle Height Visualizer", "Circle Radius Visualizer", "Rectangle Width Visualizer", "3D Voxel Visualizer"};
@@ -37,11 +38,11 @@ class ofApp : public ofBaseApp{
 		ofSoundPlayer sound;
 		AudioVisualizer visualizer;
 		bool loopStatus = false; 
-		bool helpStatus = true;
-		int color = 255;
+		bool helpStatus = false;
+		int color = ofRandom(255);
 		bool playing = false;
 		int mode = 0;
-		std::string songArray[5] = {"iReallyWannaStayAtYourHouse.mp3","OliverTreeMissyou.flac","newSongShadowOnTheSun.flac","makeThisRight.mp3", "somethingMemorable.mp3"};
+		std::string songArray[6] = {"iReallyWannaStayAtYourHouse.mp3","OliverTreeMissyou.flac","newSongShadowOnTheSun.flac","makeThisRight.mp3", "somethingMemorable.mp3", "beHereNowHybrid.mp3"};
 		int songArraySize = (sizeof(songArray)/sizeof(songArray[0]))-1;
 		int cur_x, cur_y = 0;
 		float sound_length;
@@ -53,4 +54,12 @@ class ofApp : public ofBaseApp{
 		ofLight light1;
 		ofLight light2;
 		ofEasyCam cam;
+		bool barPause = false;
+		vector<float> amplitudes;
+		vector<float> lastAmplitudes; 
+		int priorScreenHeight = ofGetHeight();
+		float heightRatio = 1;
+		
+		
+		
 };
