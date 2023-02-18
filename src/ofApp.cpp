@@ -56,16 +56,18 @@ void ofApp::drawMode2(vector<float> amplitudes)
     for (int i = 64; i > 0; i--)
     {
         shownAmplitude = amplitudes[i] * -10 * heightRatio;
-        if (amplitudes[i] * -10 * heightRatio > ofGetWidth() / 2){
+        if (amplitudes[i] * -10 * heightRatio > ofGetWidth() / 2)
+        {
             shownAmplitude = (ofGetWidth() / 2) -10;
-            }
+        }
         
         ofDrawRectangle(0, (ofGetHeight() - (20 * i)), shownAmplitude, ofGetHeight() / 64);
     }
     for (int i = 64; i > 0; i--)
     {
         shownAmplitude = amplitudes[i] * -10 * heightRatio;
-        if (amplitudes[i] * -10 * heightRatio > ofGetWidth() / 2){
+        if (amplitudes[i] * -10 * heightRatio > ofGetWidth() / 2)
+        {
             shownAmplitude = (ofGetWidth() / 2)-10;
         }
 
@@ -85,17 +87,18 @@ void ofApp::drawHelp()
     ofDrawBitmapString("Press '0' to switch to mode 0", helpMidScreenX - strlen("Press '0' to switch to mode 0") / 2 * 8, helpMidScreenY + 15);
     ofDrawBitmapString("Press '1' to switch to mode 1", helpMidScreenX - strlen("Press '1' to switch to mode 1") / 2 * 8, helpMidScreenY + 30);
     ofDrawBitmapString("Press '2' to switch to mode 2", helpMidScreenX - strlen("Press '2' to switch to mode 2") / 2 * 8, helpMidScreenY + 45);
-    ofDrawBitmapString("Press 'a' to stop", helpMidScreenX - strlen("Press 'a' to stop") / 2 * 8, helpMidScreenY + 60);
-    ofDrawBitmapString("Press 'd' to play next song", helpMidScreenX - strlen("Press 'd' to play next song") / 2 * 8, helpMidScreenY + 75);
-    ofDrawBitmapString("Press '=' to increase volume", helpMidScreenX - strlen("Press '=' to increase volume") / 2 * 8, helpMidScreenY + 90);
-    ofDrawBitmapString("Press '-' to decrease volume", helpMidScreenX - strlen("Press '-' to decrease volume") / 2 * 8, helpMidScreenY + 105);
-    ofDrawBitmapString("Release 'h' to toggle help", helpMidScreenX - strlen("Release 'h' to toggle help") / 2 * 8, helpMidScreenY + 120);
-    ofDrawBitmapString("Press 'l' to toggle loop", helpMidScreenX - strlen("Press 'l' to toggle loop") / 2 * 8, helpMidScreenY + 135);
-    ofDrawBitmapString("Press 'r' to toggle repeat", helpMidScreenX - strlen("Press 'r' to toggle repeat") / 2 * 8, helpMidScreenY + 150);
-    ofDrawBitmapString("Press 'b' to play random song", helpMidScreenX - strlen("Press 'b' to play random song") / 2 * 8, helpMidScreenY + 165);
-    ofDrawBitmapString("Press '->' to skip 5 seconds", helpMidScreenX - strlen("Press '->' to skip 5 seconds") / 2 * 8, helpMidScreenY + 180);
-    ofDrawBitmapString("Press '<-' to go back 5 seconds", helpMidScreenX - strlen("Press '<-' to go back 5 seconds") / 2 * 8, helpMidScreenY + 195);
-    ofDrawBitmapString("Press 'z' to go back 1 song", helpMidScreenX - strlen("Press 'z' to go back 1 song") / 2 * 8, helpMidScreenY + 210);
+    ofDrawBitmapString("Press '3' to switch to mode 3", helpMidScreenX - strlen("Press '3' to switch to mode 3") / 2 * 8, helpMidScreenY + 60);
+    ofDrawBitmapString("Press 'a' to stop", helpMidScreenX - strlen("Press 'a' to stop") / 2 * 8, helpMidScreenY + 75);
+    ofDrawBitmapString("Press 'd' to play next song", helpMidScreenX - strlen("Press 'd' to play next song") / 2 * 8, helpMidScreenY + 90);
+    ofDrawBitmapString("Press '=' to increase volume", helpMidScreenX - strlen("Press '=' to increase volume") / 2 * 8, helpMidScreenY + 105);
+    ofDrawBitmapString("Press '-' to decrease volume", helpMidScreenX - strlen("Press '-' to decrease volume") / 2 * 8, helpMidScreenY + 120);
+    ofDrawBitmapString("Release 'h' to toggle help", helpMidScreenX - strlen("Release 'h' to toggle help") / 2 * 8, helpMidScreenY + 135);
+    ofDrawBitmapString("Press 'l' to toggle loop", helpMidScreenX - strlen("Press 'l' to toggle loop") / 2 * 8, helpMidScreenY + 150);
+    ofDrawBitmapString("Press 'r' to toggle repeat", helpMidScreenX - strlen("Press 'r' to toggle repeat") / 2 * 8, helpMidScreenY + 165);
+    ofDrawBitmapString("Press 'b' to play random song", helpMidScreenX - strlen("Press 'b' to play random song") / 2 * 8, helpMidScreenY + 180);
+    ofDrawBitmapString("Press '->' to skip 5 seconds", helpMidScreenX - strlen("Press '->' to skip 5 seconds") / 2 * 8, helpMidScreenY + 195);
+    ofDrawBitmapString("Press '<-' to go back 5 seconds", helpMidScreenX - strlen("Press '<-' to go back 5 seconds") / 2 * 8, helpMidScreenY + 210);
+    ofDrawBitmapString("Press 'z' to go back 1 song", helpMidScreenX - strlen("Press 'z' to go back 1 song") / 2 * 8, helpMidScreenY + 225);
 }
 
 
@@ -114,13 +117,17 @@ void ofApp::drawHud()
     ofDrawBitmapString("Mode 0: Bar Graph", ofGetWidth() - strlen("Mode 0: Bar Graph") * 8, 30);
     ofDrawBitmapString("Mode 1: Circle Graph", ofGetWidth() - strlen("Mode 1: Circle Graph") * 8, 45);
     ofDrawBitmapString("Mode 2: Line Graph", ofGetWidth() - strlen("Mode 2: Line Graph") * 8, 60);
+    ofDrawBitmapString("Mode 3: 3D Graph", ofGetWidth() - strlen("Mode 3: 3D Graph") * 8, 75);
 }
 
-void ofApp::drawMode3(vector<float> amplitudes){
+void ofApp::drawMode3(vector<float> amplitudes)
+{
     setup3D(true);
     ofSetColor(0, 0, color);
-    for (int i = 0; i < 64; i++){
-        if (amplitudes[i] < 0){
+    for (int i = 0; i < 64; i++)
+    {
+        if (amplitudes[i] < 0)
+        {
             // Draws a voxel-like circle for each amplitude
             ofDrawBox(ofPoint(20*i,0,0),20, amplitudes[i] * 8 , amplitudes[i] * 4);
             ofDrawBox(ofPoint(20*i,0,0),20, amplitudes[i] * 6 , amplitudes[i] * 6);
@@ -130,8 +137,10 @@ void ofApp::drawMode3(vector<float> amplitudes){
     setup3D(false);
 }
 
-void ofApp::setup3D(bool doSetup){
-    if (doSetup) {
+void ofApp::setup3D(bool doSetup)
+{
+    if (doSetup)
+    {
         // Setup the lighting
         setupLighting(light1, true);
         setupLighting(light2, true);
@@ -156,7 +165,9 @@ void ofApp::setup3D(bool doSetup){
         ofEnableLighting();
         light1.enable();
         light2.enable();
-    } else {
+    }
+    else
+    {
         setupLighting(light1, false);
         setupLighting(light2, false);
         ofPopMatrix();
@@ -167,7 +178,8 @@ void ofApp::setup3D(bool doSetup){
 };
 
 void ofApp::setupLighting(ofLight& light, bool doSetup){
-    if (doSetup) {
+    if (doSetup)
+    {
         // Adjust the light for the most even lighting
         light.setDirectional();
         light.setSpotlight();
@@ -175,7 +187,9 @@ void ofApp::setupLighting(ofLight& light, bool doSetup){
         light.setSpotConcentration(1);
         light.setPointLight();
         ofEnableDepthTest();
-    } else {
+    }
+    else
+    {
         ofDisableLighting();
         ofDisableDepthTest();
         light.disable();
@@ -245,6 +259,7 @@ void ofApp::keyPressed(int key)
         {
             lastPos = progress;
             sound.stop();
+            playing = !playing;
             break;
         }
 
@@ -259,9 +274,8 @@ void ofApp::keyPressed(int key)
         mode = 1; break;
     case '2':
         mode = 2; break;
-        case '3':
-            mode = 3;
-            break;
+    case '3':
+        mode = 3; break;
     case 'a':
         barPause = !barPause; break;
     case 'd':
@@ -303,11 +317,9 @@ void ofApp::keyPressed(int key)
         ofApp::changeSong(-1);
         break;
     case OF_KEY_RIGHT:
-        sound.setPosition(sound.getPosition() + 0.005);
-        break;
+        sound.setPosition(sound.getPosition() + 0.005); break;
     case OF_KEY_LEFT:
-        sound.setPosition(sound.getPosition() - 0.005);
-        break;
+        sound.setPosition(sound.getPosition() - 0.005); break;
     default:
         break;
     }
@@ -409,6 +421,9 @@ void ofApp::draw()
             break;
         case 2:
             drawMode2(amplitudes);
+            break;
+        case 3:
+            drawMode3(amplitudes);
             break;
         default:
             break;

@@ -33,7 +33,7 @@ class ofApp : public ofBaseApp{
 		void setAmplitude();
 
 	private:
-		std::string modeArray[4] = {"Rectangle Height Visualizer", "Circle Radius Visualizer", "Rectangle Width Visualizer", "3D Voxel Visualizer"};
+		std::string modeArray[4] = {"Bar Graph", "Circle Graph", "Line Graph", "3D Graph"};
 		int songNumber = 0;
 		ofSoundPlayer sound;
 		AudioVisualizer visualizer;
