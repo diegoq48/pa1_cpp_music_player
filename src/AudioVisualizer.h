@@ -11,7 +11,6 @@ class AudioVisualizer {
         
         vector<float> getAmplitudes();
         int getBands();
-
         void updateAmplitudes();
 
     private:

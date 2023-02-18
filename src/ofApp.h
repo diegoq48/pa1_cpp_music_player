@@ -23,12 +23,11 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-		void changeSong();
+		void changeSong(int displacement);
 		void drawHud();
 		void drawProgressBar(float pos);
 		void drawHelp();
 		void setAmplitude();
-		void getSongs();
 
 	private:
 		std::string modeArray[3] = {"Rectangle Height Visualizer", "Circle Radius Visualizer", "Rectangle Width Visualizer"};
@@ -38,10 +37,10 @@ class ofApp : public ofBaseApp{
 		AudioVisualizer visualizer;
 		bool loopStatus = false; 
 		bool helpStatus = false;
-		int color = 255;
+		int color = ofRandom(255);
 		bool playing = false;
 		int mode = 0;
-		std::string songArray[5] = {"iReallyWannaStayAtYourHouse.mp3","OliverTreeMissyou.flac","newSongShadowOnTheSun.flac","makeThisRight.mp3", "somethingMemorable.mp3"};
+		std::string songArray[6] = {"iReallyWannaStayAtYourHouse.mp3","OliverTreeMissyou.flac","newSongShadowOnTheSun.flac","makeThisRight.mp3", "somethingMemorable.mp3", "beHereNowHybrid.mp3"};
 		int songArraySize = (sizeof(songArray)/sizeof(songArray[0]))-1;
 		int cur_x, cur_y = 0;
 		float sound_length;
@@ -55,6 +54,7 @@ class ofApp : public ofBaseApp{
 		vector<float> lastAmplitudes; 
 		int priorScreenHeight = ofGetHeight();
 		float heightRatio = 1;
+		
 		
 		
 };
