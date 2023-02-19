@@ -73,49 +73,6 @@ void ofApp::drawMode2(vector<float> amplitudes)
     }
 }
 
-
-
-
-void ofApp::drawHelp()
-{
-    ofSetColor(255);
-    int helpMidScreenY = ofGetHeight() / 2 - 48;
-    int helpMidScreenX = ofGetWidth() / 2;
-    ofDrawBitmapString("Press 'p' to play/pause", helpMidScreenX - strlen("Press 'p' to play/pause") / 2 * 8, (helpMidScreenY));
-    ofDrawBitmapString("Press '0' to switch to mode 0", helpMidScreenX - strlen("Press '0' to switch to mode 0") / 2 * 8, helpMidScreenY + 15);
-    ofDrawBitmapString("Press '1' to switch to mode 1", helpMidScreenX - strlen("Press '1' to switch to mode 1") / 2 * 8, helpMidScreenY + 30);
-    ofDrawBitmapString("Press '2' to switch to mode 2", helpMidScreenX - strlen("Press '2' to switch to mode 2") / 2 * 8, helpMidScreenY + 45);
-    ofDrawBitmapString("Press 'a' to stop", helpMidScreenX - strlen("Press 'a' to stop") / 2 * 8, helpMidScreenY + 60);
-    ofDrawBitmapString("Press 'd' to play next song", helpMidScreenX - strlen("Press 'd' to play next song") / 2 * 8, helpMidScreenY + 75);
-    ofDrawBitmapString("Press '=' to increase volume", helpMidScreenX - strlen("Press '=' to increase volume") / 2 * 8, helpMidScreenY + 90);
-    ofDrawBitmapString("Press '-' to decrease volume", helpMidScreenX - strlen("Press '-' to decrease volume") / 2 * 8, helpMidScreenY + 105);
-    ofDrawBitmapString("Release 'h' to toggle help", helpMidScreenX - strlen("Release 'h' to toggle help") / 2 * 8, helpMidScreenY + 120);
-    ofDrawBitmapString("Press 'l' to toggle loop", helpMidScreenX - strlen("Press 'l' to toggle loop") / 2 * 8, helpMidScreenY + 135);
-    ofDrawBitmapString("Press 'r' to toggle repeat", helpMidScreenX - strlen("Press 'r' to toggle repeat") / 2 * 8, helpMidScreenY + 150);
-    ofDrawBitmapString("Press 'b' to play random song", helpMidScreenX - strlen("Press 'b' to play random song") / 2 * 8, helpMidScreenY + 165);
-    ofDrawBitmapString("Press '->' to skip 5 seconds", helpMidScreenX - strlen("Press '->' to skip 5 seconds") / 2 * 8, helpMidScreenY + 180);
-    ofDrawBitmapString("Press '<-' to go back 5 seconds", helpMidScreenX - strlen("Press '<-' to go back 5 seconds") / 2 * 8, helpMidScreenY + 195);
-    ofDrawBitmapString("Press 'z' to go back 1 song", helpMidScreenX - strlen("Press 'z' to go back 1 song") / 2 * 8, helpMidScreenY + 210);
-}
-
-
-
-
-void ofApp::drawHud()
-{
-    ofSetColor(255);
-    ofDrawBitmapString("Mode: " + modeArray[mode], 0, 15);
-    ofDrawBitmapString("Song Title: " + songArray[songNumber], 0, 30);
-    ofDrawBitmapString("Progress: " + to_string(progress * 100) + "%", 0, 45);
-    ofDrawBitmapString("loopStatus: " + to_string(loopStatus), 0, 60);
-    ofDrawBitmapString("Repeat: " + to_string(repeatStatus), 0, 75);
-    ofDrawBitmapString("Volume: " + to_string(sound.getVolume()), 0, 90);
-    ofDrawBitmapString("Press h for help", ofGetWidth() - strlen("Press h for help") * 8, 15);
-    ofDrawBitmapString("Mode 0: Bar Graph", ofGetWidth() - strlen("Mode 0: Bar Graph") * 8, 30);
-    ofDrawBitmapString("Mode 1: Circle Graph", ofGetWidth() - strlen("Mode 1: Circle Graph") * 8, 45);
-    ofDrawBitmapString("Mode 2: Line Graph", ofGetWidth() - strlen("Mode 2: Line Graph") * 8, 60);
-}
-
 void ofApp::drawMode3(vector<float> amplitudes){
     setup3D(true);
     ofSetColor(0, 0, color);
@@ -129,6 +86,53 @@ void ofApp::drawMode3(vector<float> amplitudes){
     }
     setup3D(false);
 }
+
+
+
+void ofApp::drawHelp()
+{
+    ofSetColor(255);
+    int helpMidScreenY = ofGetHeight() / 2 - 48;
+    int helpMidScreenX = ofGetWidth() / 2;
+    ofDrawBitmapString("Press 'p' to play/pause", helpMidScreenX - strlen("Press 'p' to play/pause") / 2 * 8, (helpMidScreenY));
+    ofDrawBitmapString("Press '0' to switch to mode 0", helpMidScreenX - strlen("Press '0' to switch to mode 0") / 2 * 8, helpMidScreenY + 15);
+    ofDrawBitmapString("Press '1' to switch to mode 1", helpMidScreenX - strlen("Press '1' to switch to mode 1") / 2 * 8, helpMidScreenY + 30);
+    ofDrawBitmapString("Press '2' to switch to mode 2", helpMidScreenX - strlen("Press '2' to switch to mode 2") / 2 * 8, helpMidScreenY + 45);
+    ofDrawBitmapString("Press '3' to switch to mode 3", helpMidScreenX - strlen("Press '3' to switch to mode 3") / 2 * 8, helpMidScreenY + 60);
+    ofDrawBitmapString("Press 'a' to stop", helpMidScreenX - strlen("Press 'a' to stop") / 2 * 8, helpMidScreenY + 75);
+    ofDrawBitmapString("Press 'd' to play next song", helpMidScreenX - strlen("Press 'd' to play next song") / 2 * 8, helpMidScreenY + 90);
+    ofDrawBitmapString("Press '=' to increase volume", helpMidScreenX - strlen("Press '=' to increase volume") / 2 * 8, helpMidScreenY + 105);
+    ofDrawBitmapString("Press '-' to decrease volume", helpMidScreenX - strlen("Press '-' to decrease volume") / 2 * 8, helpMidScreenY + 120);
+    ofDrawBitmapString("Release 'h' to toggle help", helpMidScreenX - strlen("Release 'h' to toggle help") / 2 * 8, helpMidScreenY + 135);
+    ofDrawBitmapString("Press 'l' to toggle loop", helpMidScreenX - strlen("Press 'l' to toggle loop") / 2 * 8, helpMidScreenY + 150);
+    ofDrawBitmapString("Press 'r' to toggle repeat", helpMidScreenX - strlen("Press 'r' to toggle repeat") / 2 * 8, helpMidScreenY + 165);
+    ofDrawBitmapString("Press 'b' to play random song", helpMidScreenX - strlen("Press 'b' to play random song") / 2 * 8, helpMidScreenY + 180);
+    ofDrawBitmapString("Press '->' to skip 5 seconds", helpMidScreenX - strlen("Press '->' to skip 5 seconds") / 2 * 8, helpMidScreenY + 195);
+    ofDrawBitmapString("Press '<-' to go back 5 seconds", helpMidScreenX - strlen("Press '<-' to go back 5 seconds") / 2 * 8, helpMidScreenY + 210);
+    ofDrawBitmapString("Press 'z' to go back 1 song", helpMidScreenX - strlen("Press 'z' to go back 1 song") / 2 * 8, helpMidScreenY + 225);
+    ofDrawBitmapString("Press 's' to shuffle songs", helpMidScreenX - strlen("Press 's' to shuffle songs") / 2 * 8, helpMidScreenY + 240);
+}
+
+
+
+
+ void ofApp::drawHud()
+{
+    ofSetColor(255);
+    ofDrawBitmapString("Mode: " + modeArray[mode], 0, 15);
+    ofDrawBitmapString("Song Title: " + songVector[songNumber].getFileName(), 0, 30);
+    ofDrawBitmapString("Progress: " + to_string(progress * 100) + "%", 0, 45);
+    ofDrawBitmapString("loopStatus: " + to_string(loopStatus), 0, 60);
+    ofDrawBitmapString("Repeat: " + to_string(repeatStatus), 0, 75);
+    ofDrawBitmapString("Volume: " + to_string(sound.getVolume()), 0, 90);
+    ofDrawBitmapString("Press h for help", ofGetWidth() - strlen("Press h for help") * 8, 15);
+    ofDrawBitmapString("Mode 0: Bar Graph", ofGetWidth() - strlen("Mode 0: Bar Graph") * 8, 30);
+    ofDrawBitmapString("Mode 1: Circle Graph", ofGetWidth() - strlen("Mode 1: Circle Graph") * 8, 45);
+    ofDrawBitmapString("Mode 2: Line Graph", ofGetWidth() - strlen("Mode 2: Line Graph") * 8, 60);
+    ofDrawBitmapString("Mode 3: 3D Graph", ofGetWidth() - strlen("Mode 3: 3D Graph") * 8, 75);
+    ofDrawBitmapString("shuffleStatus: " + to_string(shuffleStatus),0 , 105);
+} 
+
 
 void ofApp::setup3D(bool doSetup){
     if (doSetup) {
@@ -205,41 +209,66 @@ void ofApp::setAmplitude()
     amplitudes = lastAmplitudes;
 }
 
+void ofApp::drawSongs(){
+    for (int i = 0; i < songVectorSize; i++) {
+        if (i == songNumber) {
+            ofSetColor(255, 0, 0);
+        } else {
+            ofSetColor(255);
+        }
+        ofDrawBitmapString(to_string(i) + " " + songVector[i].getFileName(), 0, 15 * i);
+    }
 
+}
 
 
 void ofApp::changeSong(int displacement)
 {
+    if (shuffleStatus)
+    {
+        songNumber = rand() % songVectorSize;
+        sound.load(songVector[songNumber]);
+        sound.play();
+        return;
+    }
     sound.unload();
     songNumber = songNumber + displacement;
-    if ((songNumber > songArraySize || songNumber < 0) && loopStatus)
+    if ((songNumber > songVectorSize || songNumber < 0) && loopStatus)
     {
         songNumber = 0;
-        sound.load(songArray[songNumber]);
+        sound.load(songVector[songNumber]);
         sound.play();
     }
-    else if ((songNumber > songArraySize || songNumber < 0) && !loopStatus)
+    else if ((songNumber > songVectorSize || songNumber < 0) && !loopStatus)
     {
         songNumber = 0;
         sound.unload();
         sound.stop();
         playing = false;
-        sound.load(songArray[songNumber]);
+        sound.load(songVector[songNumber]);
     }
     else
     {
-        sound.load(songArray[songNumber]);
+        sound.load(songVector[songNumber]);
         sound.play();
     }
 }
 
-
+int ofApp::songSearch(std::string songName){
+    for (int i = 0; i < songVectorSize; i++) {
+        if (songVector[i].getFileName() == songName) {
+            return i; 
+        }
+    }
+    ofLog() << "Song not found";
+    ofDrawBitmapString("Song not found", (ofGetWidth()/2)-112, ofGetHeight()/2);
+    return -1;
+}
 
 
 void ofApp::keyPressed(int key)
 {
-    switch (key)
-    {
+    switch (key){
     case 'p':
         if (playing)
         {
@@ -259,9 +288,8 @@ void ofApp::keyPressed(int key)
         mode = 1; break;
     case '2':
         mode = 2; break;
-        case '3':
-            mode = 3;
-            break;
+    case '3':
+        mode = 3; break;
     case 'a':
         barPause = !barPause; break;
     case 'd':
@@ -285,8 +313,7 @@ void ofApp::keyPressed(int key)
     case 'b':
         sound.unload();
         srand(time(NULL));
-        songNumber = rand() % songArraySize;
-        sound.load(songArray[songNumber]);
+        sound.load(songVector[rand() % songVectorSize]);
         break;
     case 'r':
         repeatStatus = !repeatStatus;
@@ -299,8 +326,10 @@ void ofApp::keyPressed(int key)
     case 'f':
         ofToggleFullscreen(); break;
     case 'z':
+    if(!shuffleStatus){
         playing = true; 
         ofApp::changeSong(-1);
+    }
         break;
     case OF_KEY_RIGHT:
         sound.setPosition(sound.getPosition() + 0.005);
@@ -308,6 +337,20 @@ void ofApp::keyPressed(int key)
     case OF_KEY_LEFT:
         sound.setPosition(sound.getPosition() - 0.005);
         break;
+    case 'k':
+        songListing = !songListing; break;
+    case 's' :
+        shuffleStatus = !shuffleStatus; break;
+        break;
+    case '/':
+        ofLog() << "Enter song name";
+        string songName;
+        cin >> songName;
+        songNumber = songSearch(songName);
+        sound.load(songVector[songNumber]);
+        sound.play();
+        break;
+
     default:
         break;
     }
@@ -368,13 +411,34 @@ void ofApp::dragEvent(ofDragInfo dragInfo)
 
 void ofApp::setup()
 {
-    sound.load(songArray[0]);
     sound.setLoop(false);
     sound.setVolume(2);
     ofSetBackgroundColor(00, 00, 00);
     ofSetWindowTitle("Music Player");
+    ofDirectory dir("/home/diegoq/Music");
+    getSongs(dir);
+    songVectorSize = songVector.size();
+    sound.load(songVector[0]);
 }
 
+void ofApp::getSongs(ofDirectory dir)
+{
+
+	dir.listDir();
+
+	for(auto file : dir)
+	{
+		if(file.isDirectory())
+		{
+			getSongs(ofDirectory(file.getAbsolutePath()));
+		}
+		else
+		{
+            dir.allowExt("mp3"); dir.allowExt("wav"); dir.allowExt("ogg"); dir.allowExt("flac"); dir.allowExt("aiff"); dir.allowExt("m4a"); dir.allowExt("wma");
+			songVector.push_back(file);
+		}
+	}
+}
 void ofApp::update()
 {
     ofSoundUpdate();
@@ -388,13 +452,17 @@ void ofApp::update()
 
 void ofApp::draw()
 {
-
+    if (songListing)
+    {
+        ofApp::drawSongs();
+        return;
+    }
     
     if (ofGetHeight() > 199 && ofGetWidth() > 199)
     {
         ofSetColor(255);
         float pos = playing ? progress : lastPos;
-        if (!playing)
+        if (!playing && !helpStatus)
         {
             ofDrawBitmapString("Press 'p' to play some music!", (ofGetWidth() / 2) - strlen("Press 'p' to play some music!")*8, ofGetHeight() / 2);
         }
@@ -410,6 +478,9 @@ void ofApp::draw()
         case 2:
             drawMode2(amplitudes);
             break;
+        case 3:
+            drawMode3(amplitudes);
+            break;
         default:
             break;
         }
@@ -421,9 +492,7 @@ void ofApp::draw()
         ofApp::drawProgressBar(pos);
         return; 
     }
+    
     ofSetColor(255);
-    for(int i = 0; i > 0;i++)
-    {
-        ofDrawBitmapString("Please resize your window",strlen("Please resize your window")*8, ofGetHeight()-(i*10));
-    }
+    ofDrawBitmapString("Please resize your window", (ofGetWidth() / 2) - strlen("Please resize your window")*8, ofGetHeight() / 2);
 }

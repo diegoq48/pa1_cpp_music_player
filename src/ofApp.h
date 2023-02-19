@@ -31,6 +31,9 @@ class ofApp : public ofBaseApp{
 		void setup3D(bool doSetup);
 		void setupLighting(ofLight& light, bool doSetup);
 		void setAmplitude();
+		void getSongs(ofDirectory dir);
+		void drawSongs();
+		int songSearch(string songName);
 
 	private:
 		std::string modeArray[4] = {"Rectangle Height Visualizer", "Circle Radius Visualizer", "Rectangle Width Visualizer", "3D Voxel Visualizer"};
@@ -42,12 +45,11 @@ class ofApp : public ofBaseApp{
 		int color = ofRandom(255);
 		bool playing = false;
 		int mode = 0;
-		std::string songArray[6] = {"iReallyWannaStayAtYourHouse.mp3","OliverTreeMissyou.flac","newSongShadowOnTheSun.flac","makeThisRight.mp3", "somethingMemorable.mp3", "beHereNowHybrid.mp3"};
-		int songArraySize = (sizeof(songArray)/sizeof(songArray[0]))-1;
+		vector<ofFile> songVector;
+		int songVectorSize = 0;
 		int cur_x, cur_y = 0;
 		float sound_length;
 		float shownAmplitude; 
-		int decay = 0; // 0 = no decay, 1 = decay
 		float progress = 0;
 		float lastPos = 0;
 		bool repeatStatus = false;
@@ -59,7 +61,9 @@ class ofApp : public ofBaseApp{
 		vector<float> lastAmplitudes; 
 		int priorScreenHeight = ofGetHeight();
 		float heightRatio = 1;
-		
+		bool songListing = false;
+		bool shuffleStatus = false;
+
 		
 		
 };
