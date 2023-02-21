@@ -9,10 +9,10 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
 
-		void drawMode0(vector<float> amplitudes);
 		void drawMode1(vector<float> amplitudes);
 		void drawMode2(vector<float> amplitudes);
 		void drawMode3(vector<float> amplitudes);
+		void drawMode4(vector<float> amplitudes);
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y);
@@ -44,7 +44,7 @@ class ofApp : public ofBaseApp{
 		bool helpStatus = false;
 		int color = ofRandom(255);
 		bool playing = false;
-		int mode = 0;
+		int mode = 1;
 		vector<ofFile> songVector;
 		int songVectorSize = 0;
 		int cur_x, cur_y = 0;
@@ -63,6 +63,12 @@ class ofApp : public ofBaseApp{
 		float heightRatio = 1;
 		bool songListing = false;
 		bool shuffleStatus = false;
+		int visualizerWindowHeight = ofGetHeight() - ofGetHeight()/4;
+		int songListDisplacement = 0; 
+		bool drawing = false; 
+		ofTrueTypeFont font;
+		ofImage image; 
+
 
 		
 		
