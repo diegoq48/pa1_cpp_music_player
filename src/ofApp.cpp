@@ -168,9 +168,10 @@ void ofApp::drawHud()
     int currentWidth = ofGetWidth();
     font.drawString("Mode: " + modeArray[mode-1], 0, 15);
     ofSetColor(255,255,0);
-    font.drawString("Now Playing: " + (songVector[songNumber].getFileName()).substr(0,25), 0, 30);
+    font.drawString("Now Playing: " + (songVector[songNumber].getFileName()), 0, 30);
     ofSetColor(255);
     font.drawString("Progress: " + to_string(progress * 100) + "%", 0, 45);
+    font.drawString("Volume: " + to_string(sound.getVolume()) + "%", 0, 75);
     font.drawString("Loop: " + shownLoopStatus  + "   Repeat: " + shownRepeatStatus + "    Shuffle: " + shownShuffleStatus, 0, 60);
     font.drawString("Press H for help", currentWidth - strlen("Press H for help")*6, 15);
     font.drawString("< or > Swap Mode", currentWidth - strlen("< or > SWAP MODE")*7, 30);
@@ -397,12 +398,13 @@ void ofApp::mouseMoved(int x, int y)
 {
     if (x < 56 && y > 90 && y < 105)
     {
-        ofDrawRectangle(0, 90, 56, 15);
+        hoveringMyMusic = true;
     }
     else
     {
-        ofSetWindowTitle("Music Player");
+        hoveringMyMusic = false;
     }
+    
 }
 
 void ofApp::mouseDragged(int x, int y, int button)
@@ -505,6 +507,9 @@ void ofApp::draw()
     {
         ofApp::drawSongs();
         return;
+    }
+    if(hoveringMyMusic){
+        ofDrawRectangle(0, 90, 56, 15);
     }
     
     if (ofGetHeight() > 199 && ofGetWidth() > 199)

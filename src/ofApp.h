@@ -68,6 +68,8 @@ class ofApp : public ofBaseApp{
 		bool drawing = false; 
 		ofTrueTypeFont font;
 		ofImage image; 
+		bool hoveringUpNext = false;
+		bool hoveringMyMusic = false; 
 
 
 		
