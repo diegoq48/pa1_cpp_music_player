@@ -32,7 +32,7 @@ class ofApp : public ofBaseApp{
 		void setupLighting(ofLight& light, bool doSetup);
 		void setAmplitude();
 		void getSongs(ofDirectory dir);
-		void drawSongs();
+		void drawUpNext();
 		int songSearch(string songName);
 
 	private:
@@ -65,7 +65,7 @@ class ofApp : public ofBaseApp{
 		bool shuffleStatus = false;
 		int visualizerWindowHeight = ofGetHeight() - ofGetHeight()/4;
 		int songListDisplacement = 0; 
-		bool drawing = false; 
+		bool drawingSongs = false; 
 		ofTrueTypeFont font;
 		ofImage image; 
 		bool hoveringUpNext = false;

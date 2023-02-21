@@ -223,12 +223,12 @@ void ofApp::setAmplitude()
     amplitudes = lastAmplitudes;
 }
 
-void ofApp::drawSongs(){
+void ofApp::drawUpNext(){
     ofSetColor(255);
     for (int i = 0; i < 5; i++){
         ofSetColor(255);
         if (i == 0){
-            ofSetColor(255, 255, 0);
+            ofSetColor(255, 0,0);
         }
         font.drawString("    " + to_string(songSearch(songVector[songNumber+i].getFileName())) + " " + songVector[songNumber + i + songListDisplacement].getFileName(), 
         0, 105+(i*12));
@@ -396,13 +396,13 @@ void ofApp::keyReleased(int key)
 
 void ofApp::mouseMoved(int x, int y)
 {
-    if (x < 56 && y > 90 && y < 105)
+    if (x < 50 && y < 90 && y >75)
     {
-        hoveringMyMusic = true;
+        hoveringUpNext = true;
     }
     else
     {
-        hoveringMyMusic = false;
+        hoveringUpNext = false;
     }
     
 }
@@ -423,9 +423,9 @@ void ofApp::mousePressed(int x, int y, int button)
         float posf = (float)x / (float)ofGetWidth();
         sound.setPosition(posf);
     }
-    if (y > ofGetHeight()/2 -8 && y < ofGetHeight()/2 + 8)
+    if (x < 50 && y < 90 && y >75)
     {
-        drawing = !drawing;
+        drawingSongs = !drawingSongs;
     }
 }
 
@@ -505,11 +505,11 @@ void ofApp::draw()
     image.draw(ofGetWidth()-250, ofGetHeight()-ofGetHeight()/4, 250, ofGetHeight()/4);
     if (songListing)
     {
-        ofApp::drawSongs();
+        ofApp::drawUpNext();
         return;
     }
-    if(hoveringMyMusic){
-        ofDrawRectangle(0, 90, 56, 15);
+    if(hoveringUpNext){
+        ofDrawRectangle(0, 75, 50, 15);
     }
     
     if (ofGetHeight() > 199 && ofGetWidth() > 199)
@@ -544,8 +544,8 @@ void ofApp::draw()
         }
         ofApp::drawHud(); 
         ofApp::drawProgressBar(pos);
-        if(drawing){
-            drawSongs();
+        if(drawingSongs){
+            drawUpNext();
         }
         return; 
     }
