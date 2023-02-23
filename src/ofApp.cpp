@@ -1,137 +1,16 @@
 #include "ofApp.h"
 #include <ctime>
 
-
-
-void ofApp::drawMode1(vector<float> amplitudes)
-{
-    ofFill();
-    ofSetColor(00, 00, color);
-
-
-    for (int i = 32; i >= 0; i--)
-    {
-        shownAmplitude = (amplitudes[32 - (i + 1)] * 10 * heightRatio);
-        if (fabs(amplitudes[32 - (i + 1)] * 10) > ofGetHeight() - 20)
-        {
-            shownAmplitude = ((ofGetHeight() - 20) * -1);
-        }
-        ofDrawRectRounded(ofGetWidth() / 64 * i, ofGetHeight() +10, ofGetWidth() / 64, shownAmplitude, 5);
-    }
-
-
-    for (int i = 32; i < 64; i++)
-    {
-        shownAmplitude = (amplitudes[i - 32] * 10 * heightRatio);
-        if (fabs(amplitudes[i - 32] * 10) > ofGetHeight() - 20)
-        {
-            shownAmplitude = (ofGetHeight() - 20) * -1;
-        }
-        ofDrawRectRounded(ofGetWidth() / 64 * i, ofGetHeight()+10, ofGetWidth() / 64, shownAmplitude, 5);
-    }
-}
+// First draw Mode Creates a visualizer that resembels a bar graph by grabing the first 32 amplitudes 
+// and Mirroring them whilst also truncating values so that they dont exceed the height of the window 
+// as well as multiplying them by a constant that is the ratio of the window height to the color is a 
+// random shade of blue that is generated at the start of the program and is changed every time the
+// program is run.
 
 
 
-
-void ofApp::drawMode2(vector<float> amplitudes)
-{
-    ofSetLineWidth(5);
-    ofNoFill();
-    ofSetColor(color, 00, 00);
-    int bands = amplitudes.size();
-    for (int i = 0; i < bands; i++)
-    {
-        shownAmplitude = amplitudes[i] * 10 * heightRatio;
-        if (amplitudes[i] *10 * heightRatio > visualizerWindowHeight / 2)
-        {
-            shownAmplitude = (visualizerWindowHeight / 2);
-        }
-        ofDrawCircle(ofGetWidth() / 2, ofGetHeight() / 2, shownAmplitude * 10 * heightRatio);
-    }
-}
-
-
-
-
-void ofApp::drawMode3(vector<float> amplitudes)
-{
-    ofSetColor(00, color, 00);
-    ofFill();
-    for (int i = 64; i > 0; i--)
-    {
-        shownAmplitude = amplitudes[i] * -10 * heightRatio;
-        if (amplitudes[i] * -10 * heightRatio > ofGetWidth() / 2){
-            shownAmplitude = (ofGetWidth() / 2) -10;
-            }
-        
-        ofDrawRectangle(0, (ofGetHeight() - (20 * i)), shownAmplitude, ofGetHeight() / 64);
-    }
-    for (int i = 64; i > 0; i--)
-    {
-        shownAmplitude = amplitudes[i] * -10 * heightRatio;
-        if (amplitudes[i] * -10 * heightRatio > ofGetWidth() / 2){
-            shownAmplitude = (ofGetWidth() / 2)-10;
-        }
-
-        ofDrawRectangle(ofGetWidth(), (ofGetHeight() - (20 * i)), shownAmplitude * -1, ofGetHeight() / 64);
-    }
-}
-
-void ofApp::setup3D(bool doSetup){
-    if (doSetup) {
-        // Setup the lighting
-        setupLighting(light1, true);
-        setupLighting(light2, true);
-
-        // Setup the camera
-        cam.setPosition(0, 900, 1000);
-        cam.lookAt(glm::vec3(0, 700, 500));
-        cam.begin();
-
-        // Setup the lights for even lighting across the scene
-        light1.setPosition(0, 500, 1500);
-        light2.setPosition(0, 500, -1500);
-        light1.draw();
-        light2.draw();
-
-        // Setup the scene
-        ofPushStyle();
-        ofPushMatrix();
-        ofRotateDeg(90, 0, 0, 1); // Rotate the whole scene 90 degrees around the z axis to align the boxes vertically
-        ofRotateDeg(ofGetElapsedTimef()*50, 0.5, 0, 0); // Rotate the whole scene around the x axis to make it spin
-
-        ofEnableLighting();
-        light1.enable();
-        light2.enable();
-    } else {
-        setupLighting(light1, false);
-        setupLighting(light2, false);
-        ofPopMatrix();
-        ofPopStyle();
-        cam.end();
-    }
-
-};
-
-
-
-void ofApp::drawMode4(vector<float> amplitudes){
-    setup3D(true);
-    ofSetColor(0, 0, color);
-    for (int i = 0; i < 64; i++){
-        if (amplitudes[i] < 0){
-            // Draws a voxel-like circle for each amplitude
-            ofDrawBox(ofPoint(20*i,0,0),20, amplitudes[i] * 8 , amplitudes[i] * 4);
-            ofDrawBox(ofPoint(20*i,0,0),20, amplitudes[i] * 6 , amplitudes[i] * 6);
-            ofDrawBox(ofPoint(20*i,0,0),20, amplitudes[i] * 4 , amplitudes[i] * 8);
-        }
-    }
-    setup3D(false);
-}
-
-
-
+// Draws a help menu at the center of the screen with instructions on how to use the program
+// substracts the length of the string from the center of the screen to center the text
 void ofApp::drawHelp()
 {
     ofSetColor(255);
@@ -158,7 +37,8 @@ void ofApp::drawHelp()
 
 
 
-
+// Draws the HUD at the top of the screen
+// and draws the drop down menu selectors for the music collections
 void ofApp::drawHud()
 {
     std::string shownLoopStatus = loopStatus? "ON":"OFF";
@@ -203,6 +83,7 @@ void ofApp::setupLighting(ofLight& light, bool doSetup){
 
 
 
+// Draws a progress bar at the bottom of the screen by multiplying by the position of the song
 void ofApp::drawProgressBar(float pos)
 {
     ofFill();
@@ -211,7 +92,7 @@ void ofApp::drawProgressBar(float pos)
 }
 
 
-
+// Gets the visualizer bars and sets them 
 void ofApp::setAmplitude()
 {
     if (!barPause)
@@ -220,9 +101,12 @@ void ofApp::setAmplitude()
         amplitudes = visualizer.getAmplitudes();
         return;
     }
+    // uses the same amplitudes in order to pause the bars 
     amplitudes = lastAmplitudes;
 }
 
+
+// Draws the next five songs on the array after songNumber
 void ofApp::drawUpNext(){
     ofSetColor(255);
     for (int i = 0; i < 5; i++){
@@ -236,6 +120,22 @@ void ofApp::drawUpNext(){
 }
 
 
+void ofApp::showCollection(){
+    ofSetColor(255);
+    for (int i = 0; i < songVectorSize/(((ofGetHeight()-90)/12)); i++){
+        ofSetColor(255);
+        if (i == 0 && songListDisplacement == 0){
+            ofSetColor(255, 0,0);
+        }
+        font.drawString("    " + to_string(songSearch(songVector[songNumber+i].getFileName())) + " " + songVector[songNumber + i + songListDisplacement].getFileName(), ofGetWidth()-200, 105+(i*12));
+    }
+    return;
+}
+
+
+
+// Method to change songs unloads songs first in order to save space in memory and later checks all the boolean values for the modes in order 
+// to determine what song to play 
 void ofApp::changeSong(int displacement)
 {
     sound.unload();
@@ -267,6 +167,20 @@ void ofApp::changeSong(int displacement)
     
 }
 
+// removes spaces in a string
+
+std::string spaceRemover(std::string word){
+    std::string newWord = "";
+    for (int i = 0; i < word.length(); i++){
+        if (word[i] != ' '){
+            newWord += word[i];
+        }
+    }
+    return newWord;
+}
+
+
+// used to search for a song directly in the terminal not in gui 
 int ofApp::songSearch(std::string songName){
     for (int i = 0; i < songVectorSize; i++) {
         if (songVector[i].getFileName() == songName) {
@@ -279,9 +193,12 @@ int ofApp::songSearch(std::string songName){
 }
 
 
+
+// switch the gets called whenever a key is pressed 
 void ofApp::keyPressed(int key)
 {
     switch (key){
+    // play/pause key 
     case 'p':
         if (playing)
         {
@@ -295,7 +212,8 @@ void ofApp::keyPressed(int key)
         sound.play();
         playing = !playing;
         break;
-
+    
+    // mode changes 
     case '1':
         mode = 1; break;
     case '2':
@@ -306,44 +224,52 @@ void ofApp::keyPressed(int key)
         mode = 4; break;
     case 'a':
         barPause = !barPause; break;
+    // playes the next song 
     case 'd':
         playing = true;
         ofApp::changeSong(1);
         break;
+    // increases volume 
     case '=':
-        if ((sound.getVolume() == 2.0))
+        if ((sound.getVolume() != 2.0))
         {
-            break;
+            sound.setVolume(sound.getVolume() + 0.1);
         }
-        sound.setVolume(sound.getVolume() + 0.1);
         break;
+    // lowers Volume 
     case '-':
-        if ((sound.getVolume() == 0.0))
+        if ((sound.getVolume() != 0.0))
         {
-            break;
+            sound.setVolume(sound.getVolume() - 0.1);
         }
-        sound.setVolume(sound.getVolume() - 0.1);
         break;
+    // plays random song
     case 'b':
         sound.unload();
         srand(time(NULL));
         sound.load(songVector[rand() % songVectorSize]);
         break;
+    // plays the same song over and over again
     case 'r':
         repeatStatus = !repeatStatus;
         sound.setLoop(repeatStatus);
         break;
+    // sets variable that allow array to start at zero once it has reached the end 
     case 'l':
         loopStatus = !loopStatus; break;
+    // tells draw to print the help menu
     case 'h':
         helpStatus = !helpStatus; break;
+    // fullscreen
     case 'f':
         ofToggleFullscreen(); break;
+    //plays the previous song if shuffle status is off 
     case 'z':
     if(!shuffleStatus){
         playing = true; 
         ofApp::changeSong(-1);
     }
+
         break;
     case OF_KEY_RIGHT:
         sound.setPosition(sound.getPosition() + 0.005);
@@ -352,19 +278,18 @@ void ofApp::keyPressed(int key)
         sound.setPosition(sound.getPosition() - 0.005);
         break;
     case OF_KEY_DOWN:
-        if (songListDisplacement != 0)
-        {
-            songListDisplacement++;
-        }
+
+        songListDisplacement++;
+        
         break;
     case OF_KEY_UP:
-        if (songListDisplacement != 0)
-        {
-            songListDisplacement--;
-        }
+
+        songListDisplacement--;
         break;
     case 's' :
-        shuffleStatus = !shuffleStatus; ofApp::changeSong(0); break;
+        shuffleStatus = !shuffleStatus;
+        if(!shuffleStatus){break;}
+        ofApp::changeSong(0); break;
     case '<':
         if (mode == 4)
         {
@@ -404,6 +329,14 @@ void ofApp::mouseMoved(int x, int y)
     {
         hoveringUpNext = false;
     }
+    if( x > ofGetWidth() - 50 && y < 90 && y >75)
+    {
+        hoveringMyMusic = true;
+    }
+    else
+    {
+        hoveringMyMusic = false;
+    }
     
 }
 
@@ -427,6 +360,10 @@ void ofApp::mousePressed(int x, int y, int button)
     {
         drawingSongs = !drawingSongs;
     }
+    if( x > ofGetWidth() - 50 && y < 90 && y >75)
+    {
+        drawingCollection  = !drawingCollection;
+    }
 }
 
 void ofApp::mouseReleased(int x, int y, int button)
@@ -443,9 +380,7 @@ void ofApp::mouseExited(int x, int y)
 
 void ofApp::windowResized(int w, int h)
 {
-    heightRatio = ofGetHeight() / priorScreenHeight;
-    priorScreenHeight = ofGetHeight();
-    visualizerWindowHeight = ofGetHeight() - ofGetHeight()/4;
+    
 }
 
 void ofApp::gotMessage(ofMessage msg)
@@ -511,7 +446,15 @@ void ofApp::draw()
     if(hoveringUpNext){
         ofDrawRectangle(0, 75, 50, 15);
     }
+    if(hoveringMyMusic){
+        ofDrawRectangle(ofGetWidth() - 50, 75, 50, 15);
+    }
     
+    if (drawingCollection)
+    {
+        ofApp::showCollection();
+        return;
+    }
     if (ofGetHeight() > 199 && ofGetWidth() > 199)
     {
         ofSetColor(255);
@@ -524,16 +467,16 @@ void ofApp::draw()
         switch (mode)
         {
         case 1:
-            drawMode1(amplitudes);
+            ofApp::drawMode1(amplitudes);
             break;
         case 2:
-            drawMode2(amplitudes);
+            ofApp::drawMode2(amplitudes);
             break;
         case 3:
-            drawMode3(amplitudes);
+            ofApp::drawMode3(amplitudes);
             break;
         case 4:
-            drawMode4(amplitudes);
+            ofApp::drawMode4(amplitudes);
             break;
         default:
             break;

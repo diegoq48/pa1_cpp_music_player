@@ -8,7 +8,6 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
-
 		void drawMode1(vector<float> amplitudes);
 		void drawMode2(vector<float> amplitudes);
 		void drawMode3(vector<float> amplitudes);
@@ -26,16 +25,17 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 		void changeSong(int displacement);
 		void drawHud();
-		void drawProgressBar(float pos);
+		void drawProgressBar(float pos);   
 		void drawHelp();
-		void setup3D(bool doSetup);
 		void setupLighting(ofLight& light, bool doSetup);
 		void setAmplitude();
 		void getSongs(ofDirectory dir);
 		void drawUpNext();
+		void showCollection();
 		int songSearch(string songName);
 
 	private:
+		void setup3D(bool doSetup);
 		std::string modeArray[4] = {"Rectangle Height Visualizer", "Circle Radius Visualizer", "Rectangle Width Visualizer", "3D Voxel Visualizer"};
 		int songNumber = 0;
 		ofSoundPlayer sound;
@@ -63,13 +63,14 @@ class ofApp : public ofBaseApp{
 		float heightRatio = 1;
 		bool songListing = false;
 		bool shuffleStatus = false;
-		int visualizerWindowHeight = ofGetHeight() - ofGetHeight()/4;
 		int songListDisplacement = 0; 
 		bool drawingSongs = false; 
 		ofTrueTypeFont font;
 		ofImage image; 
 		bool hoveringUpNext = false;
 		bool hoveringMyMusic = false; 
+		bool drawingCollection = false; 
+
 
 
 		
