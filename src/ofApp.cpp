@@ -57,7 +57,7 @@ void ofApp::drawHud()
     font.drawString("< or > Swap Mode", currentWidth - strlen("< or > SWAP MODE")*7, 30);
     ofSetColor(255, 255, 0);
     //Draw Drop Down Menus
-    font.drawString("Up Next: " + songVector[songNumber + 1].getFileName(), 0, 90);
+   // font.drawString("Up Next: " + songVector[songNumber + 1].getFileName(), 0, 90);
     font.drawString("My Music: ", currentWidth - strlen("My Music: ")*6, 90);
 }
 
@@ -127,7 +127,7 @@ void ofApp::showCollection(){
         if (i == 0 && songListDisplacement == 0){
             ofSetColor(255, 0,0);
         }
-        font.drawString("    " + to_string(songSearch(songVector[songNumber+i].getFileName())) + " " + songVector[songNumber + i + songListDisplacement].getFileName(), ofGetWidth()-200, 105+(i*12));
+        font.drawString(to_string(songSearch(songVector[songNumber+i].getFileName())) + " " + songVector[songNumber + i + songListDisplacement].getFileName(), ofGetWidth()-(songVector[songNumber+i].getFileName().length()*12)-5, 105+(i*12)+25);
     }
     return;
 }
@@ -408,9 +408,10 @@ void ofApp::setup()
 
 void ofApp::getSongs(ofDirectory dir)
 {
+    dir.allowExt("mp3"); dir.allowExt("wav"); dir.allowExt("ogg"); dir.allowExt("flac"); dir.allowExt("aiff"); dir.allowExt("m4a"); dir.allowExt("");
 
 	dir.listDir();
-
+    std::cout << dir.getAbsolutePath() << std::endl;
 	for(auto file : dir)
 	{
 		if(file.isDirectory())
@@ -419,8 +420,11 @@ void ofApp::getSongs(ofDirectory dir)
 		}
 		else
 		{
-            dir.allowExt("mp3"); dir.allowExt("wav"); dir.allowExt("ogg"); dir.allowExt("flac"); dir.allowExt("aiff"); dir.allowExt("m4a"); dir.allowExt("wma");
+            if (file.getExtension() == ""){
+                continue;
+            }
 			songVector.push_back(file);
+
 		}
 	}
 }
