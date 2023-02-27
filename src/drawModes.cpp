@@ -63,25 +63,27 @@ void ofApp::drawMode3(vector<float> amplitudes)
     for (int i = 64; i > 0; i--)
     {
         // Multiplies the amplitude by a constant to make the bars bigger along with the height Ratio
-        shownAmplitude = amplitudes[i] * -10 * heightRatio;
+        shownAmplitude = amplitudes[i] * -10 ;
         // Truncates the bars at the center of the screen
-        if (amplitudes[i] * -10 * heightRatio > windowHeight / 2)
+        if (shownAmplitude  > windowHeight / 2)
         {
             shownAmplitude = (windowWidth / 2) -10;
         }
         
-        ofDrawRectangle(0, (windowHeight - (20 * i)), shownAmplitude, windowHeight / 64);
+        ofDrawRectangle(0, (windowHeight - (32 * i)), shownAmplitude, windowHeight / 64);
     }
+
     for (int i = 64; i > 0; i--)
     {
         // Multiplies the amplitude by a constant to make the bars bigger along with the height Ratio
-        shownAmplitude = amplitudes[i] * -10 * heightRatio;
+        shownAmplitude = amplitudes[i] * -10 ;
         // Truncates the bars at the center of the screen
-        if (amplitudes[i] * -10 * heightRatio > windowWidth / 2){
-            shownAmplitude = (windowWidth / 2)-10;
+        if (shownAmplitude  > windowHeight / 2)
+        {
+            shownAmplitude = (windowWidth / 2) -10;
         }
-
-        ofDrawRectangle(windowWidth, (windowHeight - (20 * i)), shownAmplitude * -1, windowHeight / 64);
+        
+        ofDrawRectangle(windowWidth, (windowHeight - (32 * i)), shownAmplitude*-1, windowHeight / 64);
     }
 }
 
@@ -120,6 +122,23 @@ void ofApp::setup3D(bool doSetup){
     }
 
 };
+
+void ofApp::setupLighting(ofLight& light, bool doSetup){
+    if (doSetup) {
+        // Adjust the light for the most even lighting
+        light.setDirectional();
+        light.setSpotlight();
+        light.setSpotlightCutOff(2000);
+        light.setSpotConcentration(1);
+        light.setPointLight();
+        ofEnableDepthTest();
+    } else {
+        ofDisableLighting();
+        ofDisableDepthTest();
+        light.disable();
+    }
+}
+ 
 
 
 

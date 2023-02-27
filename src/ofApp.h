@@ -32,7 +32,12 @@ class ofApp : public ofBaseApp{
 		void getSongs(ofDirectory dir);
 		void drawUpNext();
 		void showCollection();
-		int songSearch(string songName);
+		void drawUserPrompt();
+		void songFileBuilder();
+		void songSearch();
+		void drawSetSongNumber();
+		void getSongDirectory();
+		void statusSaver();
 
 	private:
 		void setup3D(bool doSetup);
@@ -66,10 +71,13 @@ class ofApp : public ofBaseApp{
 		int songListDisplacement = 0; 
 		bool drawingSongs = false; 
 		ofTrueTypeFont font;
-		ofImage image; 
 		bool hoveringUpNext = false;
 		bool hoveringMyMusic = false; 
 		bool drawingCollection = false; 
+		bool gettingDirectory = true;
+		std::string directoryPath;
+		bool setSongNumberStatus = false;
+		std::string songNumberString;
 
 
 
