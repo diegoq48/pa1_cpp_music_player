@@ -23,7 +23,10 @@ void ofApp::keyPressed(int key)
             case(OF_KEY_LEFT_SHIFT):
                 break;
             default:
-                directoryPath += key;
+                // Ignore weird keys that show up when shift is pressed
+                if (key != 1 && key != 3680) {
+                    directoryPath += key;
+                }
                 break;
         } 
         return;
