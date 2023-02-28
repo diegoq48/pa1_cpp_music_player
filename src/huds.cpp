@@ -47,6 +47,8 @@ void ofApp::drawHud()
     //Draw Drop Down Menus
     font.drawString("Up Next: " + nextSong, 0, 90);
     font.drawString("My Music: ", currentWidth - strlen("My Music: ")*6, 90);
+    font.drawString("PWD: " + directoryPath, 0, 180);
+    font.drawString("FPS: " + to_string((int) ofGetFrameRate()), 0, 195);
 }
 
 
@@ -65,11 +67,12 @@ void ofApp::drawUpNext(){
 
     for (int i = 0; i < 5; i++){
         ofSetColor(255);
-        if (i == 0){
-            ofSetColor(255, 0,0);
-        }
-        if (songNumber + i + songListDisplacement < songVectorSize){
-            font.drawString("    " + to_string(songNumber+i) + " " + songVector[songNumber + i + songListDisplacement].getFileName(), 
+  
+        if (songNumber + i  < songVectorSize){
+            if (songNumber + i == songNumber){
+                ofSetColor(255, 255, 0);
+            }
+            font.drawString("    " + to_string(songNumber+i) + " " + songVector[songNumber + i].getFileName(), 
             0, 105+(i*12));
         }
         else{
@@ -93,14 +96,14 @@ void ofApp::drawSetSongNumber(){
 
 void ofApp::showCollection(){
     ofSetColor(255);
-    for (int i = 0; i < songVectorSize/(((ofGetHeight()-90)/12)); i++){
-        ofSetColor(255);
-        if (i == 0 && songListDisplacement == 0){
-            ofSetColor(255, 0,0);
+    int currentWidth = ofGetWidth();
+    for (int i = 0; i < songVectorSize/10; i++)
+    {
+        if (songListDisplacement + i + songNumber > songVectorSize){
+            return;
         }
-        font.drawString(to_string(songNumber+i) + " " + songVector[songNumber + i + songListDisplacement].getFileName(), ofGetWidth()-(songVector[songNumber+i].getFileName().length()*12)-5, 105+(i*12)+25);
+        font.drawString(to_string(songNumber + i + songListDisplacement) + " " + songVector[songNumber + i + songListDisplacement].getFileName(), currentWidth - 500, 105+(i*15));
     }
-    return;
 }
 
 

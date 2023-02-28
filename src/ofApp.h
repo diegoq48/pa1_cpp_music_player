@@ -2,6 +2,8 @@
 
 #include "ofMain.h"
 #include "AudioVisualizer.h"
+#include <ctime>
+//#include <spdlog/spdlog.h>
 
 class ofApp : public ofBaseApp{
 	public:
