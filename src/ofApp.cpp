@@ -187,9 +187,8 @@ void ofApp::keyPressed(int key)
         if (!drawingCollection)
         {
             break;
-            ofLog(OF_LOG_WARNING, "Song List Displacement = " + to_string(songListDisplacement));
         }
-        songListDisplacement++;
+        songListDisplacement < (int) songVector.size() ? songListDisplacement++ : songListDisplacement = songVector.size();
         ofLog(OF_LOG_NOTICE, "Song List Displacement = " + to_string(songListDisplacement));
         break;
 
@@ -198,10 +197,9 @@ void ofApp::keyPressed(int key)
         if (!drawingCollection)
         {
             break;
-            ofLog(OF_LOG_WARNING, "Song List Displacement = " + to_string(songListDisplacement));
         }
         ofLog(OF_LOG_NOTICE, "Song List Displacement = " + to_string(songListDisplacement));
-        songListDisplacement--;
+        songListDisplacement > 0 ? songListDisplacement-- : songListDisplacement = 0;
         break;
 
     // toggles shuffle on and off
