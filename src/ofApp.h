@@ -40,6 +40,7 @@ class ofApp : public ofBaseApp{
 		void drawSetSongNumber();
 		void getSongDirectory();
 		void statusSaver();
+		void statusSetup();
 
 	private:
 		void setup3D(bool doSetup);

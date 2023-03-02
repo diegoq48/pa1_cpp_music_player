@@ -92,6 +92,3 @@ void ofApp::getSongDirectory()
     songFileBuilder(); 
 }
 
-void ofApp::statusSaver(){
-    return; 
-}
