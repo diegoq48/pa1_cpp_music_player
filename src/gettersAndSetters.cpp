@@ -108,7 +108,3 @@ void ofApp::getDirectory()
         gettingDirectory = true;
     }
 }
-
-void ofApp::statusSaver(){
-    return; 
-}
