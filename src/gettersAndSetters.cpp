@@ -51,7 +51,6 @@ void ofApp::changeSong(int displacement)
 
 void ofApp::getSongs(ofDirectory dir)
 {
-    dir.allowExt("mp3"); dir.allowExt("wav"); dir.allowExt("ogg"); dir.allowExt("flac"); dir.allowExt("aiff"); dir.allowExt("m4a"); dir.allowExt("");
     ofLog(OF_LOG_NOTICE, "Getting songs, exploring directory: " + dir.getAbsolutePath());
 	dir.listDir();
 	for(auto file : dir)
@@ -63,12 +62,12 @@ void ofApp::getSongs(ofDirectory dir)
 		}
 		else
 		{
-            if (file.getExtension() == ""){
-                continue;
+            string ext = file.getExtension();
+            if (ext == "mp3" || ext == "wav" || ext == "ogg" || ext == "flac" || ext == "aiff" || ext == "m4a")
+            {
+                ofLog(OF_LOG_NOTICE, "File found: " + file.getAbsolutePath());
+			    songVector.push_back(file);
             }
-            ofLog(OF_LOG_NOTICE, "File found: " + file.getAbsolutePath());
-			songVector.push_back((file));
-
 		}
 	}
 }
@@ -91,6 +90,23 @@ void ofApp::getSongDirectory()
     }
     sound.load(songVector[songNumber]);
     songFileBuilder(); 
+}
+
+void ofApp::getDirectory()
+{
+    ofFileDialogResult result = ofSystemLoadDialog("Select a directory", true);
+    if (result.bSuccess)
+    {
+        directoryPath = result.getPath();
+        ofLog(OF_LOG_NOTICE, "Directory path: " + directoryPath);
+        gettingDirectory = false;
+        getSongDirectory();
+    }
+    else
+    {
+        ofLog(OF_LOG_ERROR, "User cancelled the dialog");
+        gettingDirectory = true;
+    }
 }
 
 void ofApp::statusSaver(){

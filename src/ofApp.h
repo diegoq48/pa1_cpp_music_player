@@ -39,7 +39,9 @@ class ofApp : public ofBaseApp{
 		void songSearch(std::string searchParameter);
 		void drawSetSongNumber();
 		void getSongDirectory();
+		void getDirectory();
 		void statusSaver();
+		void statusSetup();
 
 
 

@@ -17,6 +17,9 @@ void ofApp::keyPressed(int key)
                 break;
             case(OF_KEY_LEFT_SHIFT):
                 break;
+            case(OF_KEY_TAB):
+                getDirectory();
+                break;
             default:
                 // Ignore weird keys that show up when shift is pressed
                 if (key != 1 && key != 3680) {
@@ -187,9 +190,8 @@ void ofApp::keyPressed(int key)
         if (!drawingCollection)
         {
             break;
-            ofLog(OF_LOG_WARNING, "Song List Displacement = " + to_string(songListDisplacement));
         }
-        songListDisplacement++;
+        songListDisplacement < (int) songVectorSize - songNumber ? songListDisplacement++ : songListDisplacement = songVectorSize - songNumber;
         ofLog(OF_LOG_NOTICE, "Song List Displacement = " + to_string(songListDisplacement));
         break;
 
@@ -198,10 +200,9 @@ void ofApp::keyPressed(int key)
         if (!drawingCollection)
         {
             break;
-            ofLog(OF_LOG_WARNING, "Song List Displacement = " + to_string(songListDisplacement));
         }
         ofLog(OF_LOG_NOTICE, "Song List Displacement = " + to_string(songListDisplacement));
-        songListDisplacement--;
+        songListDisplacement > 0 - songNumber ? songListDisplacement-- : songListDisplacement = 0 - songNumber;
         break;
 
     // toggles shuffle on and off
@@ -358,6 +359,7 @@ void ofApp::setup()
     ofSetFrameRate(60);
     ofSetVerticalSync(true);
     ofSetCircleResolution(100);
+    statusSetup();
     ofLog(OF_LOG_NOTICE, "Starting Setup");
     sound.setLoop(false);
     ofLog(OF_LOG_NOTICE, "set sound to not loop");
@@ -377,13 +379,15 @@ void ofApp::update()
     progress = sound.getPosition();
     if (progress > 0.99 && !repeatStatus)
     {
+        if(!repeatStatus)
+        {
         ofApp::changeSong(1);
+        }
     }
-    if(!gettingDirectory && songVectorSize == 0){
-
+    if(!gettingDirectory && 0 == songVectorSize){
         getSongDirectory();
+        }
     }
-}
 
 void ofApp::draw()
 {
