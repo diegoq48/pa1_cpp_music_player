@@ -188,7 +188,7 @@ void ofApp::keyPressed(int key)
         {
             break;
         }
-        songListDisplacement < (int) songVector.size() ? songListDisplacement++ : songListDisplacement = songVector.size();
+        songListDisplacement < (int) songVectorSize - songNumber ? songListDisplacement++ : songListDisplacement = songVectorSize - songNumber;
         ofLog(OF_LOG_NOTICE, "Song List Displacement = " + to_string(songListDisplacement));
         break;
 
@@ -199,7 +199,7 @@ void ofApp::keyPressed(int key)
             break;
         }
         ofLog(OF_LOG_NOTICE, "Song List Displacement = " + to_string(songListDisplacement));
-        songListDisplacement > 0 ? songListDisplacement-- : songListDisplacement = 0;
+        songListDisplacement > 0 - songNumber ? songListDisplacement-- : songListDisplacement = 0 - songNumber;
         break;
 
     // toggles shuffle on and off
