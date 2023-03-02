@@ -247,7 +247,9 @@ void ofApp::keyPressed(int key)
         }
         mode--;
         break;
-
+    case '?':
+        songSearch("spit in my face");
+        break;
     //exit key 
     case 't':
         statusSaver();
@@ -262,7 +264,8 @@ void ofApp::keyPressed(int key)
     }
     return;
 }
-
+// Prefieres que my music lights up when you hover over it? o no ? 
+// Ok have to figure out why it stopped working
 void ofApp::keyReleased(int key)
 {
 }
@@ -281,6 +284,7 @@ void ofApp::mouseMoved(int x, int y)
     if( x > ofGetWidth() - 50 && y < 90 && y >75)
     {
         hoveringMyMusic = true;
+        return;
     }
     hoveringMyMusic = false;
     
@@ -383,33 +387,36 @@ void ofApp::update()
 
 void ofApp::draw()
 {
-    if (setSongNumberStatus)
-    {
-        ofApp::drawSetSongNumber();
-        return;
-    }
-    if(gettingDirectory)
-    {
-        ofApp::drawUserPrompt();
-        return;
-    }
-    if (songListing)
-    {
-        ofApp::drawUpNext();
-    }
-    if(hoveringUpNext){
-        ofDrawRectangle(0, 75, 50, 15);
-    }
-    if(hoveringMyMusic){
-        ofDrawRectangle(ofGetWidth() - 50, 75, 50, 15);
-    }
-    if (drawingCollection)
-    {
-        ofApp::showCollection();
-    }
+
 
     if (ofGetHeight() > 199 && ofGetWidth() > 199)
     {
+
+            if (setSongNumberStatus)
+        {
+            ofApp::drawSetSongNumber();
+            return;
+        }
+        if(gettingDirectory)
+        {
+            ofApp::drawUserPrompt();
+            return;
+        }
+        if (songListing)
+        {
+            ofApp::drawUpNext();
+        }
+        if(hoveringUpNext){
+            ofDrawRectangle(0, 75, 50, 15);
+        }
+        if(hoveringMyMusic){
+            ofDrawRectangle(ofGetWidth() - 70, 75, 70, 15);
+        }
+        if (drawingCollection)
+        {
+            ofApp::showCollection();
+        }
+
         ofSetColor(255);
         float pos = playing ? progress : lastPos;
         if (!playing && !helpStatus)
@@ -440,7 +447,7 @@ void ofApp::draw()
         }
         ofApp::drawHud(); 
         ofApp::drawProgressBar(pos);
-        if(drawingSongs){
+/*         if(drawingSongs){
             drawUpNext();
         }
             if (songListing)
@@ -456,7 +463,7 @@ void ofApp::draw()
         if (drawingCollection)
         {
             ofApp::showCollection();
-        }
+        } */
         
         return; 
     }

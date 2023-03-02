@@ -67,7 +67,7 @@ void ofApp::getSongs(ofDirectory dir)
                 continue;
             }
             ofLog(OF_LOG_NOTICE, "File found: " + file.getAbsolutePath());
-			songVector.push_back(file);
+			songVector.push_back((file));
 
 		}
 	}
@@ -89,7 +89,7 @@ void ofApp::getSongDirectory()
         gettingDirectory = true;
         return;
     }
-    sound.load(songVector[0]);
+    sound.load(songVector[songNumber]);
     songFileBuilder(); 
 }
 

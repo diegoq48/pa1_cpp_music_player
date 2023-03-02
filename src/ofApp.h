@@ -36,10 +36,12 @@ class ofApp : public ofBaseApp{
 		void showCollection();
 		void drawUserPrompt();
 		void songFileBuilder();
-		void songSearch();
+		void songSearch(std::string searchParameter);
 		void drawSetSongNumber();
 		void getSongDirectory();
 		void statusSaver();
+
+
 
 	private:
 		void setup3D(bool doSetup);
@@ -80,6 +82,8 @@ class ofApp : public ofBaseApp{
 		std::string directoryPath;
 		bool setSongNumberStatus = false;
 		std::string songNumberString;
+		std::string errorMessage = "";
+		vector<int> searchMatches; 
 
 
 

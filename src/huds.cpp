@@ -97,11 +97,14 @@ void ofApp::drawSetSongNumber(){
 void ofApp::showCollection(){
     ofSetColor(255);
     int currentWidth = ofGetWidth();
-    for (int i = 0; i < songVectorSize/10; i++)
+    for (int i = 0; i < 50; i++)
     {
+        ofSetColor(255);
         if (songListDisplacement + i + songNumber > songVectorSize){
             return;
         }
+        songListDisplacement + i == 0 ? ofSetColor(255,255,0) : ofSetColor(255, 0, 0);
+        
         font.drawString(to_string(songNumber + i + songListDisplacement) + " " + songVector[songNumber + i + songListDisplacement].getFileName(), currentWidth - 500, 105+(i*15));
     }
 }
@@ -116,5 +119,6 @@ void ofApp::drawUserPrompt()
     font.drawString("Press enter to confirm", ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 20);
     ofSetColor(255,0,0);
     font.drawString(directoryPath, ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 40);
+    font.drawString(errorMessage, ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 60);
 
 }
