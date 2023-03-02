@@ -39,6 +39,7 @@ class ofApp : public ofBaseApp{
 		void songSearch();
 		void drawSetSongNumber();
 		void getSongDirectory();
+		void getDirectory();
 		void statusSaver();
 
 	private:

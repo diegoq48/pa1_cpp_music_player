@@ -17,6 +17,9 @@ void ofApp::keyPressed(int key)
                 break;
             case(OF_KEY_LEFT_SHIFT):
                 break;
+            case(OF_KEY_TAB):
+                getDirectory();
+                break;
             default:
                 // Ignore weird keys that show up when shift is pressed
                 if (key != 1 && key != 3680) {

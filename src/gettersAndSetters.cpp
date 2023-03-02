@@ -92,6 +92,23 @@ void ofApp::getSongDirectory()
     songFileBuilder(); 
 }
 
+void ofApp::getDirectory()
+{
+    ofFileDialogResult result = ofSystemLoadDialog("Select a directory", true);
+    if (result.bSuccess)
+    {
+        directoryPath = result.getPath();
+        ofLog(OF_LOG_NOTICE, "Directory path: " + directoryPath);
+        gettingDirectory = false;
+        getSongDirectory();
+    }
+    else
+    {
+        ofLog(OF_LOG_ERROR, "User cancelled the dialog");
+        gettingDirectory = true;
+    }
+}
+
 void ofApp::statusSaver(){
     return; 
 }

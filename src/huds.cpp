@@ -112,7 +112,7 @@ void ofApp::drawUserPrompt()
 {
     // draw an empty text box to get the directory of the song 
     ofSetColor(255, 255, 255);
-    font.drawString("Enter the directory of the song", ofGetWidth() / 2 - 100, ofGetHeight() / 2);
+    font.drawString("Press tab to select the music directory or enter the directory of the song", ofGetWidth() / 2 - 225, ofGetHeight() / 2);
     font.drawString("Press enter to confirm", ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 20);
     ofSetColor(255,0,0);
     font.drawString(directoryPath, ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 40);
