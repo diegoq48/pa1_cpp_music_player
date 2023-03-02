@@ -41,6 +41,7 @@ class ofApp : public ofBaseApp{
 		void getSongDirectory();
 		void getDirectory();
 		void statusSaver();
+		void statusSetup();
 
 	private:
 		void setup3D(bool doSetup);

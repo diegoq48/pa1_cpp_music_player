@@ -355,6 +355,7 @@ void ofApp::setup()
     ofSetFrameRate(60);
     ofSetVerticalSync(true);
     ofSetCircleResolution(100);
+    statusSetup();
     ofLog(OF_LOG_NOTICE, "Starting Setup");
     sound.setLoop(false);
     ofLog(OF_LOG_NOTICE, "set sound to not loop");
@@ -374,13 +375,15 @@ void ofApp::update()
     progress = sound.getPosition();
     if (progress > 0.99 && !repeatStatus)
     {
+        if(!repeatStatus)
+        {
         ofApp::changeSong(1);
+        }
     }
-    if(!gettingDirectory && songVectorSize == 0){
-
+    if(!gettingDirectory && 0 == songVectorSize){
         getSongDirectory();
+        }
     }
-}
 
 void ofApp::draw()
 {
