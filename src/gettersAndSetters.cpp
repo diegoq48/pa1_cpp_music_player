@@ -18,6 +18,9 @@ void ofApp::setAmplitude()
 
 void ofApp::changeSong(int displacement)
 {
+    if (repeatStatus){
+        return;
+    }
     sound.unload();
     songNumber += displacement;
     if (shuffleStatus)
@@ -42,6 +45,7 @@ void ofApp::changeSong(int displacement)
         sound.load(songVector[songNumber]);
         return; 
     }
+    playing = true;
     ofLog(OF_LOG_NOTICE, "Song number: " + ofToString(songNumber));
     sound.load(songVector[songNumber]);
     sound.play();

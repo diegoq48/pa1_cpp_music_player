@@ -39,7 +39,7 @@ void ofApp::drawHud()
     font.drawString("Now Playing: " + (songVector[songNumber].getFileName()), 0, 30);
     ofSetColor(255);
     font.drawString("Progress: " + to_string(progress * 100) + "%", 0, 45);
-    font.drawString("Volume: " + to_string(sound.getVolume()) + "%", 0, 75);
+    font.drawString("Volume: " + to_string((int)(sound.getVolume()*100)) + "%", 0, 75);
     font.drawString("Loop: " + shownLoopStatus  + "   Repeat: " + shownRepeatStatus + "    Shuffle: " + shownShuffleStatus, 0, 60);
     font.drawString("Press H for help", currentWidth - strlen("Press H for help")*6, 15);
     font.drawString("< or > Swap Mode", currentWidth - strlen("< or > SWAP MODE")*7, 30);

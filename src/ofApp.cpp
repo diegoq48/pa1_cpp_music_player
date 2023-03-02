@@ -104,14 +104,13 @@ void ofApp::keyPressed(int key)
 
     // playes the next song 
     case 'd':
-        playing = true;
         ofApp::changeSong(1);
         break;
 
 
     // increases volume 
     case '=':
-        if (sound.getVolume() < 2.0)
+        if (sound.getVolume() <= 1.0)
         {
             ofLog(OF_LOG_NOTICE, "Volume = " + to_string(sound.getVolume()));
             sound.setVolume(sound.getVolume() + 0.1);
@@ -121,7 +120,7 @@ void ofApp::keyPressed(int key)
 
     // lowers Volume 
     case '-':
-        if (sound.getVolume() > 0.0)
+        if (sound.getVolume() > 0.1)
         {
             ofLog(OF_LOG_NOTICE, "Volume = " + to_string(sound.getVolume()));
             sound.setVolume(sound.getVolume() - 0.1);
@@ -204,7 +203,7 @@ void ofApp::keyPressed(int key)
         ofLog(OF_LOG_NOTICE, "Song List Displacement = " + to_string(songListDisplacement));
         songListDisplacement > 0 - songNumber ? songListDisplacement-- : songListDisplacement = 0 - songNumber;
         break;
-
+    
     // toggles shuffle on and off
     case 's' :
         shuffleStatus = !shuffleStatus;
@@ -290,6 +289,7 @@ void ofApp::mouseMoved(int x, int y)
     hoveringMyMusic = false;
     
     
+    
 }
 
 void ofApp::mouseDragged(int x, int y, int button)
@@ -320,6 +320,8 @@ void ofApp::mousePressed(int x, int y, int button)
     {
         drawingCollection  = !drawingCollection;
     }
+
+
 }
 
 void ofApp::mouseReleased(int x, int y, int button)
@@ -361,14 +363,11 @@ void ofApp::setup()
     ofSetCircleResolution(100);
     statusSetup();
     ofLog(OF_LOG_NOTICE, "Starting Setup");
-    sound.setLoop(false);
-    ofLog(OF_LOG_NOTICE, "set sound to not loop");
-    sound.setVolume(2);
-    ofLog(OF_LOG_NOTICE, "set sound to 2");
     font.load("sans-serif.ttf", 12);
     ofLog(OF_LOG_NOTICE, "loaded Font");
     ofSetBackgroundColor(00, 00, 00);
     ofSetWindowTitle("Music Player");
+    sound.setVolume(0.5);
 }
 
 
@@ -379,10 +378,8 @@ void ofApp::update()
     progress = sound.getPosition();
     if (progress > 0.99 && !repeatStatus)
     {
-        if(!repeatStatus)
-        {
         ofApp::changeSong(1);
-        }
+        
     }
     if(!gettingDirectory && 0 == songVectorSize){
         getSongDirectory();
