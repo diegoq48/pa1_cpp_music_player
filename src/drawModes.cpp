@@ -1,6 +1,9 @@
 #include "ofApp.h"
 
 
+
+// Draws one set of bars at the bottom of the window with the width of them being based on the amplitude of the frequency band truncated at the height of the window - 20
+// Gets amplitudes until 32 in order to mirror them 
 void ofApp::drawMode1(vector<float> amplitudes)
 {
     ofFill();
@@ -9,27 +12,23 @@ void ofApp::drawMode1(vector<float> amplitudes)
     int windowWidth = ofGetWidth();
     for (int i = 32; i >= 0; i--)
     {
-        // Multiplies the amplitude by a constant to make the bars bigger along with the height Ratio
         shownAmplitude = (amplitudes[32 - (i + 1)] * 10 * heightRatio);
-        // Truncates the bars at windowHeight -20
         if (fabs(amplitudes[32 - (i + 1)] * 10) > windowHeight - 20)
         {
             shownAmplitude = ((windowHeight - 20) * -1);
         }
-        ofDrawRectRounded(windowWidth / 64 * i, windowHeight +10, windowWidth / 64, shownAmplitude, 5);
+        ofDrawRectRounded(windowWidth / 64 * i, windowHeight-10, windowWidth / 80, shownAmplitude, 5);
     }
 
 
     for (int i = 32; i < 64; i++)
     {
-        // Multiplies the amplitude by a constant to make the bars bigger along with the height Ratio
         shownAmplitude = (amplitudes[i - 32] * 10 * heightRatio);
-        // Truncates the bars at windowHeight -20 
         if (fabs(amplitudes[i - 32] * 10) > windowHeight - 20)
         {
             shownAmplitude = (windowHeight - 20) * -1;
         }
-        ofDrawRectRounded(windowWidth / 64 * i, windowHeight+10, windowWidth / 64, shownAmplitude, 5);
+        ofDrawRectRounded(windowWidth / 64 * i, windowHeight-10, windowWidth / 80, shownAmplitude, 5);
     }
 }
 
@@ -62,9 +61,7 @@ void ofApp::drawMode3(vector<float> amplitudes)
     int windowWidth = ofGetWidth();
     for (int i = 64; i > 0; i--)
     {
-        // Multiplies the amplitude by a constant to make the bars bigger along with the height Ratio
         shownAmplitude = amplitudes[i] * -10 ;
-        // Truncates the bars at the center of the screen
         if (shownAmplitude  > windowHeight / 2)
         {
             shownAmplitude = (windowWidth / 2) -10;
@@ -75,15 +72,13 @@ void ofApp::drawMode3(vector<float> amplitudes)
 
     for (int i = 64; i > 0; i--)
     {
-        // Multiplies the amplitude by a constant to make the bars bigger along with the height Ratio
         shownAmplitude = amplitudes[i] * -10 ;
-        // Truncates the bars at the center of the screen
         if (shownAmplitude  > windowHeight / 2)
         {
             shownAmplitude = (windowWidth / 2) -10;
         }
         
-        ofDrawRectangle(windowWidth, (windowHeight - (32 * i)), shownAmplitude*-1, windowHeight / 64);
+        ofDrawRectangle(windowWidth, (0 + (32 * i)), shownAmplitude*-1, windowHeight / 64);
     }
 }
 

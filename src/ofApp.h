@@ -42,6 +42,7 @@ class ofApp : public ofBaseApp{
 		void getDirectory();
 		void statusSaver();
 		void statusSetup();
+		void drawSearchPrompt();
 
 
 
@@ -86,6 +87,10 @@ class ofApp : public ofBaseApp{
 		std::string songNumberString;
 		std::string errorMessage = "";
 		vector<int> searchMatches; 
+		int songMatch;
+		bool searching = false;
+		std::string searchString = "";
+		int trackNumber = 0; 
 
 
 

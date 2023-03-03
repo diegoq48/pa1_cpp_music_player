@@ -30,6 +30,60 @@ void ofApp::keyPressed(int key)
         ofLog(OF_LOG_NOTICE, "Directory path " + directoryPath);
         return;
     }
+    if (searching){
+        ofLog(OF_LOG_NOTICE, "Searching");
+        if(key == '(' || key == ')' || key == '[' || key == ']' || key == '{' || key == '}'){
+            return;
+        }
+        switch(key){
+            case(OF_KEY_RETURN):
+                if (searchMatches.size() > 0){
+                    sound.unload();
+                    songNumber = searchMatches[trackNumber];
+                    playing = true;
+                    sound.load(songVector[songNumber]);
+                    sound.play();
+                    searchString = "";
+                    searching = false;
+                }
+                break;
+            case OF_KEY_UP:
+                if (trackNumber == 0){
+                    trackNumber = searchMatches.size() - 1;
+                    break;
+                }
+                trackNumber--;
+                break;
+            case OF_KEY_DOWN:
+                if (trackNumber == searchMatches.size() -1){
+                    trackNumber = 0;
+                    break;
+                }
+                trackNumber++;
+                break;
+            case(OF_KEY_BACKSPACE):
+                searchString = searchString.substr(0, searchString.length()-1);
+                searchMatches.clear();
+                songSearch(searchString);
+                break;
+            case(OF_KEY_LEFT_SHIFT):
+                break;
+            case '?':
+                searchString = "";
+                searching = false;
+                break;
+            default:
+                // Ignore weird keys that show up when shift is pressed
+                if (key != 1 && key != 3680) {
+                    searchString += key;
+                }
+                searchMatches.clear();
+                songSearch(searchString);
+                break;
+        } 
+        ofLog(OF_LOG_NOTICE, "Search String " + searchString);
+        return;
+    }
 
 
 
@@ -248,7 +302,7 @@ void ofApp::keyPressed(int key)
         mode--;
         break;
     case '?':
-        songSearch("spit in my face");
+        searching = !searching;
         break;
     //exit key 
     case 't':
@@ -368,6 +422,8 @@ void ofApp::setup()
     ofSetBackgroundColor(00, 00, 00);
     ofSetWindowTitle("Music Player");
     sound.setVolume(0.5);
+    sound.unload();
+    sound.load(songVector[songNumber]);
 }
 
 
@@ -393,7 +449,7 @@ void ofApp::draw()
     if (ofGetHeight() > 199 && ofGetWidth() > 199)
     {
 
-            if (setSongNumberStatus)
+        if (setSongNumberStatus)
         {
             ofApp::drawSetSongNumber();
             return;
@@ -417,10 +473,14 @@ void ofApp::draw()
         {
             ofApp::showCollection();
         }
+        if (searching)
+        {
+            ofApp::drawSearchPrompt();
+        }
 
         ofSetColor(255);
         float pos = playing ? progress : lastPos;
-        if (!playing && !helpStatus)
+        if (!playing && !helpStatus && !searching)
         {
             font.drawString("Press 'P' to play some music!", (ofGetWidth() / 2) - strlen("Press 'p' to play some music!")*8, ofGetHeight() / 2);
         }

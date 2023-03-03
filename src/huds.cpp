@@ -1,5 +1,6 @@
 #include "ofApp.h"
 
+// Draws help menu at the center of the screen
 void ofApp::drawHelp()
 {
     ofSetColor(255);
@@ -24,8 +25,10 @@ void ofApp::drawHelp()
     font.drawString("Press 's' to shuffle songs", helpMidScreenX - strlen("Press 's' to shuffle songs") / 2 * 8, helpMidScreenY + 240);
     font.drawString("Press '/' to play a song at a index number", helpMidScreenX - strlen("Press '/' to play a song at a index number") / 2 * 8, helpMidScreenY + 255);
     font.drawString("Press 'k' to reset the song directory", helpMidScreenX - strlen("Press 'k' to reset the song directory") / 2 * 8, helpMidScreenY + 270);
+    font.drawString("Press '?' to search for songs", helpMidScreenX - strlen("Press '?' to search for songs") / 2 * 8, helpMidScreenY + 285);
 }
 
+// Draws the main HUD at the top of the screen both right and left 
 void ofApp::drawHud()
 {
     std::string shownLoopStatus = loopStatus? "ON":"OFF";
@@ -38,22 +41,22 @@ void ofApp::drawHud()
     ofSetColor(255,255,0);
     font.drawString("Now Playing: " + (songVector[songNumber].getFileName()), 0, 30);
     ofSetColor(255);
-    font.drawString("Progress: " + to_string(progress * 100) + "%", 0, 45);
+    font.drawString("Progress: " + to_string((int)(progress * 100)) + "%", 0, 45);
     font.drawString("Volume: " + to_string((int)(sound.getVolume()*100)) + "%", 0, 75);
     font.drawString("Loop: " + shownLoopStatus  + "   Repeat: " + shownRepeatStatus + "    Shuffle: " + shownShuffleStatus, 0, 60);
     font.drawString("Press H for help", currentWidth - strlen("Press H for help")*6, 15);
     font.drawString("< or > Swap Mode", currentWidth - strlen("< or > SWAP MODE")*7, 30);
     ofSetColor(255, 255, 0);
-    //Draw Drop Down Menus
     font.drawString("Up Next: " + nextSong, 0, 90);
     font.drawString("My Music: ", currentWidth - strlen("My Music: ")*6, 90);
+    ofSetColor(255);
     font.drawString("PWD: " + directoryPath, 0, 180);
     font.drawString("FPS: " + to_string((int) ofGetFrameRate()), 0, 195);
 }
 
 
 
-
+// draws progress bar at the bottom of the screen
 void ofApp::drawProgressBar(float pos)
 {
     ofFill();
@@ -61,13 +64,11 @@ void ofApp::drawProgressBar(float pos)
     ofDrawRectangle(0, ofGetHeight() - 10, ofGetWidth() * pos, 20);
 }
 
+// draws the drop down menu for up next songs
 void ofApp::drawUpNext(){
     ofSetColor(255);
-    // don't itterate out of bounds of the vector
-
     for (int i = 0; i < 5; i++){
         ofSetColor(255);
-  
         if (songNumber + i  < songVectorSize){
             if (songNumber + i == songNumber){
                 ofSetColor(255, 255, 0);
@@ -78,11 +79,11 @@ void ofApp::drawUpNext(){
         else{
             return;
         }
-       // font.drawString("    " + to_string(songNumber+i) + " " + songVector[songNumber + i + songListDisplacement].getFileName(), 
-        //0, 105+(i*12));
     }
 }
 
+
+// Hud for when user is setting song number 
 void ofApp::drawSetSongNumber(){
     ofSetColor(255);
     font.drawString("Enter the song number in the vector you want to play", ofGetWidth() / 2 - 100, ofGetHeight() / 2);
@@ -94,6 +95,7 @@ void ofApp::drawSetSongNumber(){
 
 
 
+// drop down for show collection 
 void ofApp::showCollection(){
     ofSetColor(255);
     int currentWidth = ofGetWidth();
@@ -104,21 +106,46 @@ void ofApp::showCollection(){
             return;
         }
         songListDisplacement + i == 0 ? ofSetColor(255,255,0) : ofSetColor(255, 0, 0);
-        
-        font.drawString(to_string(songNumber + i + songListDisplacement) + " " + songVector[songNumber + i + songListDisplacement].getFileName(), currentWidth - 500, 105+(i*15));
+        font.drawString(to_string(songNumber + i + songListDisplacement) + " " + songVector[songNumber + i + songListDisplacement].getFileName(),
+         currentWidth - 500, 105+(i*15));
     }
 }
 
 
 
+// Shown when user is resseting directory 
 void ofApp::drawUserPrompt()
 {
-    // draw an empty text box to get the directory of the song 
     ofSetColor(255, 255, 255);
-    font.drawString("Press tab to select the music directory or enter the directory of the song", ofGetWidth() / 2 - 225, ofGetHeight() / 2);
+    font.drawString("Press tab to select the music directory (Only on windows) or enter the directory of the song", ofGetWidth() / 2 - 225, ofGetHeight() / 2);
     font.drawString("Press enter to confirm", ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 20);
     ofSetColor(255,0,0);
     font.drawString(directoryPath, ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 40);
     font.drawString(errorMessage, ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 60);
+}
 
+
+// Draws the search prompt at the center of the screen 
+void ofApp::drawSearchPrompt(){
+    ofLog() << "Drawing Search Prompt";
+    ofSetColor(255, 255, 255);
+    font.drawString("Enter the name of the song you want to play", ofGetWidth() / 2 - 100, ofGetHeight() / 2);
+    font.drawString("Press enter to confirm", ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 15);
+    font.drawString("Press '?' to cancel" , ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 30);
+    font.drawString("Current Song Number: " + to_string(songNumber), ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 45);
+    font.drawString(searchString, ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 60);
+    font.drawString(errorMessage, ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 75);
+
+    for (int i = 0; i < searchMatches.size() ; i++){
+        if (i > 10){
+            return;
+        }
+        if (i == trackNumber){
+            ofSetColor(255, 255, 0);
+        }
+        else{
+            ofSetColor(255);
+        }
+        font.drawString(to_string(i) + " " + songVector[searchMatches[i]].getFileName(), ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 90 + (i*15));
+    }
 }

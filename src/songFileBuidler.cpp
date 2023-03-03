@@ -42,26 +42,28 @@ void ofApp::songFileBuilder(){
 // Black Magic with regex  works now 
 void ofApp::songSearch(std::string searchParameter){
     ofFile songFile; 
-    //std::transform(searchParameter.begin(), searchParameter.end(), searchParameter.begin(), ::tolower);
     songFile.open("songs.txt", ofFile::ReadOnly);
     ofLog(OF_LOG_NOTICE, "File opened");
     ofLog(OF_LOG_NOTICE, "Searching for " + searchParameter);
     std::regex regex(searchParameter, std::regex_constants::icase);
+    int itterator = 0;
     for (int i = 0; i < songVectorSize; i++){
         std::string line;
         while (getline(songFile, line)){
             
             if (std::regex_search(line, regex)){
                 ofLog(OF_LOG_NOTICE, "Match found" + line);
-                searchMatches.push_back(i);
+                searchMatches.push_back(itterator);
             }
+        itterator++;
         }
     }
     ofLog(OF_LOG_NOTICE, "File closed");
     songFile.close();
-    for (auto it = searchMatches.begin(); it != searchMatches.end(); it++){
-        ofLog(OF_LOG_NOTICE, "Match found at " + *it);
-    }
+   
+    for (int i=0;i  < searchMatches.size(); i++){
+        ofLog(OF_LOG_NOTICE, "Match found at " + to_string(searchMatches[i]));
+    }       
     return;
 
     
