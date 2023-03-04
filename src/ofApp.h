@@ -43,6 +43,11 @@ class ofApp : public ofBaseApp{
 		void statusSaver();
 		void statusSetup();
 		void drawSearchPrompt();
+		void playlistBuilder(std::string playlistName);
+		void playlistPopulator(std::string playlistName, std::string songPath);
+		void drawPlaylistPrompt();
+		void playlistSelector(std::string playlistName);
+		void drawAvailablePlaylists();
 
 
 
@@ -76,9 +81,7 @@ class ofApp : public ofBaseApp{
 		bool songListing = false;
 		bool shuffleStatus = false;
 		int songListDisplacement = 0; 
-		bool drawingSongs = false; 
 		ofTrueTypeFont font;
-		bool hoveringUpNext = false;
 		bool hoveringMyMusic = false; 
 		bool drawingCollection = false; 
 		bool gettingDirectory = true;
@@ -91,6 +94,14 @@ class ofApp : public ofBaseApp{
 		bool searching = false;
 		std::string searchString = "";
 		int trackNumber = 0; 
+		bool fillingRect = true;
+		bool muted = false;
+		bool makingPlaylist = false; 
+		bool fillingPlaylist = false;
+		bool selectingPlaylist = false;
+		bool queueingPlaylist = false;
+		ofDirectory playlistDirectory = ofDirectory("playlists");
+		std::string playlistName = "";
 
 
 

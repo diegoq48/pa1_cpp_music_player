@@ -5,6 +5,75 @@
 // switch the gets called whenever a key is pressed 
 void ofApp::keyPressed(int key)
 {
+    if (selectingPlaylist || queueingPlaylist){
+        ofLog(OF_LOG_NOTICE, "Selecting Playlist");
+        switch(key){
+            case(OF_KEY_RETURN):
+                if (queueingPlaylist){
+                    queueingPlaylist = false;
+                    playlistSelector(playlistName);
+                    break;
+                }
+                playlistDirectory.open("playlists");
+                playlistDirectory.listDir();
+                playlistName = playlistDirectory.getName(trackNumber);
+                selectingPlaylist = false;
+                searching = true;
+                fillingPlaylist = true;
+                break;
+            case '.':
+                selectingPlaylist = false;
+                queueingPlaylist = false; 
+            case '\'':
+                queueingPlaylist = true;
+                break;
+            case OF_KEY_UP:
+                if (trackNumber == 0){
+                    trackNumber = playlistDirectory.size() - 1;
+                    break;
+                }
+                trackNumber--;
+                break;
+            case OF_KEY_DOWN:
+                if (trackNumber > playlistDirectory.size() - 2){
+                    trackNumber = 0;
+                    break;
+                }
+                trackNumber++;
+                break;
+            default:
+                // Ignore weird keys that show up when shift is pressed
+                break;
+            
+        } 
+        ofLog(OF_LOG_NOTICE, "Playlist Name " + playlistName);
+        return;
+    }
+    if (makingPlaylist){
+        ofLog(OF_LOG_NOTICE, "Making Playlist");
+        switch(key){
+            case(OF_KEY_RETURN):
+                if (playlistName != ""){
+                    playlistBuilder(playlistName);
+                    playlistName = "";
+                    makingPlaylist = false;
+                }
+                break;
+            case(OF_KEY_BACKSPACE):
+                playlistName = playlistName.substr(0, playlistName.length()-1);
+                break;
+            case(OF_KEY_LEFT_SHIFT):
+                break;
+            default:
+                // Ignore weird keys that show up when shift is pressed
+                if (key != 1 && key != 3680) {
+                    playlistName += key;
+                }
+                break;
+        } 
+        ofLog(OF_LOG_NOTICE, "Playlist Name " + playlistName);
+        return;
+    }
     // chekcs the getting direcory boolean in order to determin whether to direct all input into the direcotry path string
     if (gettingDirectory){
         ofLog(OF_LOG_NOTICE, "Getting Directory");
@@ -37,6 +106,13 @@ void ofApp::keyPressed(int key)
         }
         switch(key){
             case(OF_KEY_RETURN):
+                if (fillingPlaylist){
+                    playlistPopulator(playlistName, songVector[searchMatches[trackNumber]].getAbsolutePath());
+                    searchString = "";
+                    searchMatches.clear();
+                    break;
+                }
+
                 if (searchMatches.size() > 0){
                     sound.unload();
                     songNumber = searchMatches[trackNumber];
@@ -64,6 +140,7 @@ void ofApp::keyPressed(int key)
             case(OF_KEY_BACKSPACE):
                 searchString = searchString.substr(0, searchString.length()-1);
                 searchMatches.clear();
+                trackNumber = 0;
                 songSearch(searchString);
                 break;
             case(OF_KEY_LEFT_SHIFT):
@@ -71,6 +148,7 @@ void ofApp::keyPressed(int key)
             case '?':
                 searchString = "";
                 searching = false;
+                fillingPlaylist = false;
                 break;
             default:
                 // Ignore weird keys that show up when shift is pressed
@@ -79,6 +157,7 @@ void ofApp::keyPressed(int key)
                 }
                 searchMatches.clear();
                 songSearch(searchString);
+                trackNumber = 0;
                 break;
         } 
         ofLog(OF_LOG_NOTICE, "Search String " + searchString);
@@ -261,7 +340,6 @@ void ofApp::keyPressed(int key)
     // toggles shuffle on and off
     case 's' :
         shuffleStatus = !shuffleStatus;
-        drawingSongs = false;
         drawingCollection = false;
         ofLog(OF_LOG_NOTICE, "Shuffle Status = " + to_string(shuffleStatus));
         if(!shuffleStatus){break;}
@@ -301,17 +379,35 @@ void ofApp::keyPressed(int key)
         }
         mode--;
         break;
+    // enables searching
     case '?':
-        searching = !searching;
+        searching = true;
+        break;
+    // toggles filling rectangles excluding mode 3
+    case ';':
+        fillingRect = !fillingRect;
         break;
     //exit key 
-    case 't':
+    case 'q':
         statusSaver();
         ofLog(OF_LOG_NOTICE, "Status Saved");
         ofLog(OF_LOG_NOTICE, "Exiting...");
         OF_EXIT_APP(0);
         break;
+    case 'm':
+    // toggles mute 
+        muted = !muted;
+        muted? sound.setVolume(0) : sound.setVolume(0.5);
+        break;
     // default case
+    case ',':
+        makingPlaylist = true;
+        break;
+    case '.':
+        trackNumber = 0;
+        selectingPlaylist = true;
+    case '\'':
+        queueingPlaylist = true;
     default:
         ofLog(OF_LOG_WARNING, "Key not recognized");
         break;
@@ -326,13 +422,7 @@ void ofApp::keyReleased(int key)
 
 void ofApp::mouseMoved(int x, int y)
 {
-    // checks if mouse is hovering over the up next button
-    if (x < 50 && y < 90 && y >75)
-    {
-        hoveringUpNext = true;
-        return; 
-    }
-    hoveringUpNext = false;
+
 
     // checks if mouse is hovering over the my music button
     if( x > ofGetWidth() - 50 && y < 90 && y >75)
@@ -364,11 +454,7 @@ void ofApp::mousePressed(int x, int y, int button)
         float posf = (float)x / (float)ofGetWidth();
         sound.setPosition(posf);
     }
-    // draw up next menu if mouse is clicked over the up next button  
-    if (x < 50 && y < 90 && y >75)
-    {
-        drawingSongs = !drawingSongs;
-    }
+    
     // draw my music menu if mouse is clicked over the my music button
     if( x > ofGetWidth() - 50 && y < 90 && y >75)
     {
@@ -423,24 +509,28 @@ void ofApp::setup()
     ofSetWindowTitle("Music Player");
     sound.setVolume(0.5);
     sound.unload();
-    sound.load(songVector[songNumber]);
+    color < 50? color += 50 : color = color;
+    if(!gettingDirectory){sound.load(songVector[songNumber]);}
+    ofLog(OF_LOG_NOTICE, "Finished Setup");
+    
 }
 
 
 void ofApp::update()
 {
+    if(!gettingDirectory && 0 == songVectorSize && !queueingPlaylist){
+        getSongDirectory();
+        }
     ofSoundUpdate();
     visualizer.updateAmplitudes();
     progress = sound.getPosition();
+    fillingRect? ofFill(): ofNoFill();
     if (progress > 0.99 && !repeatStatus)
     {
         ofApp::changeSong(1);
         
     }
-    if(!gettingDirectory && 0 == songVectorSize){
-        getSongDirectory();
-        }
-    }
+}
 
 void ofApp::draw()
 {
@@ -448,34 +538,10 @@ void ofApp::draw()
 
     if (ofGetHeight() > 199 && ofGetWidth() > 199)
     {
-
-        if (setSongNumberStatus)
-        {
-            ofApp::drawSetSongNumber();
-            return;
-        }
-        if(gettingDirectory)
+         if(gettingDirectory)
         {
             ofApp::drawUserPrompt();
             return;
-        }
-        if (songListing)
-        {
-            ofApp::drawUpNext();
-        }
-        if(hoveringUpNext){
-            ofDrawRectangle(0, 75, 50, 15);
-        }
-        if(hoveringMyMusic){
-            ofDrawRectangle(ofGetWidth() - 70, 75, 70, 15);
-        }
-        if (drawingCollection)
-        {
-            ofApp::showCollection();
-        }
-        if (searching)
-        {
-            ofApp::drawSearchPrompt();
         }
 
         ofSetColor(255);
@@ -508,25 +574,36 @@ void ofApp::draw()
         }
         ofApp::drawHud(); 
         ofApp::drawProgressBar(pos);
-/*         if(drawingSongs){
-            drawUpNext();
-        }
-            if (songListing)
+        if (setSongNumberStatus)
         {
-            ofApp::drawUpNext();
-        }
-        if(hoveringUpNext){
-            ofDrawRectangle(0, 75, 50, 15);
+            ofApp::drawSetSongNumber();
+            return;
         }
         if(hoveringMyMusic){
-            ofDrawRectangle(ofGetWidth() - 50, 75, 50, 15);
+            ofNoFill();
+            ofDrawRectangle(ofGetWidth() - 70, 75, 70, 15);
         }
         if (drawingCollection)
         {
             ofApp::showCollection();
-        } */
-        
-        return; 
+        }
+        if (searching)
+        {
+            ofApp::drawSearchPrompt();
+        }
+        if (makingPlaylist)
+        {
+            ofApp::drawPlaylistPrompt();
+        }
+        if (selectingPlaylist)
+        {
+            ofApp::drawAvailablePlaylists();
+        }
+        if (queueingPlaylist)
+        {
+            ofApp::drawAvailablePlaylists();
+        }
+        return;
     }
     
     ofSetColor(255);

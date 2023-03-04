@@ -6,7 +6,6 @@
 // Gets amplitudes until 32 in order to mirror them 
 void ofApp::drawMode1(vector<float> amplitudes)
 {
-    ofFill();
     ofSetColor(00, 00, color);
     int windowHeight = ofGetHeight();
     int windowWidth = ofGetWidth();
@@ -37,8 +36,8 @@ void ofApp::drawMode1(vector<float> amplitudes)
 // Draws multiple circle with the radius being the amplitude of the frequency band and the color being a random shade of red
 void ofApp::drawMode2(vector<float> amplitudes)
 {
-    ofSetLineWidth(5);
     ofNoFill();
+    ofSetLineWidth(5);
     ofSetColor(color, 00, 00);
     int bands = amplitudes.size();
     for (int i = 0; i < bands; i++)
@@ -56,7 +55,6 @@ void ofApp::drawMode2(vector<float> amplitudes)
 void ofApp::drawMode3(vector<float> amplitudes)
 {
     ofSetColor(00, color, 00);
-    ofFill();
     int windowHeight = ofGetHeight();
     int windowWidth = ofGetWidth();
     for (int i = 64; i > 0; i--)
@@ -64,7 +62,7 @@ void ofApp::drawMode3(vector<float> amplitudes)
         shownAmplitude = amplitudes[i] * -10 ;
         if (shownAmplitude  > windowHeight / 2)
         {
-            shownAmplitude = (windowWidth / 2) -10;
+            shownAmplitude = (windowWidth / 2);
         }
         
         ofDrawRectangle(0, (windowHeight - (32 * i)), shownAmplitude, windowHeight / 64);
@@ -75,7 +73,7 @@ void ofApp::drawMode3(vector<float> amplitudes)
         shownAmplitude = amplitudes[i] * -10 ;
         if (shownAmplitude  > windowHeight / 2)
         {
-            shownAmplitude = (windowWidth / 2) -10;
+            shownAmplitude = (windowWidth / 2);
         }
         
         ofDrawRectangle(windowWidth, (0 + (32 * i)), shownAmplitude*-1, windowHeight / 64);

@@ -21,18 +21,6 @@ void ofApp::songFileBuilder(){
         songFile.remove("songs.txt");
         songFileBuilder();
     }
-/*     else{
-        ofFile file("songs.txt");
-        file.remove();
-    } */
-/*     else{
-        ofFile file("songs.txt");
-        file.open(ofFile::ReadOnly);
-        std::string line;
-        while (getline(file, line)){
-            songVector.push_back(line);
-        }
-    } */
 
     
 }
@@ -43,21 +31,23 @@ void ofApp::songFileBuilder(){
 void ofApp::songSearch(std::string searchParameter){
     ofFile songFile; 
     songFile.open("songs.txt", ofFile::ReadOnly);
+    if (!songFile.exists()){
+        ofLog(OF_LOG_ERROR, "File does not exist");
+        songFileBuilder();
+    }
     ofLog(OF_LOG_NOTICE, "File opened");
     ofLog(OF_LOG_NOTICE, "Searching for " + searchParameter);
     std::regex regex(searchParameter, std::regex_constants::icase);
-    int itterator = 0;
-    for (int i = 0; i < songVectorSize; i++){
+    int count = 0;
         std::string line;
         while (getline(songFile, line)){
             
             if (std::regex_search(line, regex)){
                 ofLog(OF_LOG_NOTICE, "Match found" + line);
-                searchMatches.push_back(itterator);
+                searchMatches.push_back(count);
             }
-        itterator++;
+        count++;
         }
-    }
     ofLog(OF_LOG_NOTICE, "File closed");
     songFile.close();
    
@@ -97,6 +87,7 @@ void ofApp::statusSaver(){
 
 void ofApp::statusSetup(){
     ofFile statusFile(".statusFile.txt", ofFile::ReadOnly);
+    ofLog(OF_LOG_NOTICE, "Status file exists: " + to_string(statusFile.exists()));
     if (statusFile.exists()){
         statusFile.open(".statusFile.txt", ofFile::ReadOnly);
         std::string line;
@@ -139,6 +130,13 @@ void ofApp::statusSetup(){
         statusFile.close();
         gettingDirectory = false;
         getSongs(ofDirectory(directoryPath));
+    }   
+    else{
+        ofLog(OF_LOG_NOTICE, "Status file does not exist");
+        gettingDirectory = true;
+        return;
     }
-    return;    
+    return;
 }
+
+

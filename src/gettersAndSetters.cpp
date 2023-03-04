@@ -112,3 +112,43 @@ void ofApp::getDirectory()
         gettingDirectory = true;
     }
 }
+
+void ofApp::playlistBuilder(std::string playlistName){
+    ofFile playlistFile;
+    ofDirectory playlistDir("playlists");
+    if (!playlistDir.exists()){
+        playlistDir.create();
+    }
+    playlistFile.create("playlists/" + playlistName + ".txt");
+}
+
+void ofApp::playlistPopulator(std::string playlistName, std::string songPath){
+    ofFile playlistFile;
+    ofLog(OF_LOG_NOTICE, "Playlist name: " + playlistName);
+    playlistFile.open("playlists/" + playlistName, ofFile::Append);
+    ofLog(OF_LOG_NOTICE, "Opened playlist file: " + playlistName);
+    playlistFile << songPath << std::endl;
+    ofLog(OF_LOG_NOTICE, "Wrote song path: " + songPath);
+    playlistFile.close();
+}
+
+void ofApp::playlistSelector(std::string playlistName){
+    ofFile playlistFile;
+    playlistFile.open("playlists/" + playlistName, ofFile::ReadOnly);
+    ofLog(OF_LOG_NOTICE, playlistFile.getAbsolutePath());
+    sound.unload();
+    songVector.clear();
+    std::string line;
+    while (getline(playlistFile, line)){
+        ofLog(OF_LOG_NOTICE, "Adding song: " + line);
+        songVector.push_back(ofFile(line));
+    }
+    songNumber = 0;
+    shuffleStatus = false;
+    loopStatus = false;
+    repeatStatus = false;
+    playing = false; 
+    songVectorSize = songVector.size();
+    sound.load(songVector[0]);
+
+}

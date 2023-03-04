@@ -6,6 +6,10 @@ void ofApp::drawHelp()
     ofSetColor(255);
     int helpMidScreenY = ofGetHeight() / 2 - 48;
     int helpMidScreenX = ofGetWidth() / 2;
+    font.drawString("Press ''' to start playing a playlist", helpMidScreenX - strlen("Press ''' to start playing a playlist") / 2 * 8, helpMidScreenY - 15);
+    font.drawString("Press 'o' to go back to a stored directory", helpMidScreenX - strlen("Press 'o' to open a song") / 2 * 8, helpMidScreenY -30);
+    font.drawString("Press ',' to create a playlist", helpMidScreenX - strlen("Press ',' to create a playlist") / 2 * 8, helpMidScreenY - 45);
+    font.drawString("Press '.' to add a songs to a playlist", helpMidScreenX - strlen("Press '.' to add a song to a playlist") / 2 * 8, helpMidScreenY - 60);
     font.drawString("Press 'p' to play/pause", helpMidScreenX - strlen("Press 'p' to play/pause") / 2 * 8, (helpMidScreenY));
     font.drawString("Press '1' to switch to mode 1", helpMidScreenX - strlen("Press '0' to switch to mode 0") / 2 * 8, helpMidScreenY + 15);
     font.drawString("Press '2' to switch to mode 2", helpMidScreenX - strlen("Press '1' to switch to mode 1") / 2 * 8, helpMidScreenY + 30);
@@ -26,6 +30,9 @@ void ofApp::drawHelp()
     font.drawString("Press '/' to play a song at a index number", helpMidScreenX - strlen("Press '/' to play a song at a index number") / 2 * 8, helpMidScreenY + 255);
     font.drawString("Press 'k' to reset the song directory", helpMidScreenX - strlen("Press 'k' to reset the song directory") / 2 * 8, helpMidScreenY + 270);
     font.drawString("Press '?' to search for songs", helpMidScreenX - strlen("Press '?' to search for songs") / 2 * 8, helpMidScreenY + 285);
+    font.drawString("Press 'm' to toggle mute", helpMidScreenX - strlen("Press 'm' to toggle mute") / 2 * 8, helpMidScreenY + 300);
+    font.drawString("Press 'q' to exit the program", helpMidScreenX - strlen("Press 't' to exit the program") / 2 * 8, helpMidScreenY + 315);
+    font.drawString("Press ';' to toggle filling bars", helpMidScreenX - strlen("Press ';' to toggle filling bars") / 2 * 8, helpMidScreenY + 330);
 }
 
 // Draws the main HUD at the top of the screen both right and left 
@@ -44,14 +51,14 @@ void ofApp::drawHud()
     font.drawString("Progress: " + to_string((int)(progress * 100)) + "%", 0, 45);
     font.drawString("Volume: " + to_string((int)(sound.getVolume()*100)) + "%", 0, 75);
     font.drawString("Loop: " + shownLoopStatus  + "   Repeat: " + shownRepeatStatus + "    Shuffle: " + shownShuffleStatus, 0, 60);
-    font.drawString("Press H for help", currentWidth - strlen("Press H for help")*6, 15);
+    font.drawString("Press h for help", currentWidth - strlen("Press H for help")*6, 15);
     font.drawString("< or > Swap Mode", currentWidth - strlen("< or > SWAP MODE")*7, 30);
     ofSetColor(255, 255, 0);
     font.drawString("Up Next: " + nextSong, 0, 90);
     font.drawString("My Music: ", currentWidth - strlen("My Music: ")*6, 90);
     ofSetColor(255);
-    font.drawString("PWD: " + directoryPath, 0, 180);
-    font.drawString("FPS: " + to_string((int) ofGetFrameRate()), 0, 195);
+    font.drawString("PWD: " + directoryPath, 0, 105);
+    font.drawString("FPS: " + to_string((int) ofGetFrameRate()), 0, 120);
 }
 
 
@@ -62,24 +69,6 @@ void ofApp::drawProgressBar(float pos)
     ofFill();
     ofSetColor(255);
     ofDrawRectangle(0, ofGetHeight() - 10, ofGetWidth() * pos, 20);
-}
-
-// draws the drop down menu for up next songs
-void ofApp::drawUpNext(){
-    ofSetColor(255);
-    for (int i = 0; i < 5; i++){
-        ofSetColor(255);
-        if (songNumber + i  < songVectorSize){
-            if (songNumber + i == songNumber){
-                ofSetColor(255, 255, 0);
-            }
-            font.drawString("    " + to_string(songNumber+i) + " " + songVector[songNumber + i].getFileName(), 
-            0, 105+(i*12));
-        }
-        else{
-            return;
-        }
-    }
 }
 
 
@@ -97,15 +86,13 @@ void ofApp::drawSetSongNumber(){
 
 // drop down for show collection 
 void ofApp::showCollection(){
-    ofSetColor(255);
     int currentWidth = ofGetWidth();
     for (int i = 0; i < 50; i++)
     {
-        ofSetColor(255);
         if (songListDisplacement + i + songNumber > songVectorSize){
             return;
         }
-        songListDisplacement + i == 0 ? ofSetColor(255,255,0) : ofSetColor(255, 0, 0);
+        songListDisplacement + i == 0 ? ofSetColor(255,255,0) : ofSetColor(255);
         font.drawString(to_string(songNumber + i + songListDisplacement) + " " + songVector[songNumber + i + songListDisplacement].getFileName(),
          currentWidth - 500, 105+(i*15));
     }
@@ -127,7 +114,6 @@ void ofApp::drawUserPrompt()
 
 // Draws the search prompt at the center of the screen 
 void ofApp::drawSearchPrompt(){
-    ofLog() << "Drawing Search Prompt";
     ofSetColor(255, 255, 255);
     font.drawString("Enter the name of the song you want to play", ofGetWidth() / 2 - 100, ofGetHeight() / 2);
     font.drawString("Press enter to confirm", ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 15);
@@ -140,12 +126,28 @@ void ofApp::drawSearchPrompt(){
         if (i > 10){
             return;
         }
-        if (i == trackNumber){
-            ofSetColor(255, 255, 0);
-        }
-        else{
-            ofSetColor(255);
-        }
+        i == trackNumber? ofSetColor(255, 255, 0) : ofSetColor(255);
         font.drawString(to_string(i) + " " + songVector[searchMatches[i]].getFileName(), ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 90 + (i*15));
+    }
+}
+
+void ofApp::drawPlaylistPrompt(){
+    ofSetColor(255, 255, 255);
+    font.drawString("Enter the name of the playlist you want to create", ofGetWidth() / 2 - 100, ofGetHeight() / 2);
+    font.drawString("Press enter to confirm", ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 15);
+    font.drawString("Current Song Number: " + to_string(songNumber), ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 45);
+    font.drawString(playlistName, ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 60);
+    font.drawString(errorMessage, ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 75);
+}
+
+void ofApp::drawAvailablePlaylists(){
+    ofSetColor(255, 255, 255);
+    fillingPlaylist? font.drawString("Enter the name of the playlist you want to populate to", ofGetWidth() / 2 - 100, ofGetHeight() / 2)
+     : font.drawString("Enter the name of the playlist you want to play", ofGetWidth() / 2 - 100, ofGetHeight() / 2);
+    font.drawString("Press enter to confirm", ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 15);
+    playlistDirectory.listDir("playlists");
+    for (int i = 0; i < playlistDirectory.size(); i++){
+        i == trackNumber? ofSetColor(255, 255, 0) : ofSetColor(255);
+        font.drawString(to_string(i) + " " + playlistDirectory.getName(i), ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 90 + (i*15));
     }
 }
