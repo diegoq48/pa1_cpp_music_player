@@ -1,259 +1,219 @@
 #include "ofApp.h"
 #include <ctime>
+// default file provided by open frameworks rtfm open frameworks to find out what every function does @https://openframeworks.cc/documentation/application/
 
-
-
-void ofApp::drawMode0(vector<float> amplitudes)
-{
-    ofFill();
-    ofSetColor(00, 00, color);
-
-
-    for (int i = 32; i >= 0; i--)
-    {
-        shownAmplitude = (amplitudes[32 - (i + 1)] * 10 * heightRatio);
-        if (fabs(amplitudes[32 - (i + 1)] * 10) > ofGetHeight() - 20)
-        {
-            shownAmplitude = ((ofGetHeight() - 20) * -1);
-        }
-        ofDrawRectRounded(ofGetWidth() / 64 * i, ofGetHeight(), ofGetWidth() / 64, shownAmplitude, 5);
-    }
-
-
-    for (int i = 32; i < 64; i++)
-    {
-        shownAmplitude = (amplitudes[i - 32] * 10 * heightRatio);
-        if (fabs(amplitudes[i - 32] * 10) > ofGetHeight() - 20)
-        {
-            shownAmplitude = (ofGetHeight() - 20) * -1;
-        }
-        ofDrawRectRounded(ofGetWidth() / 64 * i, ofGetHeight(), ofGetWidth() / 64, shownAmplitude, 5);
-    }
-}
-
-
-
-
-void ofApp::drawMode1(vector<float> amplitudes)
-{
-    ofSetLineWidth(5);
-    ofNoFill();
-    ofSetColor(color, 00, 00);
-    int bands = amplitudes.size();
-    for (int i = 0; i < bands; i++)
-    {
-        ofDrawCircle(ofGetWidth() / 2, ofGetHeight() / 2, amplitudes[i] * 10 * heightRatio);
-    }
-}
-
-
-
-
-void ofApp::drawMode2(vector<float> amplitudes)
-{
-    ofSetColor(00, color, 00);
-    ofFill();
-    for (int i = 64; i > 0; i--)
-    {
-        shownAmplitude = amplitudes[i] * -10 * heightRatio;
-        if (amplitudes[i] * -10 * heightRatio > ofGetWidth() / 2)
-        {
-            shownAmplitude = (ofGetWidth() / 2) -10;
-        }
-        
-        ofDrawRectangle(0, (ofGetHeight() - (20 * i)), shownAmplitude, ofGetHeight() / 64);
-    }
-    for (int i = 64; i > 0; i--)
-    {
-        shownAmplitude = amplitudes[i] * -10 * heightRatio;
-        if (amplitudes[i] * -10 * heightRatio > ofGetWidth() / 2)
-        {
-            shownAmplitude = (ofGetWidth() / 2)-10;
-        }
-
-        ofDrawRectangle(ofGetWidth(), (ofGetHeight() - (20 * i)), shownAmplitude * -1, ofGetHeight() / 64);
-    }
-}
-
-
-
-
-void ofApp::drawHelp()
-{
-    ofSetColor(255);
-    int helpMidScreenY = ofGetHeight() / 2 - 48;
-    int helpMidScreenX = ofGetWidth() / 2;
-    ofDrawBitmapString("Press 'p' to play/pause", helpMidScreenX - strlen("Press 'p' to play/pause") / 2 * 8, (helpMidScreenY));
-    ofDrawBitmapString("Press '0' to switch to mode 0", helpMidScreenX - strlen("Press '0' to switch to mode 0") / 2 * 8, helpMidScreenY + 15);
-    ofDrawBitmapString("Press '1' to switch to mode 1", helpMidScreenX - strlen("Press '1' to switch to mode 1") / 2 * 8, helpMidScreenY + 30);
-    ofDrawBitmapString("Press '2' to switch to mode 2", helpMidScreenX - strlen("Press '2' to switch to mode 2") / 2 * 8, helpMidScreenY + 45);
-    ofDrawBitmapString("Press '3' to switch to mode 3", helpMidScreenX - strlen("Press '3' to switch to mode 3") / 2 * 8, helpMidScreenY + 60);
-    ofDrawBitmapString("Press 'a' to stop", helpMidScreenX - strlen("Press 'a' to stop") / 2 * 8, helpMidScreenY + 75);
-    ofDrawBitmapString("Press 'd' to play next song", helpMidScreenX - strlen("Press 'd' to play next song") / 2 * 8, helpMidScreenY + 90);
-    ofDrawBitmapString("Press '=' to increase volume", helpMidScreenX - strlen("Press '=' to increase volume") / 2 * 8, helpMidScreenY + 105);
-    ofDrawBitmapString("Press '-' to decrease volume", helpMidScreenX - strlen("Press '-' to decrease volume") / 2 * 8, helpMidScreenY + 120);
-    ofDrawBitmapString("Release 'h' to toggle help", helpMidScreenX - strlen("Release 'h' to toggle help") / 2 * 8, helpMidScreenY + 135);
-    ofDrawBitmapString("Press 'l' to toggle loop", helpMidScreenX - strlen("Press 'l' to toggle loop") / 2 * 8, helpMidScreenY + 150);
-    ofDrawBitmapString("Press 'r' to toggle repeat", helpMidScreenX - strlen("Press 'r' to toggle repeat") / 2 * 8, helpMidScreenY + 165);
-    ofDrawBitmapString("Press 'b' to play random song", helpMidScreenX - strlen("Press 'b' to play random song") / 2 * 8, helpMidScreenY + 180);
-    ofDrawBitmapString("Press '->' to skip 5 seconds", helpMidScreenX - strlen("Press '->' to skip 5 seconds") / 2 * 8, helpMidScreenY + 195);
-    ofDrawBitmapString("Press '<-' to go back 5 seconds", helpMidScreenX - strlen("Press '<-' to go back 5 seconds") / 2 * 8, helpMidScreenY + 210);
-    ofDrawBitmapString("Press 'z' to go back 1 song", helpMidScreenX - strlen("Press 'z' to go back 1 song") / 2 * 8, helpMidScreenY + 225);
-}
-
-
-
-
-void ofApp::drawHud()
-{
-    ofSetColor(255);
-    ofDrawBitmapString("Mode: " + modeArray[mode], 0, 15);
-    ofDrawBitmapString("Song Title: " + songArray[songNumber], 0, 30);
-    ofDrawBitmapString("Progress: " + to_string(progress * 100) + "%", 0, 45);
-    ofDrawBitmapString("loopStatus: " + to_string(loopStatus), 0, 60);
-    ofDrawBitmapString("Repeat: " + to_string(repeatStatus), 0, 75);
-    ofDrawBitmapString("Volume: " + to_string(sound.getVolume()), 0, 90);
-    ofDrawBitmapString("Press h for help", ofGetWidth() - strlen("Press h for help") * 8, 15);
-    ofDrawBitmapString("Mode 0: Bar Graph", ofGetWidth() - strlen("Mode 0: Bar Graph") * 8, 30);
-    ofDrawBitmapString("Mode 1: Circle Graph", ofGetWidth() - strlen("Mode 1: Circle Graph") * 8, 45);
-    ofDrawBitmapString("Mode 2: Line Graph", ofGetWidth() - strlen("Mode 2: Line Graph") * 8, 60);
-    ofDrawBitmapString("Mode 3: 3D Graph", ofGetWidth() - strlen("Mode 3: 3D Graph") * 8, 75);
-}
-
-void ofApp::drawMode3(vector<float> amplitudes)
-{
-    setup3D(true);
-    ofSetColor(0, 0, color);
-    for (int i = 0; i < 64; i++)
-    {
-        if (amplitudes[i] < 0)
-        {
-            // Draws a voxel-like circle for each amplitude
-            ofDrawBox(ofPoint(20*i,0,0),20, amplitudes[i] * 8 , amplitudes[i] * 4);
-            ofDrawBox(ofPoint(20*i,0,0),20, amplitudes[i] * 6 , amplitudes[i] * 6);
-            ofDrawBox(ofPoint(20*i,0,0),20, amplitudes[i] * 4 , amplitudes[i] * 8);
-        }
-    }
-    setup3D(false);
-}
-
-void ofApp::setup3D(bool doSetup)
-{
-    if (doSetup)
-    {
-        // Setup the lighting
-        setupLighting(light1, true);
-        setupLighting(light2, true);
-
-        // Setup the camera
-        cam.setPosition(0, 900, 1000);
-        cam.lookAt(glm::vec3(0, 700, 500));
-        cam.begin();
-
-        // Setup the lights for even lighting across the scene
-        light1.setPosition(0, 500, 1500);
-        light2.setPosition(0, 500, -1500);
-        light1.draw();
-        light2.draw();
-
-        // Setup the scene
-        ofPushStyle();
-        ofPushMatrix();
-        ofRotateDeg(90, 0, 0, 1); // Rotate the whole scene 90 degrees around the z axis to align the boxes vertically
-        ofRotateDeg(ofGetElapsedTimef()*50, 0.5, 0, 0); // Rotate the whole scene around the x axis to make it spin
-
-        ofEnableLighting();
-        light1.enable();
-        light2.enable();
-    }
-    else
-    {
-        setupLighting(light1, false);
-        setupLighting(light2, false);
-        ofPopMatrix();
-        ofPopStyle();
-        cam.end();
-    }
-
-};
-
-void ofApp::setupLighting(ofLight& light, bool doSetup){
-    if (doSetup)
-    {
-        // Adjust the light for the most even lighting
-        light.setDirectional();
-        light.setSpotlight();
-        light.setSpotlightCutOff(2000);
-        light.setSpotConcentration(1);
-        light.setPointLight();
-        ofEnableDepthTest();
-    }
-    else
-    {
-        ofDisableLighting();
-        ofDisableDepthTest();
-        light.disable();
-    }
-}
  
-
-
-
-void ofApp::drawProgressBar(float pos)
-{
-    ofFill();
-    ofSetColor(255);
-    ofDrawRectangle(0, ofGetHeight() - 10, ofGetWidth() * pos, 20);
-}
-
-
-
-void ofApp::setAmplitude()
-{
-    if (!barPause)
-    {
-        lastAmplitudes = amplitudes;
-        amplitudes = visualizer.getAmplitudes();
-        return;
-    }
-    amplitudes = lastAmplitudes;
-}
-
-
-
-
-void ofApp::changeSong(int displacement)
-{
-    sound.unload();
-    songNumber = songNumber + displacement;
-    if ((songNumber > songArraySize || songNumber < 0) && loopStatus)
-    {
-        songNumber = 0;
-        sound.load(songArray[songNumber]);
-        sound.play();
-    }
-    else if ((songNumber > songArraySize || songNumber < 0) && !loopStatus)
-    {
-        songNumber = 0;
-        sound.unload();
-        sound.stop();
-        playing = false;
-        sound.load(songArray[songNumber]);
-    }
-    else
-    {
-        sound.load(songArray[songNumber]);
-        sound.play();
-    }
-}
-
-
-
-
 void ofApp::keyPressed(int key)
 {
-    switch (key)
-    {
+    // called if user is adding to or selecting a playlist
+    // track number is the value the user is hovering over
+    if (selectingPlaylist || queueingPlaylist){
+        ofLog(OF_LOG_NOTICE, "Selecting Playlist");
+        switch(key){
+            case(OF_KEY_RETURN):
+                if (queueingPlaylist){
+                    queueingPlaylist = false;
+                    playlistSelector(playlistName);
+                    break;
+                }
+                playlistDirectory.open("playlists");
+                playlistDirectory.listDir();
+                playlistName = playlistDirectory.getName(trackNumber);
+                selectingPlaylist = false;
+                searching = true;
+                fillingPlaylist = true;
+                break;
+            case '.':
+                selectingPlaylist = false;
+                queueingPlaylist = false; 
+            case '\'':
+                queueingPlaylist = true;
+                break;
+            case OF_KEY_UP:
+                if (trackNumber == 0){
+                    trackNumber = playlistDirectory.size() - 1;
+                    break;
+                }
+                trackNumber--;
+                break;
+            case OF_KEY_DOWN:
+                if (trackNumber > playlistDirectory.size() - 2){
+                    trackNumber = 0;
+                    break;
+                }
+                trackNumber++;
+                break;
+            default:
+                break;
+            
+        } 
+        ofLog(OF_LOG_NOTICE, "Playlist Name " + playlistName);
+        return;
+    }
+
+
+    if (makingPlaylist){
+        ofLog(OF_LOG_NOTICE, "Making Playlist");
+        switch(key){
+            case(OF_KEY_RETURN):
+                if (playlistName != ""){
+                    playlistBuilder(playlistName);
+                    playlistName = "";
+                    makingPlaylist = false;
+                }
+                break;
+            case(OF_KEY_BACKSPACE):
+                playlistName = playlistName.substr(0, playlistName.length()-1);
+                break;
+            case(OF_KEY_LEFT_SHIFT):
+                break;
+            case ',': 
+                makingPlaylist = false;
+                break;
+            default:
+                // Ignore weird keys that show up when shift is pressed
+                if (key != 1 && key != 3680) {
+                    playlistName += key;
+                }
+                break;
+        } 
+        ofLog(OF_LOG_NOTICE, "Playlist Name " + playlistName);
+        return;
+    }
+
+    // allows the user to specify the directory from which to pull variables from 
+    if (gettingDirectory){
+        ofLog(OF_LOG_NOTICE, "Getting Directory");
+        switch(key){
+            case(OF_KEY_RETURN):
+                gettingDirectory = false;
+                break;
+            case(OF_KEY_BACKSPACE):
+                directoryPath = directoryPath.substr(0, directoryPath.length()-1);
+                break;
+            case(OF_KEY_LEFT_SHIFT):
+                break;
+            case(OF_KEY_TAB):
+                getDirectory();
+                break;
+            default:
+                // Ignore weird keys that show up when shift is pressed
+                if (key != 1 && key != 3680) {
+                    directoryPath += key;
+                }
+                break;
+        } 
+        ofLog(OF_LOG_NOTICE, "Directory path " + directoryPath);
+        return;
+    }
+    if (searching){
+        ofLog(OF_LOG_NOTICE, "Searching");
+        if(key == '(' || key == ')' || key == '[' || key == ']' || key == '{' || key == '}'){
+            return;
+        }
+        switch(key){
+            case(OF_KEY_RETURN):
+                if (fillingPlaylist){
+                    playlistPopulator(playlistName, songVector[searchMatches[trackNumber]].getAbsolutePath());
+                    searchString = "";
+                    searchMatches.clear();
+                    break;
+                }
+
+                if (searchMatches.size() > 0){
+                    sound.unload();
+                    songNumber = searchMatches[trackNumber];
+                    playing = true;
+                    sound.load(songVector[songNumber]);
+                    sound.play();
+                    searchString = "";
+                    searching = false;
+                }
+                break;
+            case OF_KEY_UP:
+                if (trackNumber == 0){
+                    trackNumber = searchMatches.size() - 1;
+                    break;
+                }
+                trackNumber--;
+                break;
+            case OF_KEY_DOWN:
+                if (trackNumber == searchMatches.size() -1){
+                    trackNumber = 0;
+                    break;
+                }
+                trackNumber++;
+                break;
+            case(OF_KEY_BACKSPACE):
+                searchString = searchString.substr(0, searchString.length()-1);
+                searchMatches.clear();
+                trackNumber = 0;
+                songSearch(searchString);
+                break;
+            case(OF_KEY_LEFT_SHIFT):
+                break;
+            case '?':
+                searchString = "";
+                searching = false;
+                fillingPlaylist = false;
+                break;
+            default:
+                // Ignore weird keys that show up when shift is pressed
+                if (key != 1 && key != 3680) {
+                    searchString += key;
+                }
+                searchMatches.clear();
+                songSearch(searchString);
+                trackNumber = 0;
+                break;
+        } 
+        ofLog(OF_LOG_NOTICE, "Search String " + searchString);
+        return;
+    }
+
+
+
+
+    // checks the set song number boolean in order to determin whether to direct all input into the song number string
+    if (setSongNumberStatus){
+        ofLog(OF_LOG_NOTICE, "Setting Song Number");
+        switch(key){
+            case('/'):
+                songNumberString = "";
+                setSongNumberStatus = false;
+                break;
+            case(OF_KEY_BACKSPACE):
+                songNumberString = songNumberString.substr(0, songNumberString.length()-1);
+                break;
+            case(OF_KEY_LEFT_SHIFT):
+                break;
+            case OF_KEY_RETURN:
+                sound.unload();
+                songNumber = stoi(songNumberString);
+                if (songNumber >= songVectorSize  || songNumber < 0){
+                    songNumber = 0;
+                }
+                playing = true;
+                sound.load(songVector[songNumber]);
+                sound.play();
+                songNumberString = "";
+                setSongNumberStatus = false;
+                break;
+            default:
+                if (isdigit(key)){
+                    songNumberString += key;
+                }
+                break;
+        } 
+        ofLog(OF_LOG_NOTICE, "Song Number =" + songNumberString);
+        return;
+    }
+
+
+
+    // default case if no booleans are true 
+    switch (key){
+    // play/pause key 
     case 'p':
         if (playing)
         {
@@ -267,62 +227,212 @@ void ofApp::keyPressed(int key)
         sound.play();
         playing = !playing;
         break;
-
-    case '0':
-        mode = 0; break;
+    
+    // mode changes 
     case '1':
-        mode = 1; break;
+        mode = 1; ofLog(OF_LOG_NOTICE, "Mode = 1"); break;
     case '2':
-        mode = 2; break;
+        mode = 2; ofLog(OF_LOG_NOTICE, "Mode = 2"); break;
     case '3':
-        mode = 3; break;
+        mode = 3; ofLog(OF_LOG_NOTICE, "Mode = 3"); break;
+    case '4':
+        mode = 4; ofLog(OF_LOG_NOTICE, "Mode = 4"); break;
     case 'a':
+        ofLog(OF_LOG_NOTICE, "bar Puased");
         barPause = !barPause; break;
+
+
+    // playes the next song 
     case 'd':
-        playing = true;
         ofApp::changeSong(1);
         break;
+
+
+    // increases volume 
     case '=':
-        if ((sound.getVolume() == 2.0))
+        if (sound.getVolume() <= 1.0)
         {
-            break;
+            ofLog(OF_LOG_NOTICE, "Volume = " + to_string(sound.getVolume()));
+            sound.setVolume(sound.getVolume() + 0.1);
         }
-        sound.setVolume(sound.getVolume() + 0.1);
         break;
+
+
+    // lowers Volume 
     case '-':
-        if ((sound.getVolume() == 0.0))
+        if (sound.getVolume() > 0.1)
         {
-            break;
+            ofLog(OF_LOG_NOTICE, "Volume = " + to_string(sound.getVolume()));
+            sound.setVolume(sound.getVolume() - 0.1);
         }
-        sound.setVolume(sound.getVolume() - 0.1);
         break;
+
+
+    // plays random song
     case 'b':
         sound.unload();
         srand(time(NULL));
-        songNumber = rand() % songArraySize;
-        sound.load(songArray[songNumber]);
+        songNumber = rand() % songVectorSize;
+        ofLog(OF_LOG_NOTICE, "Random Song Number = " + to_string(songNumber));
+        sound.load(songVector[songNumber]);
+        sound.play();
         break;
+
+
+    // plays the same song over and over again
     case 'r':
         repeatStatus = !repeatStatus;
+        ofLog(OF_LOG_NOTICE, "Repeat Status = " + to_string(repeatStatus));
         sound.setLoop(repeatStatus);
         break;
+
+
+    // sets variable that allow array to start at zero once it has reached the end 
     case 'l':
+        ofLog(OF_LOG_NOTICE, "Loop Status = " + to_string(loopStatus));
         loopStatus = !loopStatus; break;
+
+
+    // tells ofdraw to print the help menu
     case 'h':
+        ofLog(OF_LOG_NOTICE, "Help Status = " + to_string(helpStatus));
         helpStatus = !helpStatus; break;
+
+
+    // fullscreen toggle
     case 'f':
+        ofLog(OF_LOG_NOTICE, "Fullscreen toggled");
         ofToggleFullscreen(); break;
+
+    // plays the previous song if shuffle is off
     case 'z':
-        playing = true; 
-        ofApp::changeSong(-1);
+        if(!shuffleStatus){
+            playing = true; 
+            ofApp::changeSong(-1);
+        }
         break;
+
+    // increases the song positon by 0.005 seconds    
     case OF_KEY_RIGHT:
-        sound.setPosition(sound.getPosition() + 0.005); break;
+        sound.setPosition(sound.getPosition() + 0.005);
+        ofLog(OF_LOG_NOTICE, "Position = " + to_string(sound.getPosition()));
+        break;
+
+    // decreases the song positon by 0.005 seconds
     case OF_KEY_LEFT:
-        sound.setPosition(sound.getPosition() - 0.005); break;
+        sound.setPosition(sound.getPosition() - 0.005);
+        ofLog(OF_LOG_NOTICE, "Position = " + to_string(sound.getPosition()));
+        break;
+
+    // increases songListDisplacement by 1
+    case OF_KEY_DOWN:
+        if (!drawingCollection)
+        {
+            break;
+        }
+        songListDisplacement < (int) songVectorSize - songNumber ? songListDisplacement++ : songListDisplacement = songVectorSize - songNumber;
+        ofLog(OF_LOG_NOTICE, "Song List Displacement = " + to_string(songListDisplacement));
+        break;
+
+    // decreases songListDisplacement by 1 
+    case OF_KEY_UP:
+        if (!drawingCollection)
+        {
+            break;
+        }
+        ofLog(OF_LOG_NOTICE, "Song List Displacement = " + to_string(songListDisplacement));
+        songListDisplacement > 0 - songNumber ? songListDisplacement-- : songListDisplacement = 0 - songNumber;
+        break;
+    
+    // toggles shuffle on and off
+    case 's' :
+        shuffleStatus = !shuffleStatus;
+        drawingCollection = false;
+        ofLog(OF_LOG_NOTICE, "Shuffle Status = " + to_string(shuffleStatus));
+        if(!shuffleStatus){break;}
+        ofApp::changeSong(0); break;
+
+    // changes song directory 
+    case 'k':
+        ofLog(OF_LOG_NOTICE, "changing song directory");
+        sound.stop();
+        sound.unload();
+        songVector.clear();
+        songVectorSize = 0;
+        gettingDirectory = true;
+        directoryPath = "";
+        break;
+
+    // allows user to set song number by toggling setSongNumberStatus
+    case '/':
+        setSongNumberStatus = !setSongNumberStatus;
+        ofLog(OF_LOG_NOTICE, "Set Song Number Status = " + to_string(setSongNumberStatus));
+
+    // changes modes 
+    case '<':
+        if (mode == 4)
+        {
+            mode = 1;
+            break;
+        }
+        mode++;
+        
+        break;
+    case '>':
+        if (mode == 1)
+        {
+            mode = 4;
+            break;
+        }
+        mode--;
+        break;
+    // enables searching
+    case '?':
+        searching = true;
+        break;
+    // toggles filling rectangles excluding mode 3
+    case ';':
+        fillingRect = !fillingRect;
+        break;
+    //exit key 
+    case 'q':
+        statusSaver();
+        ofLog(OF_LOG_NOTICE, "Status Saved");
+        ofLog(OF_LOG_NOTICE, "Exiting...");
+        OF_EXIT_APP(0);
+        break;
+    case 'm':
+    // toggles mute 
+        muted = !muted;
+        muted? sound.setVolume(0) : sound.setVolume(0.5);
+        break;
+    // default case
+    case ',':
+        helpStatus = false;
+        errorMessage = "";
+        makingPlaylist = true;
+        playlistName = "";
+        break;
+    case '.':
+        trackNumber = 0;
+        helpStatus = false;
+        errorMessage = "";
+        selectingPlaylist = true;
+        fillingPlaylist = true;
+    case '\'':
+        helpStatus = false;
+        errorMessage = "";
+        queueingPlaylist = true;
+    case 'o':
+        sound.stop();
+        sound.unload();
+        songVector.clear();
+        ofApp::getDirectory();
     default:
+        ofLog(OF_LOG_WARNING, "Key not recognized");
         break;
     }
+    return;
 }
 
 void ofApp::keyReleased(int key)
@@ -331,10 +441,19 @@ void ofApp::keyReleased(int key)
 
 void ofApp::mouseMoved(int x, int y)
 {
+    // checks if mouse is hovering over the my music button
+    if( x > ofGetWidth() - 50 && y < 90 && y >75)
+    {
+        hoveringMyMusic = true;
+        return;
+    }
+    hoveringMyMusic = false;
 }
+
 
 void ofApp::mouseDragged(int x, int y, int button)
 {
+    // tracks mouse to set the position of the song to the mouse position if mouse y < 10 
     if (y >= ofGetHeight() - 10 && button == 0)
     {
         float posf = (float)x / (float)ofGetWidth();
@@ -344,10 +463,17 @@ void ofApp::mouseDragged(int x, int y, int button)
 
 void ofApp::mousePressed(int x, int y, int button)
 {
+    // sets the position of the song to the mouse position if mouse y < 10
     if (y >= ofGetHeight() - 10 && button == 0)
     {
         float posf = (float)x / (float)ofGetWidth();
         sound.setPosition(posf);
+    }
+    
+    // draw my music menu if mouse is clicked over the my music button
+    if( x > ofGetWidth() - 50 && y < 90 && y >75)
+    {
+        drawingCollection  = !drawingCollection;
     }
 }
 
@@ -365,8 +491,11 @@ void ofApp::mouseExited(int x, int y)
 
 void ofApp::windowResized(int w, int h)
 {
+    // updates the height ratio when the window is resized
     heightRatio = ofGetHeight() / priorScreenHeight;
     priorScreenHeight = ofGetHeight();
+    ofLog(OF_LOG_NOTICE, "Height Ratio = " + to_string(heightRatio));
+    ofLog(OF_LOG_NOTICE, "Prior Screen Height = " + to_string(priorScreenHeight));
 }
 
 void ofApp::gotMessage(ofMessage msg)
@@ -380,65 +509,97 @@ void ofApp::dragEvent(ofDragInfo dragInfo)
 
 void ofApp::setup()
 {
-    sound.load(songArray[0]);
-    sound.setLoop(false);
-    sound.setVolume(2);
+    // sets framerate to something not cancerous like 30fps 
+    // vertical sync is on to prevent screen tearing
+    ofSetFrameRate(60);
+    ofSetVerticalSync(true);
+    ofSetCircleResolution(100);
+    statusSetup();
+    ofLog(OF_LOG_NOTICE, "Starting Setup");
+    font.load("sans-serif.ttf", 12);
+    ofLog(OF_LOG_NOTICE, "loaded Font");
     ofSetBackgroundColor(00, 00, 00);
     ofSetWindowTitle("Music Player");
+    sound.setVolume(0.5);
+    sound.unload();
+    color < 50? color += 50 : color = color;
+    if(!gettingDirectory){sound.load(songVector[songNumber]);}
+    ofLog(OF_LOG_NOTICE, "Finished Setup");
+    
 }
+
 
 void ofApp::update()
 {
+    // if its not possible to play music and the user isnt getting music then get music 
+    if(!gettingDirectory && 0 == songVectorSize && !queueingPlaylist){getSongDirectory();}
+    // uppdates soundplayer 
     ofSoundUpdate();
+
+    // updates variables 
     visualizer.updateAmplitudes();
     progress = sound.getPosition();
+    pos = playing ? progress : lastPos;
+    fillingRect? ofFill(): ofNoFill();
+    ofApp::setAmplitude();
+
+    // changes song automatically if the song is over and repeat is off 
     if (progress > 0.99 && !repeatStatus)
     {
         ofApp::changeSong(1);
+        
     }
 }
 
 void ofApp::draw()
 {
+    // if user is getting directory, draw user prompt and return 
+    if(gettingDirectory)
+    {
+        ofApp::drawUserPrompt();
+        return;
+    }
 
+    // switch to determine which mode to draw
+    switch (mode)
+    {
+    case 1:
+        ofApp::drawMode1(amplitudes);
+        break;
+    case 2:
+        ofApp::drawMode2(amplitudes);
+        break;
+    case 3:
+        ofApp::drawMode3(amplitudes);
+        break;
+    case 4:
+        ofApp::drawMode4(amplitudes);
+        break;
+    default:
+        break;
+    }
+
+    // constants for drawing
+    ofApp::drawHud();
+    ofApp::drawProgressBar(pos);
+
+    // verfies boolean variables and draws their respective prompts
+    if (helpStatus){ofApp::drawHelp();}
     
-    if (ofGetHeight() > 199 && ofGetWidth() > 199)
-    {
-        ofSetColor(255);
-        float pos = playing ? progress : lastPos;
-        if (!playing)
-        {
-            ofDrawBitmapString("Press 'p' to play some music!", (ofGetWidth() / 2) - strlen("Press 'p' to play some music!")*8, ofGetHeight() / 2);
-        }
-        ofApp::setAmplitude();
-        switch (mode)
-        {
-        case 0:
-            drawMode0(amplitudes);
-            break;
-        case 1:
-            drawMode1(amplitudes);
-            break;
-        case 2:
-            drawMode2(amplitudes);
-            break;
-        case 3:
-            drawMode3(amplitudes);
-            break;
-        default:
-            break;
-        }
-        if (helpStatus)
-        {
-            ofApp::drawHelp();
-        }
-        ofApp::drawHud(); 
-        ofApp::drawProgressBar(pos);
-        return; 
-    }
-    ofSetColor(255);
-    for(int i = 0; i > 0;i++)
-    {
-        ofDrawBitmapString("Please resize your window",strlen("Please resize your window")*8, ofGetHeight()-(i*10));
-    }
+    if (setSongNumberStatus){ ofApp::drawSetSongNumber(); return;}
+
+    if (hoveringMyMusic){ ofNoFill(); ofDrawRectangle(ofGetWidth() - 70, 75, 70, 15);}
+
+    if (drawingCollection){ ofApp::showCollection();}
+
+    if (searching){ ofApp::drawSearchPrompt();}
+
+    if (makingPlaylist){ ofApp::drawPlaylistPrompt();}
+
+    if (selectingPlaylist){ ofApp::drawAvailablePlaylists();}
+
+    if (queueingPlaylist){ofApp::drawAvailablePlaylists();}
+
+    return;
 }
+
