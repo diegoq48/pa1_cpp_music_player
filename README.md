@@ -1,9 +1,5 @@
 # PA1: openFrameworks Audio Visualizer
-An Audio Visualizer with multiple modes made using openframeworks!
-
-
-# Classes
-The project contains two classes that should be of your concern: ofApp and AudioVisualizer.
+A music player and visualizer with multiple modes made using openframeworks!
 
 # Student Info
 
@@ -25,5 +21,10 @@ Please fill out the information below for each member of the team:
     make
 
 
-# Alternative Docker 
-    Run docker build on the cloned dir and then run image 
+# Alternative Docker only works if repo is public 
+Run docker build on the cloned dir and then run image 
+
+# Running from the binary 
+download tar in the latest release tag untar and run the included binary
+
+# Flatpak 
