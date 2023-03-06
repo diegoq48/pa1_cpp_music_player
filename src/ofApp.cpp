@@ -373,7 +373,7 @@ void ofApp::keyPressed(int key)
     // enables searching
     case '?':
         searching = true;
-        shuffleStatus = false;
+        shuffleStatus = !shuffleStatus;
         searchMatches.clear();
         break;
     // toggles filling rectangles excluding mode 3

@@ -17,7 +17,10 @@ void ofApp::setAmplitude()
 void ofApp::changeSong(int displacement)
 {
     // returns if the user is repeating the song function change is handled by sound.loop()
-    if (repeatStatus) {
+    if (repeatStatus){
+        sound.unload();
+        sound.load(songVector[songNumber]);
+        sound.play();
         return;
     }
     

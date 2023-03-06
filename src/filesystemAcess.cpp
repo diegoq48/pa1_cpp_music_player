@@ -81,7 +81,8 @@ void ofApp::getSongs(ofDirectory dir)
 		} else {
             // made for compatibility with windows and linux gets audio file extensions and adds them to the vector
             string ext = file.getExtension();
-            if (ext == "mp3" || ext == "wav" || ext == "ogg" || ext == "flac" || ext == "aiff" || ext == "m4a") {
+            if (ext == "mp3" || ext == "wav" || ext == "ogg" || ext == "flac" || ext == "aiff")
+            {
                 ofLog(OF_LOG_NOTICE, "File found: " + file.getAbsolutePath());
 			    songVector.push_back(file);
             }
