@@ -1,5 +1,8 @@
 #include "ofApp.h"
 
+
+// this file contains all the text that is drawn on the screen 
+
 // Draws help menu at the center of the screen
 void ofApp::drawHelp()
 {
@@ -41,6 +44,7 @@ void ofApp::drawHud()
     std::string shownLoopStatus = loopStatus? "ON":"OFF";
     std::string shownRepeatStatus = repeatStatus? "ON":"OFF";
     std::string shownShuffleStatus = shuffleStatus? "ON":"OFF";
+    std::string isplaying = playing? "pause":"play";
     string nextSong = songNumber + 1 < songVectorSize? songVector[songNumber + 1].getFileName() : "No More Songs";
     ofSetColor(255);
     int currentWidth = ofGetWidth();
@@ -48,7 +52,7 @@ void ofApp::drawHud()
     ofSetColor(255,255,0);
     font.drawString("Now Playing: " + (songVector[songNumber].getFileName()), 0, 30);
     ofSetColor(255);
-    font.drawString("Progress: " + to_string((int)(progress * 100)) + "%", 0, 45);
+    font.drawString("Progress: " + to_string((int)(pos * 100)) + "%", 0, 45);
     font.drawString("Volume: " + to_string((int)(sound.getVolume()*100)) + "%", 0, 75);
     font.drawString("Loop: " + shownLoopStatus  + "   Repeat: " + shownRepeatStatus + "    Shuffle: " + shownShuffleStatus, 0, 60);
     font.drawString("Press h for help", currentWidth - strlen("Press H for help")*6, 15);
@@ -59,6 +63,12 @@ void ofApp::drawHud()
     ofSetColor(255);
     font.drawString("PWD: " + directoryPath, 0, 105);
     font.drawString("FPS: " + to_string((int) ofGetFrameRate()), 0, 120);
+    ofSetColor(255);
+    font.drawString("Song Number: " + to_string(songNumber), 0, 135);
+    font.drawString("Song Vector Size: " + to_string(songVectorSize), 0, 150);
+    ofSetColor(255, 255, 0);
+    font.drawString("Press 'p' to " + isplaying,0, 165);
+
 }
 
 
@@ -115,9 +125,9 @@ void ofApp::drawUserPrompt()
 // Draws the search prompt at the center of the screen 
 void ofApp::drawSearchPrompt(){
     ofSetColor(255, 255, 255);
-    font.drawString("Enter the name of the song you want to play", ofGetWidth() / 2 - 100, ofGetHeight() / 2);
+    fillingPlaylist? font.drawString("Enter the name of the song you want to add", ofGetWidth() / 2 - 100, ofGetHeight() / 2) :  font.drawString("Enter the name of the song you want to play", ofGetWidth() / 2 - 100, ofGetHeight() / 2);
     font.drawString("Press enter to confirm", ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 15);
-    font.drawString("Press '?' to cancel" , ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 30);
+    font.drawString("Press '?' to exit prompt" , ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 30);
     font.drawString("Current Song Number: " + to_string(songNumber), ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 45);
     font.drawString(searchString, ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 60);
     font.drawString(errorMessage, ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 75);
@@ -131,15 +141,18 @@ void ofApp::drawSearchPrompt(){
     }
 }
 
+
+// Draws the playlist prompt at the center of the screen to create a playlist
 void ofApp::drawPlaylistPrompt(){
     ofSetColor(255, 255, 255);
     font.drawString("Enter the name of the playlist you want to create", ofGetWidth() / 2 - 100, ofGetHeight() / 2);
     font.drawString("Press enter to confirm", ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 15);
-    font.drawString("Current Song Number: " + to_string(songNumber), ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 45);
     font.drawString(playlistName, ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 60);
     font.drawString(errorMessage, ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 75);
 }
 
+
+// shows the available playlists
 void ofApp::drawAvailablePlaylists(){
     ofSetColor(255, 255, 255);
     fillingPlaylist? font.drawString("Enter the name of the playlist you want to populate to", ofGetWidth() / 2 - 100, ofGetHeight() / 2)

@@ -1,11 +1,14 @@
+// prepocessor directives
 #pragma once
 
 #include "ofMain.h"
 #include "AudioVisualizer.h"
 #include <ctime>
-//#include <spdlog/spdlog.h>
+// object file for the audio visualizer
 
+// class for the audio visualizer
 class ofApp : public ofBaseApp{
+	// public functions
 	public:
 		void setup();
 		void update();
@@ -50,9 +53,10 @@ class ofApp : public ofBaseApp{
 		void drawAvailablePlaylists();
 
 
-
+	// private vars for the audio visualizer
 	private:
 		void setup3D(bool doSetup);
+		// array that holds name of modes for the visualizer
 		std::string modeArray[4] = {"Rectangle Height Visualizer", "Circle Radius Visualizer", "Rectangle Width Visualizer", "3D Voxel Visualizer"};
 		int songNumber = 0;
 		ofSoundPlayer sound;
@@ -62,6 +66,8 @@ class ofApp : public ofBaseApp{
 		int color = ofRandom(255);
 		bool playing = false;
 		int mode = 1;
+		// main vector to hold the songs found in the filesystem should later be implemented with a linked list for better memory management || with a vector of pointers || as queued vectors 
+		// very inefficient to have a vector of 1000+ songs in memory at once 
 		vector<ofFile> songVector;
 		int songVectorSize = 0;
 		int cur_x, cur_y = 0;
@@ -74,6 +80,7 @@ class ofApp : public ofBaseApp{
 		ofLight light2;
 		ofEasyCam cam;
 		bool barPause = false;
+		// amplitudes that enable the visualizer to draw the shapes
 		vector<float> amplitudes;
 		vector<float> lastAmplitudes; 
 		int priorScreenHeight = ofGetHeight();
@@ -89,6 +96,7 @@ class ofApp : public ofBaseApp{
 		bool setSongNumberStatus = false;
 		std::string songNumberString;
 		std::string errorMessage = "";
+		// holds the position of the songs in the vector based on their position in the sound file 
 		vector<int> searchMatches; 
 		int songMatch;
 		bool searching = false;
@@ -100,6 +108,7 @@ class ofApp : public ofBaseApp{
 		bool fillingPlaylist = false;
 		bool selectingPlaylist = false;
 		bool queueingPlaylist = false;
+		float pos;
 		ofDirectory playlistDirectory = ofDirectory("playlists");
 		std::string playlistName = "";
 

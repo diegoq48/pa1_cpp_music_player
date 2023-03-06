@@ -1,10 +1,12 @@
 #include "ofApp.h"
 #include <ctime>
+// default file provided by open frameworks rtfm open frameworks to find out what every function does @https://openframeworks.cc/documentation/application/
 
-
-// switch the gets called whenever a key is pressed 
+ 
 void ofApp::keyPressed(int key)
 {
+    // called if user is adding to or selecting a playlist
+    // track number is the value the user is hovering over
     if (selectingPlaylist || queueingPlaylist){
         ofLog(OF_LOG_NOTICE, "Selecting Playlist");
         switch(key){
@@ -42,13 +44,14 @@ void ofApp::keyPressed(int key)
                 trackNumber++;
                 break;
             default:
-                // Ignore weird keys that show up when shift is pressed
                 break;
             
         } 
         ofLog(OF_LOG_NOTICE, "Playlist Name " + playlistName);
         return;
     }
+
+
     if (makingPlaylist){
         ofLog(OF_LOG_NOTICE, "Making Playlist");
         switch(key){
@@ -64,6 +67,9 @@ void ofApp::keyPressed(int key)
                 break;
             case(OF_KEY_LEFT_SHIFT):
                 break;
+            case ',': 
+                makingPlaylist = false;
+                break;
             default:
                 // Ignore weird keys that show up when shift is pressed
                 if (key != 1 && key != 3680) {
@@ -74,7 +80,8 @@ void ofApp::keyPressed(int key)
         ofLog(OF_LOG_NOTICE, "Playlist Name " + playlistName);
         return;
     }
-    // chekcs the getting direcory boolean in order to determin whether to direct all input into the direcotry path string
+
+    // allows the user to specify the directory from which to pull variables from 
     if (gettingDirectory){
         ofLog(OF_LOG_NOTICE, "Getting Directory");
         switch(key){
@@ -401,29 +408,39 @@ void ofApp::keyPressed(int key)
         break;
     // default case
     case ',':
+        helpStatus = false;
+        errorMessage = "";
         makingPlaylist = true;
+        playlistName = "";
         break;
     case '.':
         trackNumber = 0;
+        helpStatus = false;
+        errorMessage = "";
         selectingPlaylist = true;
+        fillingPlaylist = true;
     case '\'':
+        helpStatus = false;
+        errorMessage = "";
         queueingPlaylist = true;
+    case 'o':
+        sound.stop();
+        sound.unload();
+        songVector.clear();
+        ofApp::getDirectory();
     default:
         ofLog(OF_LOG_WARNING, "Key not recognized");
         break;
     }
     return;
 }
-// Prefieres que my music lights up when you hover over it? o no ? 
-// Ok have to figure out why it stopped working
+
 void ofApp::keyReleased(int key)
 {
 }
 
 void ofApp::mouseMoved(int x, int y)
 {
-
-
     // checks if mouse is hovering over the my music button
     if( x > ofGetWidth() - 50 && y < 90 && y >75)
     {
@@ -431,10 +448,8 @@ void ofApp::mouseMoved(int x, int y)
         return;
     }
     hoveringMyMusic = false;
-    
-    
-    
 }
+
 
 void ofApp::mouseDragged(int x, int y, int button)
 {
@@ -460,8 +475,6 @@ void ofApp::mousePressed(int x, int y, int button)
     {
         drawingCollection  = !drawingCollection;
     }
-
-
 }
 
 void ofApp::mouseReleased(int x, int y, int button)
@@ -518,13 +531,19 @@ void ofApp::setup()
 
 void ofApp::update()
 {
-    if(!gettingDirectory && 0 == songVectorSize && !queueingPlaylist){
-        getSongDirectory();
-        }
+    // if its not possible to play music and the user isnt getting music then get music 
+    if(!gettingDirectory && 0 == songVectorSize && !queueingPlaylist){getSongDirectory();}
+    // uppdates soundplayer 
     ofSoundUpdate();
+
+    // updates variables 
     visualizer.updateAmplitudes();
     progress = sound.getPosition();
+    pos = playing ? progress : lastPos;
     fillingRect? ofFill(): ofNoFill();
+    ofApp::setAmplitude();
+
+    // changes song automatically if the song is over and repeat is off 
     if (progress > 0.99 && !repeatStatus)
     {
         ofApp::changeSong(1);
@@ -534,79 +553,53 @@ void ofApp::update()
 
 void ofApp::draw()
 {
-
-
-    if (ofGetHeight() > 199 && ofGetWidth() > 199)
+    // if user is getting directory, draw user prompt and return 
+    if(gettingDirectory)
     {
-         if(gettingDirectory)
-        {
-            ofApp::drawUserPrompt();
-            return;
-        }
-
-        ofSetColor(255);
-        float pos = playing ? progress : lastPos;
-        if (!playing && !helpStatus && !searching)
-        {
-            font.drawString("Press 'P' to play some music!", (ofGetWidth() / 2) - strlen("Press 'p' to play some music!")*8, ofGetHeight() / 2);
-        }
-        ofApp::setAmplitude();
-        switch (mode)
-        {
-        case 1:
-            ofApp::drawMode1(amplitudes);
-            break;
-        case 2:
-            ofApp::drawMode2(amplitudes);
-            break;
-        case 3:
-            ofApp::drawMode3(amplitudes);
-            break;
-        case 4:
-            ofApp::drawMode4(amplitudes);
-            break;
-        default:
-            break;
-        }
-        if (helpStatus)
-        {
-            ofApp::drawHelp();
-        }
-        ofApp::drawHud(); 
-        ofApp::drawProgressBar(pos);
-        if (setSongNumberStatus)
-        {
-            ofApp::drawSetSongNumber();
-            return;
-        }
-        if(hoveringMyMusic){
-            ofNoFill();
-            ofDrawRectangle(ofGetWidth() - 70, 75, 70, 15);
-        }
-        if (drawingCollection)
-        {
-            ofApp::showCollection();
-        }
-        if (searching)
-        {
-            ofApp::drawSearchPrompt();
-        }
-        if (makingPlaylist)
-        {
-            ofApp::drawPlaylistPrompt();
-        }
-        if (selectingPlaylist)
-        {
-            ofApp::drawAvailablePlaylists();
-        }
-        if (queueingPlaylist)
-        {
-            ofApp::drawAvailablePlaylists();
-        }
+        ofApp::drawUserPrompt();
         return;
     }
+
+    // switch to determine which mode to draw
+    switch (mode)
+    {
+    case 1:
+        ofApp::drawMode1(amplitudes);
+        break;
+    case 2:
+        ofApp::drawMode2(amplitudes);
+        break;
+    case 3:
+        ofApp::drawMode3(amplitudes);
+        break;
+    case 4:
+        ofApp::drawMode4(amplitudes);
+        break;
+    default:
+        break;
+    }
+
+    // constants for drawing
+    ofApp::drawHud();
+    ofApp::drawProgressBar(pos);
+
+    // verfies boolean variables and draws their respective prompts
+    if (helpStatus){ofApp::drawHelp();}
     
-    ofSetColor(255);
-    ofLog(OF_LOG_WARNING, "Drawing Error please resize");
-    font.drawString("Please resize your window", (ofGetWidth() / 2) - strlen("Please resize your window")*8, ofGetHeight() / 2);
+    if (setSongNumberStatus){ ofApp::drawSetSongNumber(); return;}
+
+    if (hoveringMyMusic){ ofNoFill(); ofDrawRectangle(ofGetWidth() - 70, 75, 70, 15);}
+
+    if (drawingCollection){ ofApp::showCollection();}
+
+    if (searching){ ofApp::drawSearchPrompt();}
+
+    if (makingPlaylist){ ofApp::drawPlaylistPrompt();}
+
+    if (selectingPlaylist){ ofApp::drawAvailablePlaylists();}
+
+    if (queueingPlaylist){ofApp::drawAvailablePlaylists();}
+
+    return;
 }
+

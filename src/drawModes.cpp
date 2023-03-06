@@ -9,21 +9,23 @@ void ofApp::drawMode1(vector<float> amplitudes)
     ofSetColor(00, 00, color);
     int windowHeight = ofGetHeight();
     int windowWidth = ofGetWidth();
+    float currentVolume = sound.getVolume();
+    // left side of the screen
     for (int i = 32; i >= 0; i--)
     {
-        shownAmplitude = (amplitudes[32 - (i + 1)] * 10 * heightRatio);
-        if (fabs(amplitudes[32 - (i + 1)] * 10) > windowHeight - 20)
+        shownAmplitude = (amplitudes[32 - (i + 1)] * 10 * heightRatio) * (currentVolume + 1);
+        if (shownAmplitude * -1 > windowHeight - 20)
         {
             shownAmplitude = ((windowHeight - 20) * -1);
         }
         ofDrawRectRounded(windowWidth / 64 * i, windowHeight-10, windowWidth / 80, shownAmplitude, 5);
     }
 
-
+    // right side of the screen
     for (int i = 32; i < 64; i++)
     {
-        shownAmplitude = (amplitudes[i - 32] * 10 * heightRatio);
-        if (fabs(amplitudes[i - 32] * 10) > windowHeight - 20)
+        shownAmplitude = (amplitudes[i - 32] * 10 * heightRatio) * (currentVolume + 1);
+        if (shownAmplitude * -1 > windowHeight - 20)
         {
             shownAmplitude = (windowHeight - 20) * -1;
         }
@@ -57,9 +59,11 @@ void ofApp::drawMode3(vector<float> amplitudes)
     ofSetColor(00, color, 00);
     int windowHeight = ofGetHeight();
     int windowWidth = ofGetWidth();
+
+    // left side of the screen
     for (int i = 64; i > 0; i--)
     {
-        shownAmplitude = amplitudes[i] * -10 ;
+        shownAmplitude = amplitudes[i] * -10;
         if (shownAmplitude  > windowHeight / 2)
         {
             shownAmplitude = (windowWidth / 2);
@@ -68,9 +72,10 @@ void ofApp::drawMode3(vector<float> amplitudes)
         ofDrawRectangle(0, (windowHeight - (32 * i)), shownAmplitude, windowHeight / 64);
     }
 
+    // right side of the screen
     for (int i = 64; i > 0; i--)
     {
-        shownAmplitude = amplitudes[i] * -10 ;
+        shownAmplitude = amplitudes[i] * -10;
         if (shownAmplitude  > windowHeight / 2)
         {
             shownAmplitude = (windowWidth / 2);
