@@ -51,6 +51,7 @@ class ofApp : public ofBaseApp{
 		void drawPlaylistPrompt();
 		void playlistSelector(std::string playlistName);
 		void drawAvailablePlaylists();
+		void resetPlaylist(std::string directoryPath);
 
 
 	// private vars for the audio visualizer

@@ -95,11 +95,12 @@ void ofApp::drawSetSongNumber(){
 
 
 // drop down for show collection 
+// arregle el show collection now it just stops when it crashes 
 void ofApp::showCollection(){
     int currentWidth = ofGetWidth();
     for (int i = 0; i < 50; i++)
     {
-        if (songListDisplacement + i + songNumber > songVectorSize){
+        if (songListDisplacement + i + songNumber + 50 > songVectorSize || songListDisplacement + i + songNumber < 0 ){
             return;
         }
         songListDisplacement + i == 0 ? ofSetColor(255,255,0) : ofSetColor(255);

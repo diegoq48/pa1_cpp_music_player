@@ -81,8 +81,9 @@ void ofApp::drawMode3(vector<float> amplitudes)
             shownAmplitude = (windowWidth / 2);
         }
         
-        ofDrawRectangle(windowWidth, (0 + (32 * i)), shownAmplitude*-1, windowHeight / 64);
+        ofDrawRectangle(windowWidth, (-32 + (32 * i)), shownAmplitude*-1, windowHeight / 64);
     }
+    
 }
 
 void ofApp::setup3D(bool doSetup){

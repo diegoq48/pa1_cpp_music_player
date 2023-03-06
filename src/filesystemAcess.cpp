@@ -49,11 +49,14 @@ void ofApp::playlistBuilder(std::string playlistName){
 // loads the playlist into the song vector
 void ofApp::playlistSelector(std::string playlistName){
     ofFile playlistFile;
+    ofLog(OF_LOG_NOTICE, "Playlist name: " + playlistName);
+    //playlistFile = ofFile("playlists/" + playlistName);
     playlistFile.open("playlists/" + playlistName, ofFile::ReadOnly);
     ofLog(OF_LOG_NOTICE, playlistFile.getAbsolutePath());
     sound.unload();
     songVector.clear();
     std::string line;
+    ofLog(OF_LOG_NOTICE, "Loading playlist: " + playlistFile.getAbsolutePath());
     while (getline(playlistFile, line)){
         ofLog(OF_LOG_NOTICE, "Adding song: " + line);
         songVector.push_back(ofFile(line));
@@ -66,6 +69,7 @@ void ofApp::playlistSelector(std::string playlistName){
     playing = false; 
     songVectorSize = songVector.size();
     sound.load(songVector[0]);
+    playlistFile.close();
     return;
 }
 
@@ -81,7 +85,7 @@ void ofApp::getSongs(ofDirectory dir)
         // recursive call if the file is a directory
 		if(file.isDirectory())
 		{
-            ofLog(OF_LOG_NOTICE, "Directory found: " + file.getAbsolutePath() + " exploring... recursivly");
+            //ofLog(OF_LOG_NOTICE, "Directory found: " + file.getAbsolutePath() + " exploring... recursivly");
 			getSongs(ofDirectory(file.getAbsolutePath()));
 		}
 		else
@@ -252,6 +256,14 @@ void ofApp::songFileBuilder(){
         songFile.remove("songs.txt");
         songFileBuilder();
     }
-
+    return;
     
+}
+
+//resets to the user provided directory path 
+void ofApp::resetPlaylist(std::string directoryPath){
+    songVector.clear();
+    ofDirectory dir = ofDirectory(directoryPath);
+    ofApp::getSongs(dir);
+    return;
 }

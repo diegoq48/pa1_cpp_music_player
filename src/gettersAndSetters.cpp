@@ -29,8 +29,6 @@ void ofApp::changeSong(int displacement)
     sound.stop();
     sound.unload();
     songNumber += displacement;
-    ofApp::statusSaver();
-
     // plays a random song using present time as a seed 
     if (shuffleStatus)
     {

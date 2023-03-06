@@ -5,18 +5,21 @@
  
 void ofApp::keyPressed(int key)
 {
+    // ya lo aregle 
     // called if user is adding to or selecting a playlist
     // track number is the value the user is hovering over
     if (selectingPlaylist || queueingPlaylist){
         ofLog(OF_LOG_NOTICE, "Selecting Playlist");
         switch(key){
+            
             case(OF_KEY_RETURN):
                 if (queueingPlaylist){
-                    queueingPlaylist = false;
+                    playlistName = playlistDirectory.getName(trackNumber);
                     playlistSelector(playlistName);
+                    queueingPlaylist = false;
                     break;
                 }
-                playlistDirectory.open("playlists");
+                playlistDirectory.open("playlists"); 
                 playlistDirectory.listDir();
                 playlistName = playlistDirectory.getName(trackNumber);
                 selectingPlaylist = false;
@@ -24,16 +27,18 @@ void ofApp::keyPressed(int key)
                 fillingPlaylist = true;
                 break;
             case '.':
+                playlistName = "";
                 selectingPlaylist = false;
-                queueingPlaylist = false; 
-            case '\'':
+                break;
+            case '\'':           
+                playlistName = "";      
                 queueingPlaylist = false;
                 break;
             case OF_KEY_UP:
                 if (trackNumber == 0){
                     trackNumber = playlistDirectory.size() - 1;
                     break;
-                }
+                }   
                 trackNumber--;
                 break;
             case OF_KEY_DOWN:
@@ -51,7 +56,7 @@ void ofApp::keyPressed(int key)
         return;
     }
 
-
+    // redirects user input for the playlist builder function 
     if (makingPlaylist){
         ofLog(OF_LOG_NOTICE, "Making Playlist");
         switch(key){
@@ -110,7 +115,7 @@ void ofApp::keyPressed(int key)
     // redirects user input for the searching function 
     if (searching){
         ofLog(OF_LOG_NOTICE, "Searching");
-        if(key == '(' || key == ')' || key == '[' || key == ']' || key == '{' || key == '}'){
+        if(key == '(' || key == ')' || key == '[' || key == ']' || key == '{' || key == '}' || key == '\\'){
             return;
         }
         switch(key){
@@ -228,7 +233,7 @@ void ofApp::keyPressed(int key)
             break;
         }
 
-        sound.setPosition(lastPos);//========================================================================
+        sound.setPosition(lastPos);
 
         sound.play();
         playing = !playing;
@@ -291,7 +296,6 @@ void ofApp::keyPressed(int key)
         ofLog(OF_LOG_NOTICE, "Repeat Status = " + to_string(repeatStatus));
         sound.setLoop(repeatStatus);
         break;
-//========================================================================
 
 
     // sets variable that allow array to start at zero once it has reached the end 
@@ -374,7 +378,7 @@ void ofApp::keyPressed(int key)
     case '/':
         setSongNumberStatus = !setSongNumberStatus;
         ofLog(OF_LOG_NOTICE, "Set Song Number Status = " + to_string(setSongNumberStatus));
-
+        break;
     // changes modes 
     case '<':
         if (mode == 4)
@@ -383,7 +387,6 @@ void ofApp::keyPressed(int key)
             break;
         }
         mode++;
-        
         break;
     case '>':
         if (mode == 1)
@@ -405,9 +408,11 @@ void ofApp::keyPressed(int key)
         break;
     //exit key 
     case 'q':
-        statusSaver();
+        songVector.clear();
+        sound.unload();
         ofLog(OF_LOG_NOTICE, "Status Saved");
         ofLog(OF_LOG_NOTICE, "Exiting...");
+        ofApp::resetPlaylist(directoryPath);
         OF_EXIT_APP(0);
         break;
     case 'm':
@@ -437,8 +442,8 @@ void ofApp::keyPressed(int key)
     case 'o':
         sound.stop();
         sound.unload();
-        songVector.clear();
-        ofApp::getDirectory();
+        ofApp::resetPlaylist(directoryPath);
+        ofLog(OF_LOG_NOTICE, "Reset vector");
         break;
     default:
         ofLog(OF_LOG_WARNING, "Key not recognized");
@@ -495,7 +500,7 @@ void ofApp::mouseReleased(int x, int y, int button)
 
 void ofApp::mouseEntered(int x, int y)
 {
-}//========================================================================
+}
 
 void ofApp::mouseExited(int x, int y)
 {
