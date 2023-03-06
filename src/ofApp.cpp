@@ -27,7 +27,7 @@ void ofApp::keyPressed(int key)
                 selectingPlaylist = false;
                 queueingPlaylist = false; 
             case '\'':
-                queueingPlaylist = true;
+                queueingPlaylist = false;
                 break;
             case OF_KEY_UP:
                 if (trackNumber == 0){
@@ -37,7 +37,7 @@ void ofApp::keyPressed(int key)
                 trackNumber--;
                 break;
             case OF_KEY_DOWN:
-                if (trackNumber > playlistDirectory.size() - 2){
+                if (trackNumber > (int)playlistDirectory.size() - 2){
                     trackNumber = 0;
                     break;
                 }
@@ -106,6 +106,8 @@ void ofApp::keyPressed(int key)
         ofLog(OF_LOG_NOTICE, "Directory path " + directoryPath);
         return;
     }
+
+    // redirects user input for the searching function 
     if (searching){
         ofLog(OF_LOG_NOTICE, "Searching");
         if(key == '(' || key == ')' || key == '[' || key == ']' || key == '{' || key == '}'){
@@ -113,13 +115,16 @@ void ofApp::keyPressed(int key)
         }
         switch(key){
             case(OF_KEY_RETURN):
+            // if the string is empy break since itll add the entire song file 
+                if (searchString == ""){
+                    break;
+                }
                 if (fillingPlaylist){
                     playlistPopulator(playlistName, songVector[searchMatches[trackNumber]].getAbsolutePath());
                     searchString = "";
                     searchMatches.clear();
                     break;
                 }
-
                 if (searchMatches.size() > 0){
                     sound.unload();
                     songNumber = searchMatches[trackNumber];
@@ -138,7 +143,7 @@ void ofApp::keyPressed(int key)
                 trackNumber--;
                 break;
             case OF_KEY_DOWN:
-                if (trackNumber == searchMatches.size() -1){
+                if (trackNumber == (int)searchMatches.size() -1){
                     trackNumber = 0;
                     break;
                 }
@@ -223,7 +228,8 @@ void ofApp::keyPressed(int key)
             break;
         }
 
-        sound.setPosition(lastPos);
+        sound.setPosition(lastPos);//========================================================================
+
         sound.play();
         playing = !playing;
         break;
@@ -285,6 +291,7 @@ void ofApp::keyPressed(int key)
         ofLog(OF_LOG_NOTICE, "Repeat Status = " + to_string(repeatStatus));
         sound.setLoop(repeatStatus);
         break;
+//========================================================================
 
 
     // sets variable that allow array to start at zero once it has reached the end 
@@ -389,6 +396,8 @@ void ofApp::keyPressed(int key)
     // enables searching
     case '?':
         searching = true;
+        shuffleStatus = false;
+        searchMatches.clear();
         break;
     // toggles filling rectangles excluding mode 3
     case ';':
@@ -419,15 +428,18 @@ void ofApp::keyPressed(int key)
         errorMessage = "";
         selectingPlaylist = true;
         fillingPlaylist = true;
+        break;
     case '\'':
         helpStatus = false;
         errorMessage = "";
         queueingPlaylist = true;
+        break;
     case 'o':
         sound.stop();
         sound.unload();
         songVector.clear();
         ofApp::getDirectory();
+        break;
     default:
         ofLog(OF_LOG_WARNING, "Key not recognized");
         break;
@@ -483,7 +495,7 @@ void ofApp::mouseReleased(int x, int y, int button)
 
 void ofApp::mouseEntered(int x, int y)
 {
-}
+}//========================================================================
 
 void ofApp::mouseExited(int x, int y)
 {

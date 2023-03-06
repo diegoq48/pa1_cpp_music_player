@@ -132,7 +132,7 @@ void ofApp::drawSearchPrompt(){
     font.drawString(searchString, ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 60);
     font.drawString(errorMessage, ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 75);
 
-    for (int i = 0; i < searchMatches.size() ; i++){
+    for (int i = 0; i < (int)searchMatches.size() ; i++){
         if (i > 10){
             return;
         }
@@ -159,7 +159,7 @@ void ofApp::drawAvailablePlaylists(){
      : font.drawString("Enter the name of the playlist you want to play", ofGetWidth() / 2 - 100, ofGetHeight() / 2);
     font.drawString("Press enter to confirm", ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 15);
     playlistDirectory.listDir("playlists");
-    for (int i = 0; i < playlistDirectory.size(); i++){
+    for (int i = 0; i < (int)playlistDirectory.size(); i++){
         i == trackNumber? ofSetColor(255, 255, 0) : ofSetColor(255);
         font.drawString(to_string(i) + " " + playlistDirectory.getName(i), ofGetWidth() / 2 - 100, ofGetHeight() / 2 + 90 + (i*15));
     }

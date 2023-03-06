@@ -224,7 +224,7 @@ void ofApp::songSearch(std::string searchParameter){
     ofLog(OF_LOG_NOTICE, "File closed");
     songFile.close();
    
-    for (int i=0;i  < searchMatches.size(); i++){
+    for (int i=0;i  < (int)searchMatches.size(); i++){
         ofLog(OF_LOG_NOTICE, "Match found at " + to_string(searchMatches[i]));
     }       
     return;
