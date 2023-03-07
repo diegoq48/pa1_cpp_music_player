@@ -17,6 +17,15 @@ class ofApp : public ofBaseApp{
 		void drawMode2(vector<float> amplitudes);
 		void drawMode3(vector<float> amplitudes);
 		void drawMode4(vector<float> amplitudes);
+		void drawHelp();
+		void drawHud();
+		void drawPlaylistPrompt();
+		void drawProgressBar(float pos);   
+		void drawSearchPrompt();
+		void drawSetSongNumber();
+		void drawUpNext();
+		void drawUserPrompt();
+
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y);
@@ -28,27 +37,24 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+
 		void changeSong(int displacement);
-		void drawHud();
-		void drawProgressBar(float pos);   
-		void drawHelp();
+		void setRandomSong();
 		void setupLighting(ofLight& light, bool doSetup);
 		void setAmplitude();
 		void getSongs(ofDirectory dir);
-		void drawUpNext();
 		void showCollection();
-		void drawUserPrompt();
+
 		void songFileBuilder();
 		void songSearch(std::string searchParameter);
-		void drawSetSongNumber();
 		void getSongDirectory();
 		void getDirectory();
+		
 		void statusSaver();
 		void statusSetup();
-		void drawSearchPrompt();
+
 		void playlistBuilder(std::string playlistName);
 		void playlistPopulator(std::string playlistName, std::string songPath);
-		void drawPlaylistPrompt();
 		void playlistSelector(std::string playlistName);
 		void drawAvailablePlaylists();
 		void resetPlaylist(std::string directoryPath);

@@ -282,27 +282,26 @@ void ofApp::keyPressed(int key)
     // plays random song
     case 'b':
         sound.unload();
-        srand(time(NULL));
-        songNumber = rand() % songVectorSize;
-        ofLog(OF_LOG_NOTICE, "Random Song Number = " + to_string(songNumber));
-        sound.load(songVector[songNumber]);
-        sound.play();
+        setRandomSong();
         break;
 
 
     // plays the same song over and over again
     case 'r':
-        repeatStatus = !repeatStatus;
-        ofLog(OF_LOG_NOTICE, "Repeat Status = " + to_string(repeatStatus));
-        sound.setLoop(repeatStatus);
+        if (!loopStatus && !shuffleStatus) {
+            repeatStatus = !repeatStatus;
+            ofLog(OF_LOG_NOTICE, "Repeat Status = " + to_string(repeatStatus));
+            sound.setLoop(repeatStatus);
+        }
         break;
-
 
     // sets variable that allow array to start at zero once it has reached the end 
     case 'l':
-        ofLog(OF_LOG_NOTICE, "Loop Status = " + to_string(loopStatus));
-        loopStatus = !loopStatus; break;
-
+        if (!repeatStatus && !shuffleStatus) {
+            ofLog(OF_LOG_NOTICE, "Loop Status = " + to_string(loopStatus));
+            loopStatus = !loopStatus;
+        }
+        break;
 
     // tells ofdraw to print the help menu
     case 'h':
@@ -357,11 +356,11 @@ void ofApp::keyPressed(int key)
     
     // toggles shuffle on and off
     case 's' :
-        shuffleStatus = !shuffleStatus;
-        drawingCollection = false;
-        ofLog(OF_LOG_NOTICE, "Shuffle Status = " + to_string(shuffleStatus));
-        if(!shuffleStatus){break;}
-        ofApp::changeSong(0); break;
+        if (!loopStatus && !repeatStatus) {
+            shuffleStatus = !shuffleStatus;
+            ofLog(OF_LOG_NOTICE, "Shuffle Status = " + to_string(shuffleStatus));
+        }
+        break;
 
     // changes song directory 
     case 'k':
@@ -565,6 +564,8 @@ void ofApp::update()
     {
         if (loopStatus) {
             ofApp::changeSong(1);
+        } else if (shuffleStatus) {
+            setRandomSong();
         } else {
             playing = false;
         }

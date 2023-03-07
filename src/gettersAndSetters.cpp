@@ -30,18 +30,6 @@ void ofApp::changeSong(int displacement)
     sound.stop();
     sound.unload();
     songNumber += displacement;
-    // plays a random song using present time as a seed 
-    if (shuffleStatus)
-    {
-        srand(time(NULL));
-        songNumber = rand() % songVectorSize;
-        sound.load(songVector[songNumber]);
-        sound.play();
-        playing = true; 
-        ofLog(OF_LOG_NOTICE, "Song number: " + ofToString(songNumber));
-        ofLog(OF_LOG_NOTICE, "Song loaded: " + songVector[songNumber].getFileName());
-        return;
-    }
 
     // checks if the song number is out of bounds and if it is it will start over from the beginning
     if (songNumber >= songVectorSize || songNumber < 0)
@@ -61,4 +49,15 @@ void ofApp::changeSong(int displacement)
     sound.load(songVector[songNumber]);
     sound.play();
     ofLog(OF_LOG_NOTICE, "Song loaded: " + songVector[songNumber].getFileName());
+}
+
+void ofApp::setRandomSong(){
+    srand(time(NULL));
+    songNumber = rand() % songVectorSize;
+    sound.load(songVector[songNumber]);
+    sound.play();
+    playing = true; 
+    ofLog(OF_LOG_NOTICE, "Song number: " + ofToString(songNumber));
+    ofLog(OF_LOG_NOTICE, "Song loaded: " + songVector[songNumber].getFileName());
+    return;
 }

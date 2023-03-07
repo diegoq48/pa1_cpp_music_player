@@ -41,6 +41,14 @@ void ofApp::drawHelp()
 // Draws the main HUD at the top of the screen both right and left 
 void ofApp::drawHud()
 {
+    std::string playbackoption = "None";
+    if (loopStatus) {
+        playbackoption = "Loop";
+    } else if (repeatStatus) {
+        playbackoption = "Repeat";
+    } else if (shuffleStatus) {
+        playbackoption = "Shuffle";
+    }
     std::string shownLoopStatus = loopStatus? "ON":"OFF";
     std::string shownRepeatStatus = repeatStatus? "ON":"OFF";
     std::string shownShuffleStatus = shuffleStatus? "ON":"OFF";
@@ -48,13 +56,13 @@ void ofApp::drawHud()
     string nextSong = songNumber + 1 < songVectorSize? songVector[songNumber + 1].getFileName() : "No More Songs";
     ofSetColor(255);
     int currentWidth = ofGetWidth();
-    font.drawString("Mode: " + modeArray[mode-1], 0, 15);
+    font.drawString("Visual Mode: " + modeArray[mode-1], 0, 15);
     ofSetColor(255,255,0);
     font.drawString("Now Playing: " + (songVector[songNumber].getFileName()), 0, 30);
     ofSetColor(255);
     font.drawString("Progress: " + to_string((int)(pos * 100)) + "%", 0, 45);
     font.drawString("Volume: " + to_string((int)(sound.getVolume()*100)) + "%", 0, 75);
-    font.drawString("Loop: " + shownLoopStatus  + "   Repeat: " + shownRepeatStatus + "    Shuffle: " + shownShuffleStatus, 0, 60);
+    font.drawString("Playback Mode: " + playbackoption, 0, 60);
     font.drawString("Press h for help", currentWidth - strlen("Press H for help")*6, 15);
     font.drawString("< or > Swap Mode", currentWidth - strlen("< or > SWAP MODE")*7, 30);
     ofSetColor(255, 255, 0);
