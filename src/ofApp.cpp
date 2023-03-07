@@ -563,8 +563,11 @@ void ofApp::update()
     // changes song automatically if the song is over and repeat is off 
     if (progress > 0.99 && !repeatStatus)
     {
-        ofApp::changeSong(1);
-        
+        if (loopStatus) {
+            ofApp::changeSong(1);
+        } else {
+            playing = false;
+        }
     }
 }
 

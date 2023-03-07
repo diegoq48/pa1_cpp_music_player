@@ -62,7 +62,7 @@ class ofApp : public ofBaseApp{
 		int songNumber = 0;
 		ofSoundPlayer sound;
 		AudioVisualizer visualizer;
-		bool loopStatus = false; 
+		bool loopStatus = true; 
 		bool helpStatus = false;
 		int color = ofRandom(255);
 		bool playing = false;

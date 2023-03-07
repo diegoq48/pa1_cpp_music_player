@@ -26,6 +26,7 @@ void ofApp::changeSong(int displacement)
     if (repeatStatus){
         return;
     }
+    
     sound.stop();
     sound.unload();
     songNumber += displacement;
@@ -42,23 +43,17 @@ void ofApp::changeSong(int displacement)
         return;
     }
 
-    // checks if the song number is out of bounds and if it is it will either loop or stop the song depending on the loop status
+    // checks if the song number is out of bounds and if it is it will start over from the beginning
     if (songNumber >= songVectorSize || songNumber < 0)
     {
         songNumber = 0;
-        if (loopStatus){
-            sound.load(songVector[songNumber]);
-            sound.play();
-            playing = true; 
-            ofLog(OF_LOG_NOTICE, "Song number: " + ofToString(songNumber));
-            ofLog(OF_LOG_NOTICE, "Song loaded: " + songVector[songNumber].getFileName());
-            return;
-        }
-        playing = false;
         sound.load(songVector[songNumber]);
+        sound.play();
+        playing = true; 
         ofLog(OF_LOG_NOTICE, "Song number: " + ofToString(songNumber));
         ofLog(OF_LOG_NOTICE, "Song loaded: " + songVector[songNumber].getFileName());
-        return; 
+        return;
+
     }
     // default case simply loads the song + displacement and plays it
     playing = true;
@@ -67,12 +62,3 @@ void ofApp::changeSong(int displacement)
     sound.play();
     ofLog(OF_LOG_NOTICE, "Song loaded: " + songVector[songNumber].getFileName());
 }
-
-
-
-
-
-
-
-
-
