@@ -38,6 +38,7 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
+		void setPlaybackMode(char playbackMode);
 		void changeSong(int displacement);
 		void setRandomSong();
 		void setupLighting(ofLight& light, bool doSetup);

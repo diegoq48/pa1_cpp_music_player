@@ -63,9 +63,7 @@ void ofApp::playlistSelector(std::string playlistName){
     }
     // resets the user mutable variables
     songNumber = 0;
-    shuffleStatus = false;
-    loopStatus = false;
-    repeatStatus = false;
+    setPlaybackMode(0);
     playing = false; 
     songVectorSize = songVector.size();
     sound.load(songVector[0]);

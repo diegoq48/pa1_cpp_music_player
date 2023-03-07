@@ -49,9 +49,6 @@ void ofApp::drawHud()
     } else if (shuffleStatus) {
         playbackoption = "Shuffle";
     }
-    std::string shownLoopStatus = loopStatus? "ON":"OFF";
-    std::string shownRepeatStatus = repeatStatus? "ON":"OFF";
-    std::string shownShuffleStatus = shuffleStatus? "ON":"OFF";
     std::string isplaying = playing? "pause":"play";
     string nextSong = songNumber + 1 < songVectorSize? songVector[songNumber + 1].getFileName() : "No More Songs";
     ofSetColor(255);

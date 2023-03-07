@@ -293,19 +293,12 @@ void ofApp::keyPressed(int key)
 
     // plays the same song over and over again
     case 'r':
-        if (!loopStatus && !shuffleStatus) {
-            repeatStatus = !repeatStatus;
-            ofLog(OF_LOG_NOTICE, "Repeat Status = " + to_string(repeatStatus));
-            sound.setLoop(repeatStatus);
-        }
+        setPlaybackMode('r');
         break;
 
     // sets variable that allow array to start at zero once it has reached the end 
     case 'l':
-        if (!repeatStatus && !shuffleStatus) {
-            ofLog(OF_LOG_NOTICE, "Loop Status = " + to_string(loopStatus));
-            loopStatus = !loopStatus;
-        }
+        setPlaybackMode('l');
         break;
 
     // tells ofdraw to print the help menu
@@ -361,10 +354,7 @@ void ofApp::keyPressed(int key)
     
     // toggles shuffle on and off
     case 's' :
-        if (!loopStatus && !repeatStatus) {
-            shuffleStatus = !shuffleStatus;
-            ofLog(OF_LOG_NOTICE, "Shuffle Status = " + to_string(shuffleStatus));
-        }
+        setPlaybackMode('s');
         break;
 
     // changes song directory 

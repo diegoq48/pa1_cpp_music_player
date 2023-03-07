@@ -61,3 +61,32 @@ void ofApp::setRandomSong(){
     ofLog(OF_LOG_NOTICE, "Song loaded: " + songVector[songNumber].getFileName());
     return;
 }
+
+void ofApp::setPlaybackMode(char playbackMode) {
+    switch (playbackMode) {
+        case 'r':
+            loopStatus = false;
+            shuffleStatus = false;
+            repeatStatus = !repeatStatus;
+            sound.setLoop(repeatStatus);
+            ofLog(OF_LOG_NOTICE, "Repeat Status = " + to_string(repeatStatus));
+            break;
+        case 'l':
+            repeatStatus = false;
+            shuffleStatus = false;
+            loopStatus = !loopStatus;
+            ofLog(OF_LOG_NOTICE, "Loop Status = " + to_string(loopStatus));
+            break;
+        case 's':
+            loopStatus = false;
+            repeatStatus = false;
+            shuffleStatus = !shuffleStatus;
+            ofLog(OF_LOG_NOTICE, "Shuffle Status = " + to_string(shuffleStatus));
+            break;
+        default:
+            repeatStatus = false;
+            loopStatus = true;
+            shuffleStatus = false;
+            break;
+    }
+}
