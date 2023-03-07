@@ -255,7 +255,12 @@ void ofApp::keyPressed(int key)
 
     // playes the next song 
     case 'd':
-        ofApp::changeSong(1);
+        if (shuffleStatus) {
+            ofApp::setRandomSong();
+        }
+        else {
+            ofApp::changeSong(1);
+        }
         break;
 
 
