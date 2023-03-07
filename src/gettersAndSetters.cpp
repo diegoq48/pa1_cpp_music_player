@@ -1,29 +1,23 @@
 #include "ofApp.h"
 
 
-
-
 // called in update in order to get the amplitude for the given frame 
 void ofApp::setAmplitude()
 {
-    if (!barPause)
-    {
+    if (!barPause) {
         lastAmplitudes = amplitudes;
         amplitudes = visualizer.getAmplitudes();
-        return;
+    } else {
+        // uses the same amplitudes in order to pause the bars 
+        amplitudes = lastAmplitudes;
     }
-    // uses the same amplitudes in order to pause the bars 
-    amplitudes = lastAmplitudes;
 }
-
-
-
 
 // function that allows the app to change songs given a displacement (positive or negative)
 void ofApp::changeSong(int displacement)
 {
     // returns if the user is repeating the song function change is handled by sound.loop()
-    if (repeatStatus){
+    if (repeatStatus) {
         return;
     }
     
@@ -32,8 +26,7 @@ void ofApp::changeSong(int displacement)
     songNumber += displacement;
 
     // checks if the song number is out of bounds and if it is it will start over from the beginning
-    if (songNumber >= songVectorSize || songNumber < 0)
-    {
+    if (songNumber >= songVectorSize || songNumber < 0) {
         songNumber = 0;
         sound.load(songVector[songNumber]);
         sound.play();
@@ -51,6 +44,7 @@ void ofApp::changeSong(int displacement)
     ofLog(OF_LOG_NOTICE, "Song loaded: " + songVector[songNumber].getFileName());
 }
 
+// set a random song from the song vector
 void ofApp::setRandomSong(){
     srand(time(NULL));
     songNumber = rand() % songVectorSize;
@@ -62,6 +56,7 @@ void ofApp::setRandomSong(){
     return;
 }
 
+// sets the playback mode of the app, toggling between repeat, loop and shuffle
 void ofApp::setPlaybackMode(char playbackMode) {
     switch (playbackMode) {
         case 'r':

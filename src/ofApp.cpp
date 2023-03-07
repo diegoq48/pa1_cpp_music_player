@@ -1,30 +1,29 @@
 #include "ofApp.h"
 #include <ctime>
 // default file provided by open frameworks rtfm open frameworks to find out what every function does @https://openframeworks.cc/documentation/application/
-
+// rtfm meaning read the free manual btw
  
+
 void ofApp::keyPressed(int key)
 {
-    // ya lo aregle 
     // called if user is adding to or selecting a playlist
     // track number is the value the user is hovering over
-    if (selectingPlaylist || queueingPlaylist){
+    if (selectingPlaylist || queueingPlaylist) {
         ofLog(OF_LOG_NOTICE, "Selecting Playlist");
-        switch(key){
-            
+        switch(key) {
             case(OF_KEY_RETURN):
-                if (queueingPlaylist){
+                if (queueingPlaylist) {
                     playlistName = playlistDirectory.getName(trackNumber);
                     playlistSelector(playlistName);
                     queueingPlaylist = false;
-                    break;
+                } else {
+                    playlistDirectory.open("playlists");
+                    playlistDirectory.listDir();
+                    playlistName = playlistDirectory.getName(trackNumber);
+                    selectingPlaylist = false;
+                    searching = true;
+                    fillingPlaylist = true;
                 }
-                playlistDirectory.open("playlists"); 
-                playlistDirectory.listDir();
-                playlistName = playlistDirectory.getName(trackNumber);
-                selectingPlaylist = false;
-                searching = true;
-                fillingPlaylist = true;
                 break;
             case '.':
                 playlistName = "";
@@ -35,18 +34,18 @@ void ofApp::keyPressed(int key)
                 queueingPlaylist = false;
                 break;
             case OF_KEY_UP:
-                if (trackNumber == 0){
+                if (trackNumber == 0) {
                     trackNumber = playlistDirectory.size() - 1;
-                    break;
-                }   
-                trackNumber--;
+                } else {
+                    trackNumber--;
+                }
                 break;
             case OF_KEY_DOWN:
-                if (trackNumber > (int)playlistDirectory.size() - 2){
+                if (trackNumber > (int)playlistDirectory.size() - 2) {
                     trackNumber = 0;
-                    break;
+                } else {
+                    trackNumber++;
                 }
-                trackNumber++;
                 break;
             default:
                 break;
@@ -57,11 +56,11 @@ void ofApp::keyPressed(int key)
     }
 
     // redirects user input for the playlist builder function 
-    if (makingPlaylist){
+    if (makingPlaylist) {
         ofLog(OF_LOG_NOTICE, "Making Playlist");
-        switch(key){
+        switch(key) {
             case(OF_KEY_RETURN):
-                if (playlistName != ""){
+                if (playlistName != "") {
                     playlistBuilder(playlistName);
                     playlistName = "";
                     makingPlaylist = false;
@@ -87,9 +86,9 @@ void ofApp::keyPressed(int key)
     }
 
     // allows the user to specify the directory from which to pull variables from 
-    if (gettingDirectory){
+    if (gettingDirectory) {
         ofLog(OF_LOG_NOTICE, "Getting Directory");
-        switch(key){
+        switch(key) {
             case(OF_KEY_RETURN):
                 gettingDirectory = false;
                 break;
@@ -113,24 +112,21 @@ void ofApp::keyPressed(int key)
     }
 
     // redirects user input for the searching function 
-    if (searching){
+    if (searching) {
         ofLog(OF_LOG_NOTICE, "Searching");
-        if(key == '(' || key == ')' || key == '[' || key == ']' || key == '{' || key == '}' || key == '\\'){
+        if(key == '(' || key == ')' || key == '[' || key == ']' || key == '{' || key == '}' || key == '\\') {
             return;
         }
-        switch(key){
+        switch(key) {
             case(OF_KEY_RETURN):
             // if the string is empy break since itll add the entire song file 
-                if (searchString == ""){
+                if (searchString == "") {
                     break;
-                }
-                if (fillingPlaylist){
+                } else if (fillingPlaylist) {
                     playlistPopulator(playlistName, songVector[searchMatches[trackNumber]].getAbsolutePath());
                     searchString = "";
                     searchMatches.clear();
-                    break;
-                }
-                if (searchMatches.size() > 0){
+                } else if (searchMatches.size() > 0) {
                     sound.unload();
                     songNumber = searchMatches[trackNumber];
                     playing = true;
@@ -141,18 +137,18 @@ void ofApp::keyPressed(int key)
                 }
                 break;
             case OF_KEY_UP:
-                if (trackNumber == 0){
+                if (trackNumber == 0) {
                     trackNumber = searchMatches.size() - 1;
-                    break;
+                } else {
+                    trackNumber--;
                 }
-                trackNumber--;
                 break;
             case OF_KEY_DOWN:
-                if (trackNumber == (int)searchMatches.size() -1){
+                if (trackNumber == (int)searchMatches.size() -1) {
                     trackNumber = 0;
-                    break;
+                } else {
+                    trackNumber++;
                 }
-                trackNumber++;
                 break;
             case(OF_KEY_BACKSPACE):
                 searchString = searchString.substr(0, searchString.length()-1);
@@ -181,13 +177,10 @@ void ofApp::keyPressed(int key)
         return;
     }
 
-
-
-
     // checks the set song number boolean in order to determin whether to direct all input into the song number string
-    if (setSongNumberStatus){
+    if (setSongNumberStatus) {
         ofLog(OF_LOG_NOTICE, "Setting Song Number");
-        switch(key){
+        switch(key) {
             case('/'):
                 songNumberString = "";
                 setSongNumberStatus = false;
@@ -200,7 +193,7 @@ void ofApp::keyPressed(int key)
             case OF_KEY_RETURN:
                 sound.unload();
                 songNumber = stoi(songNumberString);
-                if (songNumber >= songVectorSize  || songNumber < 0){
+                if (songNumber >= songVectorSize  || songNumber < 0) {
                     songNumber = 0;
                 }
                 playing = true;
@@ -210,7 +203,7 @@ void ofApp::keyPressed(int key)
                 setSongNumberStatus = false;
                 break;
             default:
-                if (isdigit(key)){
+                if (isdigit(key)) {
                     songNumberString += key;
                 }
                 break;
@@ -219,77 +212,69 @@ void ofApp::keyPressed(int key)
         return;
     }
 
-
-
     // default case if no booleans are true 
-    switch (key){
+    switch (key) {
     // play/pause key 
     case 'p':
-        if (playing)
-        {
+        if (playing) {
             lastPos = progress;
             sound.stop();
             playing = !playing;
             break;
         }
-
         sound.setPosition(lastPos);
-
         sound.play();
         playing = !playing;
         break;
     
-    // mode changes 
+    // mode changes
     case '1':
-        mode = 1; ofLog(OF_LOG_NOTICE, "Mode = 1"); break;
+        mode = 1;
+        ofLog(OF_LOG_NOTICE, "Mode = 1");
+        break;
     case '2':
-        mode = 2; ofLog(OF_LOG_NOTICE, "Mode = 2"); break;
+        mode = 2;
+        ofLog(OF_LOG_NOTICE, "Mode = 2");
+        break;
     case '3':
-        mode = 3; ofLog(OF_LOG_NOTICE, "Mode = 3"); break;
+        mode = 3;
+        ofLog(OF_LOG_NOTICE, "Mode = 3");
+        break;
     case '4':
-        mode = 4; ofLog(OF_LOG_NOTICE, "Mode = 4"); break;
+        mode = 4;
+        ofLog(OF_LOG_NOTICE, "Mode = 4");
+        break;
     case 'a':
-        ofLog(OF_LOG_NOTICE, "bar Puased");
-        barPause = !barPause; break;
-
-
-    // playes the next song 
-    case 'd':
-        if (shuffleStatus) {
-            ofApp::setRandomSong();
-        }
-        else {
-            ofApp::changeSong(1);
-        }
+        barPause = !barPause;
+        ofLog(OF_LOG_NOTICE, "Bar paused");
         break;
 
+    // plays the next song 
+    case 'd':
+        shuffleStatus ? ofApp::setRandomSong() : ofApp::changeSong(1);
+        break;
 
     // increases volume 
     case '=':
-        if (sound.getVolume() <= 1.0)
-        {
+        if (sound.getVolume() <= 1.0) {
             ofLog(OF_LOG_NOTICE, "Volume = " + to_string(sound.getVolume()));
             sound.setVolume(sound.getVolume() + 0.1);
         }
         break;
 
-
     // lowers Volume 
     case '-':
-        if (sound.getVolume() > 0.1)
-        {
+        if (sound.getVolume() > 0.1) {
             ofLog(OF_LOG_NOTICE, "Volume = " + to_string(sound.getVolume()));
             sound.setVolume(sound.getVolume() - 0.1);
         }
         break;
-
 
     // plays random song
     case 'b':
         sound.unload();
         setRandomSong();
         break;
-
 
     // plays the same song over and over again
     case 'r':
@@ -314,7 +299,7 @@ void ofApp::keyPressed(int key)
 
     // plays the previous song if shuffle is off
     case 'z':
-        if(!shuffleStatus){
+        if(!shuffleStatus) {
             playing = true; 
             ofApp::changeSong(-1);
         }
@@ -334,22 +319,18 @@ void ofApp::keyPressed(int key)
 
     // increases songListDisplacement by 1
     case OF_KEY_DOWN:
-        if (!drawingCollection)
-        {
-            break;
+        if (drawingCollection) {
+            songListDisplacement < (int) songVectorSize - songNumber ? songListDisplacement++ : songListDisplacement = songVectorSize - songNumber;
+            ofLog(OF_LOG_NOTICE, "Song List Displacement = " + to_string(songListDisplacement));
         }
-        songListDisplacement < (int) songVectorSize - songNumber ? songListDisplacement++ : songListDisplacement = songVectorSize - songNumber;
-        ofLog(OF_LOG_NOTICE, "Song List Displacement = " + to_string(songListDisplacement));
         break;
 
     // decreases songListDisplacement by 1 
     case OF_KEY_UP:
-        if (!drawingCollection)
-        {
-            break;
+        if (drawingCollection) {
+            ofLog(OF_LOG_NOTICE, "Song List Displacement = " + to_string(songListDisplacement));
+            songListDisplacement > 0 - songNumber ? songListDisplacement-- : songListDisplacement = 0 - songNumber;
         }
-        ofLog(OF_LOG_NOTICE, "Song List Displacement = " + to_string(songListDisplacement));
-        songListDisplacement > 0 - songNumber ? songListDisplacement-- : songListDisplacement = 0 - songNumber;
         break;
     
     // toggles shuffle on and off
@@ -370,25 +351,24 @@ void ofApp::keyPressed(int key)
 
     // allows user to set song number by toggling setSongNumberStatus
     case '/':
+        helpStatus = false;
         setSongNumberStatus = !setSongNumberStatus;
         ofLog(OF_LOG_NOTICE, "Set Song Number Status = " + to_string(setSongNumberStatus));
         break;
     // changes modes 
     case '<':
-        if (mode == 4)
-        {
+        if (mode == 4) {
             mode = 1;
-            break;
+        } else {
+            mode++;
         }
-        mode++;
         break;
     case '>':
-        if (mode == 1)
-        {
+        if (mode == 1) {
             mode = 4;
-            break;
+        } else {
+            mode--;
         }
-        mode--;
         break;
     // enables searching
     case '?':
@@ -402,19 +382,19 @@ void ofApp::keyPressed(int key)
         break;
     //exit key 
     case 'q':
-        songVector.clear();
+        ofApp::resetPlaylist(directoryPath);
         sound.unload();
+        statusSaver();
         ofLog(OF_LOG_NOTICE, "Status Saved");
         ofLog(OF_LOG_NOTICE, "Exiting...");
         ofApp::resetPlaylist(directoryPath);
         OF_EXIT_APP(0);
         break;
+    // toggles mute
     case 'm':
-    // toggles mute 
         muted = !muted;
         muted? sound.setVolume(0) : sound.setVolume(0.5);
         break;
-    // default case
     case ',':
         helpStatus = false;
         errorMessage = "";
@@ -453,20 +433,17 @@ void ofApp::keyReleased(int key)
 void ofApp::mouseMoved(int x, int y)
 {
     // checks if mouse is hovering over the my music button
-    if( x > ofGetWidth() - 50 && y < 90 && y >75)
-    {
+    if( x > ofGetWidth() - 50 && y < 90 && y >75) {
         hoveringMyMusic = true;
-        return;
+    } else {
+        hoveringMyMusic = false;
     }
-    hoveringMyMusic = false;
 }
-
 
 void ofApp::mouseDragged(int x, int y, int button)
 {
     // tracks mouse to set the position of the song to the mouse position if mouse y < 10 
-    if (y >= ofGetHeight() - 10 && button == 0)
-    {
+    if (y >= ofGetHeight() - 10 && button == 0) {
         float posf = (float)x / (float)ofGetWidth();
         sound.setPosition(posf);
     }
@@ -475,15 +452,13 @@ void ofApp::mouseDragged(int x, int y, int button)
 void ofApp::mousePressed(int x, int y, int button)
 {
     // sets the position of the song to the mouse position if mouse y < 10
-    if (y >= ofGetHeight() - 10 && button == 0)
-    {
+    if (y >= ofGetHeight() - 10 && button == 0) {
         float posf = (float)x / (float)ofGetWidth();
         sound.setPosition(posf);
     }
     
     // draw my music menu if mouse is clicked over the my music button
-    if( x > ofGetWidth() - 50 && y < 90 && y >75)
-    {
+    if( x > ofGetWidth() - 50 && y < 90 && y >75) {
         drawingCollection  = !drawingCollection;
     }
 }
@@ -517,7 +492,6 @@ void ofApp::dragEvent(ofDragInfo dragInfo)
 {
 }
 
-
 void ofApp::setup()
 {
     // sets framerate to something not cancerous like 30fps 
@@ -534,16 +508,15 @@ void ofApp::setup()
     sound.setVolume(0.5);
     sound.unload();
     color < 50? color += 50 : color = color;
-    if(!gettingDirectory){sound.load(songVector[songNumber]);}
+    if (!gettingDirectory) { sound.load(songVector[songNumber]); }
     ofLog(OF_LOG_NOTICE, "Finished Setup");
     
 }
 
-
 void ofApp::update()
 {
     // if its not possible to play music and the user isnt getting music then get music 
-    if(!gettingDirectory && 0 == songVectorSize && !queueingPlaylist){getSongDirectory();}
+    if (!gettingDirectory && 0 == songVectorSize && !queueingPlaylist) { getSongDirectory(); }
     // uppdates soundplayer 
     ofSoundUpdate();
 
@@ -555,8 +528,7 @@ void ofApp::update()
     ofApp::setAmplitude();
 
     // changes song automatically if the song is over and repeat is off 
-    if (progress > 0.99 && !repeatStatus)
-    {
+    if (progress > 0.99 && !repeatStatus) {
         if (loopStatus) {
             ofApp::changeSong(1);
         } else if (shuffleStatus) {
@@ -570,29 +542,27 @@ void ofApp::update()
 void ofApp::draw()
 {
     // if user is getting directory, draw user prompt and return 
-    if(gettingDirectory)
-    {
+    if(gettingDirectory) {
         ofApp::drawUserPrompt();
         return;
     }
 
     // switch to determine which mode to draw
-    switch (mode)
-    {
-    case 1:
-        ofApp::drawMode1(amplitudes);
-        break;
-    case 2:
-        ofApp::drawMode2(amplitudes);
-        break;
-    case 3:
-        ofApp::drawMode3(amplitudes);
-        break;
-    case 4:
-        ofApp::drawMode4(amplitudes);
-        break;
-    default:
-        break;
+    switch (mode) {
+        case 1:
+            ofApp::drawMode1(amplitudes);
+            break;
+        case 2:
+            ofApp::drawMode2(amplitudes);
+            break;
+        case 3:
+            ofApp::drawMode3(amplitudes);
+            break;
+        case 4:
+            ofApp::drawMode4(amplitudes);
+            break;
+        default:
+            break;
     }
 
     // constants for drawing
@@ -600,21 +570,21 @@ void ofApp::draw()
     ofApp::drawProgressBar(pos);
 
     // verfies boolean variables and draws their respective prompts
-    if (helpStatus){ofApp::drawHelp();}
+    if (helpStatus) { ofApp::drawHelp(); }
     
-    if (setSongNumberStatus){ ofApp::drawSetSongNumber(); return;}
+    if (setSongNumberStatus) { ofApp::drawSetSongNumber(); return; }
 
-    if (hoveringMyMusic){ ofNoFill(); ofDrawRectangle(ofGetWidth() - 70, 75, 70, 15);}
+    if (hoveringMyMusic) { ofNoFill(); ofDrawRectangle(ofGetWidth() - 70, 75, 70, 15); }
 
-    if (drawingCollection){ ofApp::showCollection();}
+    if (drawingCollection) { ofApp::showCollection(); }
 
-    if (searching){ ofApp::drawSearchPrompt();}
+    if (searching) { ofApp::drawSearchPrompt(); }
 
-    if (makingPlaylist){ ofApp::drawPlaylistPrompt();}
+    if (makingPlaylist) { ofApp::drawPlaylistPrompt(); }
 
-    if (selectingPlaylist){ ofApp::drawAvailablePlaylists();}
+    if (selectingPlaylist) { ofApp::drawAvailablePlaylists(); }
 
-    if (queueingPlaylist){ofApp::drawAvailablePlaylists();}
+    if (queueingPlaylist) { ofApp::drawAvailablePlaylists(); }
 
     return;
 }
