@@ -127,13 +127,16 @@ void ofApp::keyPressed(int key)
                     searchString = "";
                     searchMatches.clear();
                 } else if (searchMatches.size() > 0) {
-                    sound.unload();
                     songNumber = searchMatches[trackNumber];
                     playing = true;
-                    sound.load(songVector[songNumber]);
-                    sound.play();
                     searchString = "";
                     searching = false;
+                    searchMatches.clear();
+                    sound.stop();
+                    sound.unload();
+                    sound.load(songVector[songNumber]);
+                    sound.setVolume(sound.getVolume());
+                    sound.play();
                 }
                 break;
             case OF_KEY_UP:
@@ -418,6 +421,16 @@ void ofApp::keyPressed(int key)
         sound.unload();
         ofApp::resetPlaylist(directoryPath);
         ofLog(OF_LOG_NOTICE, "Reset vector");
+        break;
+    case '[':
+        if(sound.getVolume() > 0){
+            sound.setVolume(sound.getVolume() - 0.01);
+        }
+        break;
+    case ']':
+        if(sound.getVolume() < 1){
+            sound.setVolume(sound.getVolume() + 0.01);
+        }
         break;
     default:
         ofLog(OF_LOG_WARNING, "Key not recognized");

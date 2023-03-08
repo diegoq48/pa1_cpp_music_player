@@ -98,8 +98,8 @@ void ofApp::drawSetSongNumber()
 void ofApp::showCollection()
 {
     int currentWidth = ofGetWidth();
-    for (int i = 0; i < 50; i++) {
-        if (songListDisplacement + i + songNumber + 50 > songVectorSize || songListDisplacement + i + songNumber < 0 ) {
+    for (int i = 0; i < 25; i++) {
+        if (songListDisplacement + i + songNumber + 25 > songVectorSize -1 || songListDisplacement + i + songNumber < 0 ) {
             return;
         }
         songListDisplacement + i == 0 ? ofSetColor(255,255,0) : ofSetColor(255);

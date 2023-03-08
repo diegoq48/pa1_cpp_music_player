@@ -16,11 +16,14 @@ void ofApp::setAmplitude()
 // function that allows the app to change songs given a displacement (positive or negative)
 void ofApp::changeSong(int displacement)
 {
+    drawingCollection = false;
+    float volume = sound.getVolume();
     // returns if the user is repeating the song function change is handled by sound.loop()
     if (repeatStatus){
         sound.unload();
         sound.load(songVector[songNumber]);
         sound.play();
+        sound.setVolume(volume);
         return;
     }
     
@@ -36,6 +39,7 @@ void ofApp::changeSong(int displacement)
         playing = true; 
         ofLog(OF_LOG_NOTICE, "Song number: " + ofToString(songNumber));
         ofLog(OF_LOG_NOTICE, "Song loaded: " + songVector[songNumber].getFileName());
+        sound.setVolume(volume);
         return;
 
     }
@@ -45,14 +49,19 @@ void ofApp::changeSong(int displacement)
     sound.load(songVector[songNumber]);
     sound.play();
     ofLog(OF_LOG_NOTICE, "Song loaded: " + songVector[songNumber].getFileName());
+    sound.setVolume(volume);
 }
 
 // set a random song from the song vector
 void ofApp::setRandomSong(){
+    float volume = sound.getVolume();
+    sound.stop();
+    sound.unload();
     srand(time(NULL));
     songNumber = rand() % songVectorSize;
     sound.load(songVector[songNumber]);
     sound.play();
+    sound.setVolume(volume);
     playing = true; 
     ofLog(OF_LOG_NOTICE, "Song number: " + ofToString(songNumber));
     ofLog(OF_LOG_NOTICE, "Song loaded: " + songVector[songNumber].getFileName());
